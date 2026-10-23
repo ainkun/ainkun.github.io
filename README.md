@@ -41,11 +41,54 @@ Edit **`profile.js`** to change the biography, skills, projects, achievements, b
 
 ### Medium blog and VTuber-style host
 
-The **Blog** navigation item and homepage chapter tile open the separate `blog.html` page in the same tab. The page shares the portfolio sidebar, fixed background, and all three local-time themes. It shows up to ten real articles from [ainkun's Medium RSS feed](https://ainkun.medium.com/feed), with cover images, dates, short excerpts, and links that open on Medium. `blog.maxPosts` and `blog.feed` live in `profile.js`. The homepage also shows the two newest articles in its scrollable **Latest articles** section, before Connect, with a **Read more on the blog** link to the full page. Both use the same feed and card renderer; the homepage preview does not load the blog host or voice.
+On the homepage, the sidebar **Blog** item scrolls to the **Latest articles** section; the **Notes from the Field** chapter tile and the **Read more on the blog** button open the separate `blog.html` page in the same tab. The page shares the portfolio sidebar, fixed background, and all three local-time themes. It shows every archived article from [ainkun's Medium](https://ainkun.medium.com/) (up to 100), with cover images, dates, labels, short excerpts, and links that open on Medium. `blog.maxPosts`, `blog.feed` and `blog.labels` live in `profile.js`. The homepage also shows the two newest articles in its scrollable **Latest articles** section, before Connect, with a **Read more on the blog** link to the full page. Both use the same feed and card renderer; the homepage preview does not load the blog host or voice.
 
 On opening the blog page, a large teenage male anime host based on `mainimage.png` rises from below the bottom-right edge with **こんにちは / Konnichiwa**. Following a portfolio navigation link or clicking a Medium link triggers **ありがとうございます / Arigatou gozaimasu**, then he slides down. Voice can be muted independently of motion; its preference lasts for the tab session. Browsers may block audio before interaction; the voice button changes to **Enable voice** if needed. Only his upper body is visible, with the lower body cropped outside the window. The host uses 43% of the viewport height on landscape screens, and up to 27.5% on square or portrait screens. Viewport sizing keeps the character steady through browser zoom. The speech bubble sits close beside the character in the artwork's empty left margin, or above it on square and portrait screens; viewport units keep its width, text and padding visually consistent during both zoom-in and zoom-out. A subtle breathing motion keeps the portrait relaxed. Reduced/paused motion removes both the sliding and breathing animations. The host stays visible while scrolling the blog and is exclusive to this page. Ordinary portfolio navigation waits 1.75 seconds for the farewell; Medium links and modified clicks keep their native behavior.
 
-The browser fetches the same-origin `data/medium.json` on entry and caches it for five minutes. `scripts/refresh_medium.py` reads Medium's RSS to produce that file; it does not copy full articles or require a public CORS proxy. The checked-in snapshot contains real fetched articles, and its sync date is displayed. This follows [Medium's supported RSS format](https://help.medium.com/hc/en-us/articles/214874118-Using-RSS-feeds-of-profiles-publications-and-topics).
+#### Search, tags and card labels
+
+The blog page has a **search box** and **tag chips**:
+
+- Search matches every typed word against the article **title and labels** (case-insensitive). `#crypto` works the same as `crypto`.
+- Tag chips show how many articles use each label. Click one to filter, click it again (or **All**) to clear it. Tags combine with the search text, for example *part 4* inside **Cryptography**.
+- Chips used by two or more articles are always shown; one-off tags sit behind **More tags (N)** so the list stays short on phones.
+
+Each card shows **up to four labels** (homepage preview too). They come from **`data/blog-labels.json`**, not from Medium, so you control them:
+
+```json
+{
+  "labels": {
+    "dc3244b27b01": ["Reverse Engineering", "Mobile Security"],
+    "60cc0d86a7bf": ["Red Team", "Malware Dev", "Process Injection", "Privilege Escalation"]
+  }
+}
+```
+
+- The **key** is the id at the end of the article's Medium URL: `https://ainkun.medium.com/dll-injection-60cc0d86a7bf` → `60cc0d86a7bf`.
+- The **value** is 1–4 labels, in the order they appear on the card. Spell a label exactly the same on every article so they share one tag chip (`Red Team`, not `Red team`).
+- An article with no entry falls back to its first Medium tags (for example `ctf-writeup` → `CTF Writeup`).
+- Labels live in their own file because the hourly workflow rewrites `data/medium.json`; edits there would be overwritten.
+
+Labels in use: *Red Team, Malware Dev, Process Injection, Defense Evasion, Privilege Escalation, Persistence, Initial Access, DLL Hijacking, Malicious Macros, Reverse Engineering, Mobile Security, CTF Writeup, Box Writeup, Cryptography, Steganography, Forensics, Web Exploitation, PicoCTF, HackTheBox, NCC CTF*. MITRE ATT&CK tactic names (Initial Access, Persistence, Privilege Escalation, Defense Evasion, …) are used as written by MITRE.
+
+#### When you publish a new Medium article
+
+1. Publish on Medium. The live site picks the article up by itself within an hour (the workflow reads the RSS feed hourly), using its Medium tags as labels.
+2. To choose your own labels, copy the id from the end of the article URL and add a line to `data/blog-labels.json`:
+   ```json
+   "abc123def456": ["CTF Writeup", "Cryptography", "PicoCTF"],
+   ```
+   Keep the commas valid: every line except the last inside `"labels"` ends with a comma.
+3. Optional, to see it on localhost and keep it in the archive: run `python scripts/refresh_medium.py` (updates `data/medium.json`).
+4. Preview with `python -m http.server 8000`, open `http://127.0.0.1:8000/blog.html`, and check the card and its tag chip.
+5. Run `node tests/blog.test.cjs`. It fails if a label key matches no article in `data/medium.json` or has more than four labels. (If you skipped step 3, a brand-new id will not be in the local `medium.json` yet; refresh first.)
+6. Commit `data/blog-labels.json` (and `data/medium.json` if refreshed), then push.
+
+To rename or remove a label everywhere, edit it on each article in `data/blog-labels.json`; the tag chips rebuild themselves from the file.
+
+#### Feed refresh
+
+The browser fetches the same-origin `data/medium.json` on entry and caches it for five minutes. `scripts/refresh_medium.py` reads Medium's RSS to produce that file; it does not copy full articles or require a public CORS proxy. Medium's RSS only lists the ten newest articles, so the script **merges** them into the existing file instead of replacing it; older articles stay in the archive (up to 100). The checked-in snapshot contains real fetched articles, and its sync date is displayed. This follows [Medium's supported RSS format](https://help.medium.com/hc/en-us/articles/214874118-Using-RSS-feeds-of-profiles-publications-and-topics).
 
 To refresh articles locally or on another static host:
 
@@ -55,7 +98,7 @@ python scripts/refresh_medium.py
 
 Use `python3` on macOS/Linux or `py` on Windows if needed. If an obsolete environment proxy prevents the connection, `--direct` ignores proxy variables for this request. `--allow-stale` retains the bundled snapshot with a warning if Medium is unavailable. A simple localhost server does not refresh Medium by itself.
 
-The included GitHub Pages workflow refreshes the feed on pushes to `main`, manual runs, and daily around **08:17 PKT**. Refreshes go into the deployment artifact; **the workflow makes no Git commits**. Enable it as described below. Other hosts and branch-based Pages deployments must refresh and upload the JSON manually.
+The included GitHub Pages workflow refreshes the feed on pushes to `main`, manual runs, and **every hour**. Refreshes go into the deployment artifact; **the workflow makes no Git commits**. Enable it as described below. Other hosts and branch-based Pages deployments must refresh and upload the JSON manually.
 
 Character and audio files are in `assets/blog/`. The teenage host matches `mainimage.png` with tousled black hair, glasses, gray-green eyes and a dark hoodie. Three portraits cover the themes: `teen-host.png` (morning), `teen-evening.png` (sunset), and `teen-night.png` (sleepy). All three use their source orientation, horizontally flipped from the previous displayed version. Portraits follow automatic local-time and manual theme changes, crossfading over 3.2 seconds after the incoming image decodes; rapid changes keep the latest selection. Youthful male greetings are synthesized with **VOICEVOX:白上虎太郎**, saved locally as `teen-konnichiwa.mp3` and `teen-arigatou-gozaimasu.mp3`. No external speech service is needed during playback. See [asset credits](assets/blog/CREDITS.md) and [the generation prompts](assets/blog/TEEN-HOST-PROMPTS.md). Keep the VOICEVOX credit when reusing the audio. Previous variants are retained as design history.
 
@@ -218,7 +261,7 @@ Keep the other preview HTML pages, reference images, tests, and historical asset
 
 1. Open the repository's **Settings → Pages**.
 2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
-3. Open **Actions → Refresh Medium and deploy portfolio → Run workflow** on `main`. Later pushes and the daily schedule run it automatically. If you use another default branch, update `branches: [main]` in `.github/workflows/pages.yml`.
+3. Open **Actions → Refresh Medium and deploy portfolio → Run workflow** on `main`. Later pushes and the hourly schedule run it automatically. If you use another default branch, update `branches: [main]` in `.github/workflows/pages.yml`.
 4. Check the deployment status in **Actions**. Once it completes, return to Pages and use **Visit site**.
 
 Upload the files first, including the `.github` directory. The workflow fetches public RSS, stages only public site files in `_site/`, and publishes using GitHub's standard Pages actions. It requires no API key or custom secret and never writes commits. Scheduled runs may be delayed; a refresh failure keeps the bundled feed and logs a warning. See [GitHub's custom Pages workflow instructions](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
@@ -268,7 +311,7 @@ python tests/test_medium.py
 
 The theme suite contains 10 behavior tests. Eleven additional card tests check proportional desktop/mobile sizing, opening, interrupting the animation with Escape, outside clicks, focus restoration, motion preferences, resizing, timed diagonal hints, clicks during hints, suspension/resumption when hidden or paused, and silent video playback without a background image. These use DOM models and do not replace browser checks for rendering, native focus trapping, or animation smoothness.
 
-Eleven blog tests cover feed validation, caching/retry, portrait decoding and theme races, page navigation and modifier keys, greeting/farewell state, mute controls, blocked autoplay, and interrupted audio. Four Python tests cover RSS parsing, empty/error responses, and duplicate/unsafe links. Browser appearance and actual audio playback still need manual verification.
+Fourteen blog tests cover feed validation, caching/retry, portrait decoding and theme races, page navigation and modifier keys, greeting/farewell state, mute controls, blocked autoplay, interrupted audio, curated labels and their Medium-tag fallback, title/label search with tag filtering, and a check that every `data/blog-labels.json` entry matches a real article with 1–4 labels. Five Python tests cover RSS parsing, empty/error responses, duplicate/unsafe links, and keeping older archived articles during a refresh. Browser appearance and actual audio playback still need manual verification.
 
 For the latest validation results and outstanding browser checks, see [SUMMARY.md](SUMMARY.md#11-verification-status-and-limits).
 
