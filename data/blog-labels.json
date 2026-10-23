@@ -1,0 +1,17 @@
+{
+  "about": "Labels shown on each blog card and used by the blog search. Keys are the id at the end of the Medium URL. Posts without an entry fall back to their Medium tags.",
+  "labels": {
+    "dc3244b27b01": ["Reverse Engineering", "Mobile Security"],
+    "60cc0d86a7bf": ["Red Team", "Malware Dev", "Process Injection", "Privilege Escalation"],
+    "73f06ce102ce": ["Red Team", "DLL Hijacking", "Persistence"],
+    "ae82737d8f65": ["Red Team", "Malware Dev", "Process Injection", "Defense Evasion"],
+    "895c7d468532": ["Red Team", "Malware Dev", "Defense Evasion"],
+    "e2901a50f89d": ["Red Team", "Initial Access", "Malicious Macros"],
+    "2480a39b264f": ["CTF Writeup", "Cryptography", "HackTheBox", "PicoCTF"],
+    "1e8ea238b28a": ["CTF Writeup", "Cryptography", "PicoCTF"],
+    "751f796773ba": ["CTF Writeup", "Cryptography", "NCC CTF"],
+    "5ed32565b5ca": ["CTF Writeup", "Cryptography", "PicoCTF"],
+    "a17a59cbf79c": ["CTF Writeup", "Steganography", "Forensics"],
+    "eee565738e78": ["Box Writeup", "Web Exploitation", "Privilege Escalation"]
+  }
+}

@@ -1,6 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { normalizeFeed, createFeedLoader, createVisitController, createVoicePlayer, shouldDelayNavigation, createPortraitSwitcher } = require('../blog.js');
+const { normalizeFeed, createFeedLoader, postKey, applyLabels, searchPosts, labelCounts, createVisitController, createVoicePlayer, shouldDelayNavigation, createPortraitSwitcher } = require('../blog.js');
 const post = (title = 'Security notes', extra = {}) => ({ title, url: 'https://ainkun.medium.com/security-notes-123', publishedAt: '2023-09-06T00:10:29Z', ...extra });
 const settle = () => new Promise(resolve => setImmediate(resolve));
 
@@ -122,4 +122,41 @@ test('a cancelled hello cannot change audio controls after the farewell starts',
   const voice = createVoicePlayer(audio, value => notices.push(value));
   voice.play('hello.mp3'); voice.play('bye.mp3'); rejectHello(new Error('Aborted'));
   await settle(); assert.deepEqual(notices, [false]);
+});
+
+test('curated labels replace Medium tags and unlabeled posts fall back to readable tags', () => {
+  const posts = normalizeFeed({ posts: [
+    post('Crypto Conspiracy', { url: 'https://ainkun.medium.com/crypto-conspiracy-5ed32565b5ca', tags: ['ctf-writeup'] }),
+    post('Fresh post', { url: 'https://ainkun.medium.com/fresh-post-0123456789ab', tags: ['ctf-writeup', 'red-team'] })
+  ] }).posts;
+  assert.equal(postKey(posts[0].url), '5ed32565b5ca');
+  const labelled = applyLabels(posts, { labels: { '5ed32565b5ca': ['CTF Writeup', 'Cryptography', 'PicoCTF', 'Fourth', 'Extra'] } });
+  assert.deepEqual(labelled.find(item => item.title === 'Crypto Conspiracy').labels, ['CTF Writeup', 'Cryptography', 'PicoCTF', 'Fourth']);
+  assert.deepEqual(labelled.find(item => item.title === 'Fresh post').labels, ['CTF Writeup', 'Red Team']);
+  assert.deepEqual(applyLabels(posts, null)[0].labels.length > 0, true);
+});
+
+test('search matches title words and labels, and a tag narrows the results', () => {
+  const posts = [
+    { title: 'DLL Injection', labels: ['Red Team', 'Process Injection'] },
+    { title: 'Crypto Conspiracy | Part 1', labels: ['CTF Writeup', 'Cryptography'] },
+    { title: 'Shellcode Injection', labels: ['Red Team', 'Defense Evasion'] }
+  ];
+  const titles = list => list.map(item => item.title);
+  assert.deepEqual(titles(searchPosts(posts, 'injection')), ['DLL Injection', 'Shellcode Injection']);
+  assert.deepEqual(titles(searchPosts(posts, '#crypto')), ['Crypto Conspiracy | Part 1']);
+  assert.deepEqual(titles(searchPosts(posts, 'red evasion')), ['Shellcode Injection']);
+  assert.deepEqual(titles(searchPosts(posts, '', 'Process Injection')), ['DLL Injection']);
+  assert.deepEqual(titles(searchPosts(posts, 'shellcode', 'Process Injection')), []);
+  assert.equal(searchPosts(posts, '   ').length, 3);
+  assert.deepEqual(labelCounts(posts)[0], ['Red Team', 2]);
+});
+
+test('every curated label points at a published article', () => {
+  const read = file => JSON.parse(require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'data', file), 'utf8'));
+  const keys = new Set(read('medium.json').posts.map(item => postKey(item.url)));
+  for (const [key, labels] of Object.entries(read('blog-labels.json').labels)) {
+    assert.ok(keys.has(key), `${key} matches no article`);
+    assert.ok(labels.length >= 1 && labels.length <= 4, `${key} needs 1-4 labels`);
+  }
 });

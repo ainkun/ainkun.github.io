@@ -19,7 +19,26 @@
 .blog-card-art::before { content:'研究ノート';position:absolute;inset:0;display:grid;place-items:center;font:24px/1.5 'Noto Sans JP',sans-serif;letter-spacing:7px;color:var(--muted); }
 .blog-card-art img { position:relative; }
 .blog-card-copy { display:flex;flex-direction:column;flex:1;padding:22px; }
-.blog-card-meta { display:flex;justify-content:space-between;gap:12px;color:var(--accent);font:8px/1.6 var(--mono);letter-spacing:.7px; }
+.blog-card-meta { display:flex;justify-content:space-between;align-items:flex-start;gap:12px;color:var(--accent);font:8px/1.6 var(--mono);letter-spacing:.7px; }
+.blog-card-meta time { flex-shrink:0;padding-top:3px; }
+.blog-card-labels { display:flex;flex-wrap:wrap;gap:5px; }
+.blog-label { padding:2px 7px;border:1px solid var(--line);border-radius:4px;background:var(--surface-tint);color:var(--accent);font:8px/1.6 var(--mono);letter-spacing:.4px;text-transform:uppercase; }
+.blog-search { display:flex;flex-direction:column;gap:14px;margin:0 0 20px; }
+.blog-search[hidden] { display:none; }
+.blog-search-field { display:flex;align-items:center;gap:10px;max-width:520px;padding:0 14px;border:1px solid var(--line);border-radius:8px;background:var(--surface);transition:border-color .25s; }
+.blog-search-field:focus-within { border-color:var(--accent); }
+.blog-search-icon { color:var(--accent);font-size:20px;line-height:1; }
+.blog-search-field input { flex:1;min-width:0;padding:12px 0;border:0;background:none;color:var(--ink);font:14px/1.4 'DM Sans',sans-serif;outline:none; }
+.blog-search-field input::placeholder { color:var(--muted); }
+.blog-tags { display:flex;flex-wrap:wrap;gap:7px; }
+.blog-tag { display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:9px/1.5 var(--mono);letter-spacing:.5px;cursor:pointer;transition:background .25s,color .25s; }
+.blog-tag small { color:var(--muted);font-size:8px; }
+.blog-tag:hover { background:var(--surface-hover); }
+.blog-tag[aria-pressed="true"] { background:var(--accent);border-color:var(--accent);color:var(--paper); }
+.blog-tag[aria-pressed="true"] small { color:inherit;opacity:.8; }
+.blog-tag:focus-visible { outline:2px solid var(--accent);outline-offset:3px; }
+.blog-tags:not(.is-expanded) .blog-tag.is-extra:not([aria-pressed="true"]) { display:none; }
+.blog-tag-more { border-style:dashed;color:var(--accent); }
 .blog-card-copy h3 { margin:12px 0 9px;font-size:21px;line-height:1.35; }
 .blog-card-copy p { margin:0 0 20px;font-size:13px;line-height:1.8;color:var(--secondary-ink); }
 .blog-card-copy .text-link { margin-top:auto;padding-top:12px; }

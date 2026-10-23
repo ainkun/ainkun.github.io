@@ -43,6 +43,39 @@
       return pending;
     };
   }
+  // Curated card labels live beside the feed because the hourly refresh rewrites medium.json.
+  function postKey(url) {
+    try {
+      const slug = new URL(url).pathname.split('/').filter(Boolean).pop() || '';
+      const id = slug.match(/-([0-9a-f]{8,16})$/);
+      return id ? id[1] : slug;
+    } catch { return ''; }
+  }
+  const humanizeTag = tag => tag.replace(/[-_]+/g, ' ').replace(/\b\w/g, letter => letter.toUpperCase()).replace(/\bCtf\b/g, 'CTF');
+  function applyLabels(posts, payload) {
+    const labels = payload && payload.labels && typeof payload.labels === 'object' ? payload.labels : {};
+    return posts.map(post => {
+      const listed = labels[postKey(post.url)];
+      const chosen = Array.isArray(listed)
+        ? listed.filter(label => typeof label === 'string' && label.trim()).map(label => label.trim().slice(0, 40)) : [];
+      return { ...post, labels: (chosen.length ? chosen : post.tags.map(humanizeTag)).slice(0, 4) };
+    });
+  }
+  // Every word must appear in the title or a label; an optional label narrows further.
+  function searchPosts(posts, query = '', label = '') {
+    const terms = query.toLowerCase().replace(/#/g, ' ').split(/\s+/).filter(Boolean);
+    return posts.filter(post => {
+      const labels = post.labels || [];
+      if (label && !labels.includes(label)) return false;
+      const text = `${post.title} ${labels.join(' ')}`.toLowerCase();
+      return terms.every(term => text.includes(term));
+    });
+  }
+  function labelCounts(posts) {
+    const counts = new Map();
+    posts.forEach(post => (post.labels || []).forEach(label => counts.set(label, (counts.get(label) || 0) + 1)));
+    return [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  }
   function createVisitController({ enter, leave }) {
     let active = false, suppressed = false;
     return {
@@ -104,7 +137,7 @@
   }
   // The same helpers are exercised by dependency-free Node tests.
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { normalizeFeed, createFeedLoader, createVisitController, createVoicePlayer, shouldDelayNavigation, createPortraitSwitcher };
+    module.exports = { normalizeFeed, createFeedLoader, postKey, applyLabels, searchPosts, labelCounts, createVisitController, createVoicePlayer, shouldDelayNavigation, createPortraitSwitcher };
   }
   if (typeof document === 'undefined') return;
 
@@ -116,6 +149,12 @@
   const soundButton = document.querySelector('#blog-sound');
   const guide = document.querySelector('#blog-guide');
   const config = window.PORTFOLIO.blog;
+  const search = document.querySelector('#blog-search');
+  const queryInput = document.querySelector('#blog-query');
+  const tagList = document.querySelector('#blog-tags');
+  let labelData;
+  const loadLabelData = () => labelData || (labelData = window.fetch(config.labels || 'data/blog-labels.json', { cache: 'no-cache' })
+    .then(response => response.ok ? response.json() : {}).catch(() => ({})));
   const loadFeed = createFeedLoader({ fetcher: window.fetch.bind(window), url: config.feed, limit: isPreview ? 2 : config.maxPosts });
   const node = (tag, className, text) => {
     const result = document.createElement(tag);
@@ -126,8 +165,9 @@
   const formatDate = value => new Intl.DateTimeFormat('en', {
     year: 'numeric', month: 'short', day: 'numeric', timeZone: 'Asia/Karachi'
   }).format(new Date(value));
-  function renderFeed(feed) {
-    const cards = feed.posts.map(item => {
+  let allPosts = [], syncedAt = '', activeLabel = '';
+  function renderCards(posts) {
+    const cards = posts.map(item => {
       const link = node('a', 'writing-card blog-card');
       link.href = item.url; link.target = '_blank'; link.rel = 'noopener noreferrer';
       const art = node('div', 'blog-card-art');
@@ -143,20 +183,81 @@
       const meta = node('div', 'blog-card-meta');
       const date = node('time', '', item.publishedAt ? formatDate(item.publishedAt) : 'FIELD NOTES');
       if (item.publishedAt) date.dateTime = item.publishedAt;
-      meta.append(node('span', '', item.tags[0] || 'SECURITY & RESEARCH'), date);
+      const labels = node('span', 'blog-card-labels');
+      (item.labels.length ? item.labels : ['Security & Research']).forEach(label => labels.append(node('span', 'blog-label', label)));
+      meta.append(labels, date);
       copy.append(meta, node('h3', '', item.title), node('p', '', item.excerpt), node('span', 'text-link', 'Read on Medium ↗'));
       link.append(art, copy);
       return link;
     });
     grid.replaceChildren(...cards);
-    if (!cards.length) {
+    return cards.length;
+  }
+  function renderFeed(feed, labels) {
+    allPosts = applyLabels(feed.posts, labels);
+    syncedAt = feed.fetchedAt;
+    if (search && !isPreview) { renderTagList(); applySearch(); return; }
+    const count = renderCards(allPosts);
+    if (!count) {
       note.textContent = isPreview
         ? 'New stories will appear here when published. Visit the blog for more reading.'
         : 'New stories will appear here when published. Explore the Medium profile above.';
     } else {
       const fetched = new Date(feed.fetchedAt);
-      note.textContent = `${cards.length} ${isPreview ? 'latest' : 'recent'} ${cards.length === 1 ? 'story' : 'stories'}` + (Number.isFinite(fetched.getTime()) ? ` · Last synced ${formatDate(feed.fetchedAt)}` : '');
+      note.textContent = `${count} ${isPreview ? 'latest' : 'recent'} ${count === 1 ? 'story' : 'stories'}` + (Number.isFinite(fetched.getTime()) ? ` · Last synced ${formatDate(feed.fetchedAt)}` : '');
     }
+  }
+  function renderTagList() {
+    const counts = labelCounts(allPosts);
+    if (activeLabel && !counts.some(([label]) => label === activeLabel)) activeLabel = '';
+    // Shared tags stay visible; one-off tags wait behind a toggle so the list stays short.
+    const chips = [['', allPosts.length], ...counts].map(([label, count], index) => {
+      const button = node('button', index > 8 || (index && count < 2) ? 'blog-tag is-extra' : 'blog-tag');
+      button.type = 'button'; button.dataset.label = label;
+      button.append(node('span', '', label || 'All'), node('small', '', String(count)));
+      return button;
+    });
+    const extras = chips.filter(chip => chip.classList.contains('is-extra')).length;
+    if (extras) {
+      const more = node('button', 'blog-tag blog-tag-more');
+      more.type = 'button';
+      more.setAttribute('aria-expanded', String(tagList.classList.contains('is-expanded')));
+      more.textContent = tagList.classList.contains('is-expanded') ? 'Fewer tags' : `More tags (${extras})`;
+      chips.push(more);
+    }
+    tagList.replaceChildren(...chips);
+    search.hidden = !allPosts.length;
+  }
+  function applySearch() {
+    const query = queryInput.value.trim();
+    const found = searchPosts(allPosts, query, activeLabel);
+    renderCards(found);
+    tagList.querySelectorAll('[data-label]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.label === activeLabel)));
+    const fetched = new Date(syncedAt);
+    const synced = Number.isFinite(fetched.getTime()) ? ` · Last synced ${formatDate(syncedAt)}` : '';
+    if (!allPosts.length) note.textContent = 'New stories will appear here when published. Explore the Medium profile above.';
+    else if (!query && !activeLabel) note.textContent = `${allPosts.length} recent ${allPosts.length === 1 ? 'story' : 'stories'}${synced}`;
+    else {
+      const filters = [query && `“${query}”`, activeLabel && `tag ${activeLabel}`].filter(Boolean).join(' in ');
+      note.textContent = found.length
+        ? `${found.length} of ${allPosts.length} stories match ${filters}`
+        : `No stories match ${filters}. Try another word or tag.`;
+    }
+  }
+  if (search && !isPreview) {
+    queryInput.addEventListener('input', applySearch);
+    tagList.addEventListener('click', event => {
+      if (event.target.closest('.blog-tag-more')) {
+        tagList.classList.toggle('is-expanded');
+        renderTagList(); applySearch();
+        tagList.querySelector('.blog-tag-more').focus();
+        return;
+      }
+      const button = event.target.closest('[data-label]');
+      if (!button) return;
+      activeLabel = button.dataset.label === activeLabel ? '' : button.dataset.label;
+      applySearch();
+    });
   }
   let loading = false;
   async function loadArticles(force = false) {
@@ -164,7 +265,7 @@
     loading = true;
     grid.setAttribute('aria-busy', 'true'); retry.hidden = true;
     if (!grid.children.length) note.textContent = 'Opening the reading shelf…';
-    try { renderFeed(await loadFeed(force)); }
+    try { const [feed, labels] = await Promise.all([loadFeed(force), loadLabelData()]); renderFeed(feed, labels); }
     catch {
       note.textContent = grid.children.length
         ? 'Showing the articles already loaded. The latest refresh is unavailable.'
