@@ -367,7 +367,7 @@ body.motion-paused .hero-copy,body.motion-paused .profile-panel{animation:none;}
 
 
 /* Keep the avatar card labels legible at every size. */
-.profile-panel figcaption>span{font-size:9px;letter-spacing:0;line-height:1.6;display:block;margin-top:3px}
+.profile-panel figcaption>span{font-size:9px;letter-spacing:0;line-height:1.6;display:block;margin-top:3px;text-wrap:balance}
 .profile-card-top{font-size:9px;gap:6px;flex-wrap:wrap}
 .profile-card-top>[lang=ja]{font-size:10px}
 .profile-motto{font-size:9px;line-height:1.8;color:var(--secondary-ink);background:var(--surface-glass);border:1px solid var(--line);border-radius:6px;padding:10px 8px;box-shadow:0 4px 18px #33432f14;}

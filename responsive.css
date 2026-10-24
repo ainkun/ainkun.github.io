@@ -125,3 +125,15 @@
 .collectible-technique { padding-block:4px; }
 .collectible-traits { margin-top:6px;padding-block:5px; }
 .collectible-motto { margin-block:6px 4px; }
+
+/* Keep the Japanese motto on one line at every width and browser zoom.
+   Each layout keeps its usual size and shrinks only when the box is too narrow:
+   the line is about 12.5em wide at desktop spacing, and 1cqi is 1% of the box. */
+.profile-motto>[lang=ja] { white-space:nowrap; }
+@supports(font-size:1cqi) {
+  .profile-motto { container-type:inline-size; }
+  .profile-motto>[lang=ja] { font-size:min(16px,7.75cqi);letter-spacing:.375em; }
+  @media(max-width:1000px) { .profile-motto>[lang=ja] { font-size:min(12px,8.8cqi);letter-spacing:.25em; } }
+  @media(max-width:760px) { .profile-motto>[lang=ja] { font-size:min(14px,9.15cqi);letter-spacing:.2143em; } }
+  @media(max-width:640px) { .profile-motto>[lang=ja] { font-size:min(10px,10.5cqi);letter-spacing:.1em; } }
+}

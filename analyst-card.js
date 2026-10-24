@@ -41,7 +41,7 @@
   }
   const ribbon = element('span', 'collectible-ribbon', config.type);
   const caption = element('figcaption', 'collectible-art-caption');
-  const japanese = element('span', '', config.japaneseName);
+  const japanese = element('span', '', config.japaneseRole);
   japanese.lang = 'ja';
   caption.append(element('span', '', config.role), japanese);
   if (config.mainVideo) {

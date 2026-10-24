@@ -22,7 +22,8 @@ Change the `analystCard` object in [profile.js](profile.js). The card is built i
 
 | Field | What it changes |
 | --- | --- |
-| `name`, `japaneseName`, `stage`, `role`, `type`, `number` | Identity, classification, and card number |
+| `name`, `stage`, `role`, `type`, `number` | Identity, classification, and card number |
+| `japaneseRole` | Japanese text beside `role` in the artwork caption (currently セキュリティ研究者, "security researcher") |
 | `statLabel`, `statValue` | Decorative header stat; currently curiosity/infinity, not a skill rating |
 | `mainImage`, `mainImageAlt`, `imagePosition` | Optional central artwork (empty disables it), description, and crop position |
 | `mainVideo` | Optional silent looping video; uses `mainImage` as its poster and fallback only when set |
@@ -341,6 +342,8 @@ For Pages deployment errors, consult the repository's Actions run and [GitHub's 
 
 - Public identity: **ainkun**, **Security Researcher**. Keep the existing AINKUN / HUSSAIN K. hover animation, but do not display the full legal name.
 - Copy focuses on offensive security, reconnaissance, vulnerability research, and attack paths. The profile motto is **Recon / Research / Exploit**.
+- The homepage card's tagline is **LOW-LEVEL LIFE. PROLOGUE ARC.**; edit it in the `<figcaption>` of `index.html`. When the card is too narrow for one line, it splits evenly into two lines (`text-wrap:balance` in `styles.css`) instead of leaving one word alone.
+- The Japanese motto **偵察 · 研究 · 攻略** under the card always stays on one line. At any window size or browser zoom it keeps its normal size and shrinks only as much as its box requires (the last block of `responsive.css`).
 - Both sidebars end with the **ainkun.** home wordmark. The bottom-left footer contains **Created by [PakCyberbot](https://pakcyberbot.com)**. The previous learning status and decorative-motion button have been removed; OS reduced-motion support remains.
 - The favicon uses the current transparent `assets/logo-clean/ainkun-clean.png` logo.
 - Explore my work uses white text for morning/evening and transitions to black over 3.2 seconds for night. Its Japanese label inherits the same color.

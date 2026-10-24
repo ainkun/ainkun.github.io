@@ -8,9 +8,9 @@ window.PORTFOLIO = {
   // The collectible card opened by clicking the hero avatar. All text is editable.
   analystCard: {
     name: "ainkun",
-    japaneseName: "アインくん",
     stage: "RESEARCHER",
     role: "Security Researcher",
+    japaneseRole: "セキュリティ研究者", // Shown beside the role in the artwork caption.
     type: "RECON TYPE",
     number: "001",
     statLabel: "CURIOSITY",
