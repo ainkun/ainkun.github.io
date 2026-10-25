@@ -23,8 +23,9 @@ Change the `analystCard` object in [profile.js](profile.js). The card is built i
 | `name` | Card name in the header (currently AinKun) |
 | `evolvesFrom` | Optional line under the name, shown as "Evolves from …" like an evolved trading card (currently Hussain K.); leave it out to hide the line |
 | `stage` | Optional small label above the name (not used now) |
-| `role`, `type`, `number` | Role in the artwork caption, the ribbon on the artwork (currently GLITCH TYPE), and card number |
-| `japaneseRole` | Japanese text beside `role` in the artwork caption (currently セキュリティ研究者, "security researcher") |
+| `type` | The ribbon on the artwork (currently GLITCH TYPE) |
+| `japaneseRole` | Japanese text at the bottom right of the artwork caption (currently セキュリティ研究者, "security researcher") |
+| `role` | Optional English text at the bottom left of the artwork caption (not used now; leave it out to show only the Japanese) |
 | `statLabel`, `statValue` | Decorative header stat; currently curiosity/infinity, not a skill rating |
 | `mainImage`, `mainImageAlt`, `imagePosition` | Optional central artwork (empty disables it), description, and crop position |
 | `mainVideo` | Optional silent looping video; uses `mainImage` as its poster and fallback only when set |
@@ -33,7 +34,7 @@ Change the `analystCard` object in [profile.js](profile.js). The card is built i
 | `techniques` | Editable skill rows with `symbol`, `title`, `description`, and `tag` |
 | `stats` | Specialty labels shown in the STATS grid |
 | `traits` | Optional footer details with `label` and `value` |
-| `motto`, `edition` | Collection motto and footer |
+| `motto`, `edition`, `number` | Optional line under STATS, and footer text: `edition` at the left, `number` shown as "number / a刀 ✦" (none used now; the footer shows only the **a刀** mark) |
 
 The central art plays `card-back-main-clip.mp4` silently in a loop, without a poster or background image. It plays only while the popup or flip preview is visible, and pauses when hidden or motion is disabled. The corner portrait is `card-top-left-small.jpeg`. `card-design-reference.jpeg` is the visual reference, not the rendered card. The card follows the current theme and respects reduced/paused motion. Layout and interaction live in `analyst-card.css` and `analyst-card.js`.
 
@@ -340,11 +341,12 @@ Design and behavior details for maintainers.
 
 - Public identity: **ainkun**, **Security Researcher**. Keep the existing AINKUN / HUSSAIN K. hover animation, but do not display the full legal name.
 - Copy focuses on offensive security, reconnaissance, vulnerability research, and attack paths. The profile motto is **Break / Build / Repeat**.
+- The hero opens with the terminal prompt **ainkun@portfolio:~$ ./explore** (`.hero-topline` in `index.html`; 1.4 times the line's font size in `styles.css`, with `./explore` in gold), followed directly by アインくん and the AINKUN heading. The prompt stays on one line at every size and zoom. The bar at the bottom of the hero shows only **SCROLL TO EXPLORE ↓**, kept at the right by `margin-left:auto` on `.scroll-cue`.
 - The homepage card's tagline is **LOW-LEVEL LIFE. PROLOGUE ARC.**; edit it in the `<figcaption>` of `index.html`. When the card is too narrow for one line, it splits evenly into two lines (`text-wrap:balance` in `styles.css`) instead of leaving one word alone.
-- The card's top bar shows **プロフィール** and **PROFILE** (`.profile-card-top` in `index.html`), with no number. The back of the card keeps its **PERSONAL COLLECTION / 01** edition line and **001** serial.
-- The motto box under the card reads **破壊 · 創造 · 反復 / BREAK · BUILD · REPEAT** (destruction, creation, repetition). Edit both lines in the `profile-motto` paragraph of `index.html`; the `motto` field in `profile.js` is a different text on the back of the collectible card.
+- The card's top bar shows **プロフィール** and **PROFILE** (`.profile-card-top` in `index.html`), with no number. The back of the collectible card has no motto line, and its footer shows only the **a刀** mark.
+- The motto box under the card reads **破壊 · 創造 · 反復 / BREAK · BUILD · REPEAT** (destruction, creation, repetition). Edit both lines in the `profile-motto` paragraph of `index.html`; the optional `motto` field in `profile.js` is a separate line for the back of the collectible card and is not used now.
 - The Japanese motto line always stays on one line. At any window size or browser zoom it keeps its normal size and shrinks only as much as its box requires (the motto block near the end of `responsive.css`). That sizing assumes three two-character words. The English line does not shrink, so keep it to 26 characters or fewer; longer lines wrap at some zoom levels.
-- The back of the collectible card shows **AinKun** with **Evolves from Hussain K.** underneath, like an evolved trading card (`name` and `evolvesFrom` in `profile.js`), a **GLITCH TYPE** ribbon on the artwork (`type`), and the ability **Security Researcher** (`ability.title`).
+- The back of the collectible card shows **AinKun** with **Evolves from Hussain K.** underneath, like an evolved trading card (`name` and `evolvesFrom` in `profile.js`), a **GLITCH TYPE** ribbon on the artwork (`type`), and the ability **Security Researcher** (`ability.title`) with the line "CTF player working across reverse engineering, Android security and red teaming." (`ability.description`). Every extra line of description takes room from the artwork, because the card keeps a fixed shape; this one is two lines on desktop and phones.
 - The card name and its Evolves line each stay on one line too. They keep their normal sizes (name 34px, or 30px on phones; Evolves line 9px) and shrink only when the card is very narrow, such as at 500% zoom on a laptop or on a folding phone (the last block of `responsive.css`). The sizing is set for the current texts, so recheck at high zoom if you make either one much longer.
 - Both sidebars end with the **ainkun.** home wordmark. The bottom-left footer contains **Created by [PakCyberbot](https://pakcyberbot.com)**. The previous learning status and decorative-motion button have been removed; OS reduced-motion support remains.
 - The favicon uses the current transparent `assets/logo-clean/ainkun-clean.png` logo.
@@ -363,7 +365,7 @@ Shared implementation: `credit-transition.js` and `credit-transition.css`, loade
 
 The About biography introduces Hussain / ainkun as a Security Researcher and experienced CTF participant, covering reverse engineering, malware, mobile security, red teaming, and vulnerability research. The card techniques are **Reverse Engineering** (including malware reversing) and **Mobile Security**. `analystCard.stats` and `skills` contain **Cryptography, Reversing, Programming, Malware Dev, Android Security, AI Automation**; these are labels without invented numerical scores. Optional `traits` remain supported but are omitted from the current card to keep it compact.
 
-Latest validation (2026-10-25): all 50 Node tests and 5 Python tests pass, and the layout was checked in headless Edge at desktop and phone sizes and at browser zoom levels from 50% to 500%, including the theme panel at several scroll positions, the one-line motto, and the back of the collectible card (name and Evolves line, ribbon, ability title).
+Latest validation (2026-10-26): all 50 Node tests and 5 Python tests pass, and the layout was checked in headless Edge at desktop and phone sizes and at browser zoom levels from 50% to 500%, including the theme panel at several scroll positions, the one-line motto, the back of the collectible card (name and Evolves line, ribbon, ability title and description, caption, footer), the one-line hero prompt, the hero without its old kicker line, and the right-aligned scroll cue.
 
 The homepage archive bar (`#chapters`) fades and rises into view over one second using the existing reveal observer as the visitor scrolls. **Scroll to explore** smoothly targets this bar before the About section. Scrolling within the content remains native; wheel and single-finger touch gestures at the opening boundary use the panel transition below. Keyboard focus reveals the bar, and system reduced-motion preferences skip the animation.
 

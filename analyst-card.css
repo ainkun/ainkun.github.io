@@ -86,7 +86,7 @@ body.card-popup-open { overflow:hidden; }
 .collectible-artwork::after { content:'';position:absolute;inset:0;pointer-events:none;box-shadow:0 0 0 1px #fff5 inset,0 0 24px #19271d24 inset; }
 .collectible-ribbon { position:absolute;right:0;top:12px;padding:5px 11px 5px 19px;background:var(--accent);color:var(--button-ink);font:700 8px/1.4 var(--mono);letter-spacing:1.2px;clip-path:polygon(9px 0,100% 0,100% 100%,0 100%); }
 .collectible-art-caption { position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px;background:linear-gradient(transparent,#17271ee8);color:#fffbea;font:8px/1.5 var(--mono);letter-spacing:.2px; }
-.collectible-art-caption [lang="ja"] { letter-spacing:2px;font-size:10px; }
+.collectible-art-caption [lang="ja"] { margin-left:auto;letter-spacing:2px;font-size:10px; }
 .collectible-body { padding:10px 4px 0; }
 .collectible-ability { margin-bottom:6px;padding-bottom:8px;border-bottom:1px solid var(--line); }
 .collectible-ability-heading { display:flex;align-items:center;gap:9px; }
@@ -105,7 +105,7 @@ body.card-popup-open { overflow:hidden; }
 .collectible-motto { margin:9px 0 6px;font-size:9px;font-style:italic;line-height:1.5;color:var(--muted); }
 .collectible-card footer.collectible-footer { display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 4px 0;background:none;border-top:1px solid var(--line); }
 .collectible-footer>span { font:7px/1.4 var(--mono);color:var(--secondary-ink);letter-spacing:.2px; }
-.collectible-footer>span:last-child { color:var(--accent);white-space:nowrap; }
+.collectible-footer>span:last-child { margin-left:auto;color:var(--accent);white-space:nowrap; }
 
 @keyframes card-fly-in {
   from { transform:translate(var(--card-origin-x),var(--card-origin-y)) scale(var(--card-origin-scale)) var(--card-origin-pose); }

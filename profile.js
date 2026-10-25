@@ -9,10 +9,8 @@ window.PORTFOLIO = {
   analystCard: {
     name: "AinKun",
     evolvesFrom: "Hussain K.", // Shown under the name as "Evolves from …", like an evolved trading card.
-    role: "Security Researcher",
-    japaneseRole: "セキュリティ研究者", // Shown beside the role in the artwork caption.
+    japaneseRole: "セキュリティ研究者", // Shown in the artwork caption; add role: "…" to show English text beside it.
     type: "GLITCH TYPE",
-    number: "001",
     statLabel: "CURIOSITY",
     statValue: "∞", // Decorative card flavor, not a skill rating or certification.
     mainImage: "", // Optional poster/fallback; leave empty for video only.
@@ -23,15 +21,14 @@ window.PORTFOLIO = {
     imagePosition: "center 43%",
     ability: {
       title: "Security Researcher",
-      description: "Map the surface. Question the assumptions. Trace the attack path."
+      description: "CTF player working across reverse engineering, Android security and red teaming."
     },
     techniques: [
       { symbol: "◎", title: "Reverse Engineering", description: "Binary analysis and malware reversing.", tag: "REVERSE" },
       { symbol: "◇", title: "Mobile Security", description: "Explore Android internals and mobile attack surfaces.", tag: "MOBILE" }
     ],
-    stats: ["Cryptography", "Reversing", "Programming", "Malware Dev", "Android Security", "AI Automation"],
-    motto: "A curious mind. An offensive mindset.",
-    edition: "PERSONAL COLLECTION / 01"
+    stats: ["Cryptography", "Reversing", "Programming", "Malware Dev", "Android Security", "AI Automation"]
+    // Optional: motto (line under STATS), edition and number (footer text beside the a刀 mark).
   },
   blog: { feed: "data/medium.json", labels: "data/blog-labels.json", maxPosts: 100 }, // Card labels/tags: edit data/blog-labels.json
   socials: { github: "https://github.com/ainkun", medium: "https://ainkun.medium.com/", linkedin: "https://www.linkedin.com/in/ainkun/", x: "https://x.com/ain__kun", email: "contact@ainkun.com" }, // email: plain email address
@@ -41,6 +38,6 @@ window.PORTFOLIO = {
   ],
   achievements: [
     { title: "Ignite Cyber Hackathon — 2nd Place", description: "Our team secured second place at the Ignite 2024 Cyber Hackathon.", year: "2024", type: "TEAM ACHIEVEMENT", url: "" },
-    { title: "Black Hat MEA — Finalist", description: "Reached the Black Hat MEA finals in three consecutive years: 2023, 2024, and 2025.", year: "2023–2025", type: "CTF FINALIST", url: "" }
+    { title: "Black Hat MEA — Finalist", description: "Reached the Black Hat MEA finals in 2023 and 2025.", year: "2023 & 2025", type: "CTF FINALIST", url: "" }
   ]
 };

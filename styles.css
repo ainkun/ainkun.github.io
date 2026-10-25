@@ -44,12 +44,10 @@ main{margin-left:var(--rail);min-width:0}
 .scene-shade{position:absolute;inset:0;z-index:-3;background:var(--scene-wash);}
 .scene-grid{position:absolute;inset:0;z-index:-2;background-image:linear-gradient(#ffffff04 1px,transparent 1px),linear-gradient(90deg,#ffffff04 1px,transparent 1px);background-size:100px 100px;opacity:0;mask-image:linear-gradient(90deg,#000,transparent);}
 .hero-topline{display:flex;justify-content:space-between;gap:15px;font:9px var(--mono);letter-spacing:1.4px;color:var(--secondary-ink);border-bottom:1px solid var(--line);padding-bottom:18px}
-.hero-topline b{color:var(--sunlight);padding:0 7px}
-.hero-topline [lang=ja]{letter-spacing:3px;font-size:12px}
+.hero-topline .hero-prompt{font-size:1.4em;letter-spacing:.6px;text-transform:none;white-space:nowrap}
+.hero-topline .hero-prompt b{color:var(--sunlight);font-weight:700}
 .hero-layout{display:grid;grid-template-columns:minmax(0,1fr) 250px;align-items:center;gap:30px;flex:1;padding:68px 0 64px}
 .hero-copy{min-width:0}
-.hero-kicker{font:9px var(--mono);letter-spacing:1.8px;color:var(--secondary-ink);display:flex;align-items:center;gap:10px;margin:0 0 18px}
-.diamond{font-size:24px;color:var(--sunlight)}
 .name-lockup{position:relative;width:100%;min-width:0}
 .name-jp{display:block;font-size:22px;font-weight:700;letter-spacing:10px;margin-bottom:2px;color:var(--accent);}
 h1{font:900 italic clamp(100px,10.4vw,170px)/.95 var(--display);letter-spacing:-2px;margin:0 0 25px;text-shadow:3px 3px 0 var(--title-shadow),6px 6px 0 var(--title-shadow-soft);position:relative;color:var(--title);}
@@ -65,9 +63,8 @@ h1{font:900 italic clamp(100px,10.4vw,170px)/.95 var(--display);letter-spacing:-
 .primary>[lang=ja]{font-size:10px;border-right:1px solid #c4d0ac70;padding-right:12px;color:inherit;}
 .secondary{border:1px solid var(--line);background:var(--surface-glass);color:var(--ink);}
 .hero-bottom{display:flex;justify-content:space-between;align-items:center;gap:20px;border-top:1px solid var(--line);padding-top:20px}
-.chapter-label,.scroll-cue{font:9px var(--mono);letter-spacing:1px;color:var(--secondary-ink)}
-.chapter-label>[lang=ja]{background:var(--label-fill);padding:5px 9px;margin-right:12px;font-size:10px}
-.scroll-cue{display:flex;gap:16px;align-items:center}
+.scroll-cue{font:9px var(--mono);letter-spacing:1px;color:var(--secondary-ink)}
+.scroll-cue{display:flex;gap:16px;align-items:center;margin-left:auto}
 .scroll-cue>span{font-size:18px;animation:scroll-nudge 3s ease-in-out infinite}
 
 .profile-stage{perspective:1000px;align-self:center;margin-top:50px;position:relative}
@@ -190,7 +187,6 @@ to{opacity:1;translate:0 0}
 @media(min-width:1600px){.hero{min-height:880px;color:var(--ink);}
 .hero-layout{grid-template-columns:minmax(0,1fr) 300px;gap:60px;padding-right:35px}
 .hero-description{font-size:16px;color:var(--secondary-ink);text-shadow:none;}
-.hero-kicker{font-size:11px}
 .profile-panel figcaption>span{font-size:9px}
 .profile-card-top{font-size:10px}
 }
@@ -204,8 +200,6 @@ to{opacity:1;translate:0 0}
 .hero-layout{grid-template-columns:minmax(0,1fr) 210px;gap:20px}
 h1{font-size:108px;color:var(--title);text-shadow:3px 3px 0 var(--title-shadow),6px 6px 0 var(--title-shadow-soft);}
 .hero-topline{font-size:8px}
-.hero-topline [lang=ja]{font-size:10px}
-.hero-kicker{font-size:8px;letter-spacing:1px}
 .intro{font-size:17px;color:var(--ink);}
 .hero-actions{gap:10px}
 .button{gap:12px;padding:12px 14px;font-size:12px;border-radius:6px;}
@@ -239,7 +233,6 @@ h1{font-size:92px;color:var(--title);text-shadow:3px 3px 0 var(--title-shadow),6
 .intro{font-size:16px;color:var(--ink);}
 .intro>span{letter-spacing:2px;font-size:9px}
 .hero-description{font-size:13px;color:var(--secondary-ink);text-shadow:none;}
-.hero-kicker{font-size:7px;letter-spacing:.6px}
 .profile-card-top{font-size:6px;padding:8px}
 .profile-card-top>[lang=ja]{font-size:8px}
 .profile-panel figcaption{padding:9px}
@@ -247,9 +240,6 @@ h1{font-size:92px;color:var(--title);text-shadow:3px 3px 0 var(--title-shadow),6
 .profile-panel strong{font-size:21px}
 .profile-motto>[lang=ja]{font-size:12px;letter-spacing:3px;color:var(--accent);}
 .profile-motto{font-size:6px;letter-spacing:.4px;color:var(--secondary-ink);background:var(--surface-glass);border:1px solid var(--line);border-radius:6px;padding:10px 8px;box-shadow:0 4px 18px #33432f14;}
-.hero-topline [lang=ja]{display:none}
-.chapter-label{font-size:8px}
-.chapter-label>[lang=ja]{margin-right:5px}
 .scroll-cue{font-size:8px;letter-spacing:0}
 .projects-grid{grid-template-columns:1fr}
 .card-top{margin-bottom:18px}
@@ -288,7 +278,6 @@ main{padding-top:124px}
 .hero{min-height:710px;padding:25px 28px;color:var(--ink);}
 .hero-layout{grid-template-columns:1fr 185px;padding:55px 0;gap:25px}
 h1{font-size:110px;color:var(--title);text-shadow:3px 3px 0 var(--title-shadow),6px 6px 0 var(--title-shadow-soft);}
-.hero-kicker{font-size:8px}
 .name-jp{font-size:20px;color:var(--accent);}
 .hero-description{font-size:14px;color:var(--secondary-ink);text-shadow:none;}
 .intro{font-size:18px;color:var(--ink);}
@@ -307,7 +296,6 @@ footer{padding:25px 28px}
 
 @media(max-width:640px){.hero{padding:24px;min-height:950px;color:var(--ink);}
 .hero-layout{grid-template-columns:1fr;padding:40px 0 24px;gap:25px;align-items:start}
-.hero-kicker{font-size:8px}
 .name-jp{font-size:19px;color:var(--accent);}
 h1{font-size:clamp(76px,24vw,125px);color:var(--title);text-shadow:3px 3px 0 var(--title-shadow),6px 6px 0 var(--title-shadow-soft);}
 .hero-description{max-width:360px;font-size:14px;color:var(--secondary-ink);text-shadow:none;}
@@ -320,8 +308,6 @@ h1{font-size:clamp(76px,24vw,125px);color:var(--title);text-shadow:3px 3px 0 var
 .profile-motto{position:absolute;right:calc(100% + 15px);top:40px;margin:0;width:105px;font-size:7px;line-height:1.8;color:var(--secondary-ink);background:var(--surface-glass);border:1px solid var(--line);border-radius:6px;padding:10px 8px;box-shadow:0 4px 18px #33432f14;}
 .profile-motto>[lang=ja]{font-size:13px;letter-spacing:1px;line-height:1.8;color:var(--accent);}
 .hero-bottom{gap:10px;padding-top:18px}
-.chapter-label{font-size:7px;letter-spacing:0}
-.chapter-label>[lang=ja]{display:none}
 .scroll-cue{font-size:7px;gap:9px}
 
 .chapter-menu{grid-template-columns:1fr;padding:20px 24px;gap:10px}

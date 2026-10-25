@@ -19,8 +19,9 @@ Use case: stylized-concept. Asset type: full-width background illustration for a
 | Japanese | Meaning / use |
 | --- | --- |
 | アインくん | Ainkun, rendered phonetically as Ain + kun |
+| セキュリティ研究者 | Security researcher (collectible card caption) |
+| 破壊 · 創造 · 反復 | Destruction, creation, repetition (motto under the profile card) |
 | 自分の道を切り拓く | Carve your own path |
-| 好奇心を、力に。 | Turn curiosity into strength |
 | ホーム | Home |
 | 自己紹介 | Self-introduction / About me |
 | プロジェクト | Projects |
@@ -34,7 +35,6 @@ Use case: stylized-concept. Asset type: full-width background illustration for a
 | 成長 | Growth |
 | 成長の記録 | A record of growth |
 | 日々成長 | Growing every day |
-| 第一章 | Chapter one |
 | またね | See you again |
 
 Design direction requested by the owner: https://2026.ctf.sekai.team/. The reference's bilingual navigation was available through search indexing; its live visual view could not be rendered in this session. This portfolio uses original markup, styling, and generated artwork, with no copied site assets.

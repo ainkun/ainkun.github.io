@@ -45,7 +45,8 @@
   const caption = element('figcaption', 'collectible-art-caption');
   const japanese = element('span', '', config.japaneseRole);
   japanese.lang = 'ja';
-  caption.append(element('span', '', config.role), japanese);
+  if (config.role) caption.append(element('span', '', config.role));
+  caption.append(japanese);
   if (config.mainVideo) {
     const video = element('video', 'collectible-main-image collectible-main-video');
     video.src = config.mainVideo;
@@ -100,9 +101,10 @@
     traits.append(trait);
   });
   if (config.traits?.length) body.append(traits);
-  body.append(element('p', 'collectible-motto', config.motto));
+  if (config.motto) body.append(element('p', 'collectible-motto', config.motto));
   const footer = element('footer', 'collectible-footer');
-  footer.append(element('span', '', config.edition), element('span', '', `${config.number} / a刀 ✦`));
+  if (config.edition) footer.append(element('span', '', config.edition));
+  footer.append(element('span', '', config.number ? `${config.number} / a刀 ✦` : 'a刀'));
   card.append(header, artwork, body, footer);
 
   const trigger = element('button', 'profile-card-open');
