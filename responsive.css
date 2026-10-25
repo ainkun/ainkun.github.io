@@ -137,3 +137,13 @@
   @media(max-width:760px) { .profile-motto>[lang=ja] { font-size:min(14px,9.15cqi);letter-spacing:.2143em; } }
   @media(max-width:640px) { .profile-motto>[lang=ja] { font-size:min(10px,10.5cqi);letter-spacing:.1em; } }
 }
+
+/* Keep the card's name and its "Evolves from" line on one line each in the same way: they keep
+   their usual sizes and shrink only when the name column is too narrow (500% zoom, folding phones).
+   The name is about 2.6em wide and the "Evolves from" line about 10.8em. */
+@supports(font-size:1cqi) {
+  .collectible-identity { container-type:inline-size; }
+  .collectible-card h2.collectible-name { font-size:min(34px,38cqi); }
+  .collectible-evolves { font-size:min(9px,9cqi); }
+  @media(max-width:480px) { .collectible-card h2.collectible-name { font-size:min(30px,38cqi); } }
+}

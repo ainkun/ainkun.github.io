@@ -73,6 +73,7 @@ body.card-popup-open { overflow:hidden; }
 .collectible-identity { min-width:0;flex:1; }
 .collectible-stage { display:block;color:var(--accent);font:700 8px/1.5 var(--mono);letter-spacing:1.5px; }
 .collectible-card h2.collectible-name { font:800 italic 34px/.95 var(--display);letter-spacing:-.6px;margin:2px 0 0;overflow-wrap:anywhere; }
+.collectible-evolves { display:block;margin-top:4px;font-size:9px;font-style:italic;line-height:1.3;color:var(--secondary-ink); }
 .collectible-stat { text-align:right;line-height:1;flex-shrink:0; }
 .collectible-stat>span { display:block;font:7px/1.4 var(--mono);letter-spacing:.7px;color:var(--muted); }
 .collectible-stat strong { display:block;font:600 33px/1.1 var(--display);color:var(--title); }

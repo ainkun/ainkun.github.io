@@ -26,7 +26,9 @@
   const identity = element('div', 'collectible-identity');
   const name = element('h2', 'collectible-name', config.name);
   name.id = 'analyst-card-name';
-  identity.append(element('span', 'collectible-stage', config.stage), name);
+  if (config.stage) identity.append(element('span', 'collectible-stage', config.stage));
+  identity.append(name);
+  if (config.evolvesFrom) identity.append(element('span', 'collectible-evolves', `Evolves from ${config.evolvesFrom}`));
   const stat = element('div', 'collectible-stat');
   stat.append(element('span', '', config.statLabel), element('strong', '', config.statValue));
   const energy = element('span', 'collectible-energy');

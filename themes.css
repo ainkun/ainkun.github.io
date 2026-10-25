@@ -170,6 +170,10 @@
 .theme-controls[aria-busy="true"] .theme-options { opacity:.65; }
 /* Make space for the controls without covering the hero's opening line. */
 @media(min-width:761px) { .hero { padding-top:102px; } }
+/* On desktop the panel stays in that space and scrolls away with the page, so it never
+   covers the profile card or other content at any browser zoom. On phones it stays
+   fixed inside the fixed top bar. */
+@media(min-width:761px) { .theme-controls { position:absolute; } }
 @media(max-width:760px) {
   .theme-controls { top:8px;right:18px;width:250px;padding:4px 5px 3px;border-radius:7px;box-shadow:none; }
   .theme-options button { min-height:29px;padding:3px 4px;font-size:10px; }
@@ -184,5 +188,13 @@
   .theme-meta { padding-left:2px;padding-right:2px;font-size:7px; }
   .sidebar { padding-left:12px;padding-right:12px; }
   .sidebar-bottom { left:12px; }
+}
+/* The narrowest widths (about 500% zoom on a laptop) show icons only, so the panel
+   clears the logo. The labels stay available to screen readers. */
+@media(max-width:300px) {
+  .theme-controls { width:150px; }
+  .theme-meta { white-space:nowrap; }
+  .theme-options span { position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap; }
+  .theme-options svg { width:14px;height:14px; }
 }
 @media(prefers-reduced-motion:reduce) { .theme-options button { transition:none; } }

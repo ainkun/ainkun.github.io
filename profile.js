@@ -7,11 +7,11 @@ window.PORTFOLIO = {
   skills: ["Cryptography", "Reversing", "Programming", "Malware Dev", "Android Security", "AI Automation"],
   // The collectible card opened by clicking the hero avatar. All text is editable.
   analystCard: {
-    name: "ainkun",
-    stage: "RESEARCHER",
+    name: "AinKun",
+    evolvesFrom: "Hussain K.", // Shown under the name as "Evolves from …", like an evolved trading card.
     role: "Security Researcher",
     japaneseRole: "セキュリティ研究者", // Shown beside the role in the artwork caption.
-    type: "RECON TYPE",
+    type: "GLITCH TYPE",
     number: "001",
     statLabel: "CURIOSITY",
     statValue: "∞", // Decorative card flavor, not a skill rating or certification.
@@ -22,7 +22,7 @@ window.PORTFOLIO = {
     portraitImageAlt: "The supplied corner portrait for ainkun's card",
     imagePosition: "center 43%",
     ability: {
-      title: "An offensive mindset",
+      title: "Security Researcher",
       description: "Map the surface. Question the assumptions. Trace the attack path."
     },
     techniques: [

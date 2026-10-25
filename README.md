@@ -1,16 +1,14 @@
 # ainkun — Cybersecurity Portfolio
 
-An anime-inspired, responsive portfolio for **ainkun**. Plain HTML, CSS, and JavaScript: no build, installation, or framework required. Features three matching morning, evening, and night neighborhood panoramas that stay fixed behind the full page, bilingual Japanese/English navigation, warm cream and sage-green game-menu panels, your profile avatar, sunlit drifting particles, scroll reveals, a translucent final contact section, and system reduced-motion support. Respects reduced-motion preferences.
+An anime-inspired, responsive portfolio for **ainkun**. Plain HTML, CSS, and JavaScript: no build, installation, or framework required. Features three matching morning, evening, and night neighborhood panoramas that stay fixed behind the full page, bilingual Japanese/English navigation, warm cream and sage-green game-menu panels, your profile avatar, sunlit drifting particles, scroll reveals, a translucent final contact section, and system reduced-motion support.
 
 **Start here:** [Run on localhost](#run-on-localhost) · [Publish on GitHub Pages](#publish-on-github-pages) · [Update the live website](#update-the-live-website) · [Troubleshooting](#troubleshooting)
 
-For the complete design history, approved choices, file map, and future handoff, read [SUMMARY.md](SUMMARY.md).
-
-When working with an assistant, ask the owner before making Git commits. Complete and validate major changes, then request approval for the concrete commit.
+When working with an assistant: every change is previewed on localhost first. When the owner says **update**, bring the documentation up to date without committing; when the owner says **save**, update the docs and commit. The owner pushes; an assistant never runs `git push`.
 
 ## Customize
 
-Hover over the hero name to transform `AINKUN` into `HUSSAIN K`, keeping the final dot. The shared `AIN` and `K` move into place while `UN` fades out and `HUSS` appears. Moving away reverses it. Keyboard focus reveals the name, and mobile taps toggle it. The heading fits both names to the available width and respects the motion pause button and reduced-motion preferences.
+Hover over the hero name to transform `AINKUN` into `HUSSAIN K`, keeping the final dot. The shared `AIN` and `K` move into place while `UN` fades out and `HUSS` appears. Moving away reverses it. Keyboard focus reveals the name, and mobile taps toggle it. The heading fits both names to the available width and respects reduced-motion preferences.
 
 Click or tap the hero avatar card to open an editable collectible analyst card. It flies from the avatar, grows into the center of the whole window, and flips to its detailed side. Escape, the close button, or a click outside reverses the animation. The popup traps focus through a native modal dialog, locks page scrolling, and restores focus to the avatar when closed. Short windows can scroll within the popup.
 
@@ -22,13 +20,16 @@ Change the `analystCard` object in [profile.js](profile.js). The card is built i
 
 | Field | What it changes |
 | --- | --- |
-| `name`, `stage`, `role`, `type`, `number` | Identity, classification, and card number |
+| `name` | Card name in the header (currently AinKun) |
+| `evolvesFrom` | Optional line under the name, shown as "Evolves from …" like an evolved trading card (currently Hussain K.); leave it out to hide the line |
+| `stage` | Optional small label above the name (not used now) |
+| `role`, `type`, `number` | Role in the artwork caption, the ribbon on the artwork (currently GLITCH TYPE), and card number |
 | `japaneseRole` | Japanese text beside `role` in the artwork caption (currently セキュリティ研究者, "security researcher") |
 | `statLabel`, `statValue` | Decorative header stat; currently curiosity/infinity, not a skill rating |
 | `mainImage`, `mainImageAlt`, `imagePosition` | Optional central artwork (empty disables it), description, and crop position |
 | `mainVideo` | Optional silent looping video; uses `mainImage` as its poster and fallback only when set |
 | `portraitImage`, `portraitImageAlt` | Small top-left portrait |
-| `ability.title`, `ability.description` | Featured ability heading and copy |
+| `ability.title`, `ability.description` | Featured ability heading (currently Security Researcher) and copy |
 | `techniques` | Editable skill rows with `symbol`, `title`, `description`, and `tag` |
 | `stats` | Specialty labels shown in the STATS grid |
 | `traits` | Optional footer details with `label` and `value` |
@@ -101,7 +102,11 @@ Use `python3` on macOS/Linux or `py` on Windows if needed. If an obsolete enviro
 
 The included GitHub Pages workflow refreshes the feed on pushes to `main`, manual runs, and **every hour**. Refreshes go into the deployment artifact; **the workflow makes no Git commits**. Enable it as described below. Other hosts and branch-based Pages deployments must refresh and upload the JSON manually.
 
+#### Blog host artwork and voice
+
 Character and audio files are in `assets/blog/`. The teenage host matches `mainimage.png` with tousled black hair, glasses, gray-green eyes and a dark hoodie. Three portraits cover the themes: `teen-host.png` (morning), `teen-evening.png` (sunset), and `teen-night.png` (sleepy). All three use their source orientation, horizontally flipped from the previous displayed version. Portraits follow automatic local-time and manual theme changes, crossfading over 3.2 seconds after the incoming image decodes; rapid changes keep the latest selection. Youthful male greetings are synthesized with **VOICEVOX:白上虎太郎**, saved locally as `teen-konnichiwa.mp3` and `teen-arigatou-gozaimasu.mp3`. No external speech service is needed during playback. See [asset credits](assets/blog/CREDITS.md) and [the generation prompts](assets/blog/TEEN-HOST-PROMPTS.md). Keep the VOICEVOX credit when reusing the audio. Previous variants are retained as design history.
+
+### More customization
 
 - Set `socials.github`, `medium`, `linkedin`, and `x` to complete `https://...` URLs.
 - Set `socials.email` to your plain email address, or leave it empty.
@@ -130,6 +135,8 @@ The website chooses its initial theme using **the visitor's device time and loca
 
 Use the three buttons at the top right to preview any scene. **Use local time** returns to automatic mode. A preview lasts until you return to automatic mode or reload the page; no preference is stored. Automatic mode refreshes every minute and when you return to the tab. The clock always displays the visitor's local time. This is a fixed daily schedule, not a sunrise/sunset calculation.
 
+The panel sits at the top right of the page. On desktop it scrolls away with the page, so it never covers the profile card or other content at any browser zoom; scroll back to the top to change the scene. On phones it stays inside the fixed top bar. At very narrow widths (about 500% zoom on a laptop) its buttons show icons only, and their names stay available to screen readers. These position rules are in `themes.css`.
+
 `themes.js` sets the initial theme before the page is painted and preloads only its background. Theme changes load and decode their image before blending the street scene and matching palette over 3.2 seconds with gentle easing. The incoming background uses an explicit opacity keyframe animation so the fade starts reliably even when the browser batches updates. Layered backgrounds preserve an in-progress blend during rapid clicks, and older requests cannot replace the latest choice. `theme-motion.css` animates the palette colors, including the logo, title, gradients, and translucent panels. System reduced-motion preferences make theme changes immediate. If a preview fails to load, the current theme remains available. Without JavaScript the morning palette is the fallback. All three images stay fixed during scrolling, with translucent section backgrounds above them.
 
 To change the schedule, edit `themeForDate()` in `themes.js`. To replace an image, update its entry in both `themes.js` and `themes.css`. Keep their relative paths for GitHub Pages. Run `node tests/themes.test.cjs` to check timezone boundaries and preview behavior; Node is only needed for development checks, not hosting.
@@ -147,14 +154,14 @@ There is no `npm install` or build command. Python serves the existing files; it
 
 ### 1. Open the project folder
 
-Download and extract the project, or clone your existing repository:
+Download and extract the project, or clone the repository:
 
 ```sh
-git clone https://github.com/YOUR_USERNAME/AinKun-Portfolio.git
-cd AinKun-Portfolio
+git clone https://github.com/ainkun/ainkun.github.io.git
+cd ainkun.github.io
 ```
 
-Replace `YOUR_USERNAME` and the repository name with your own. If you already have the files, open a terminal in the folder containing `index.html`.
+For a fork or copy, use its URL instead. If you already have the files, open a terminal in the folder containing `index.html`.
 
 ### 2. Start the server
 
@@ -193,7 +200,7 @@ Use the localhost server; opening `index.html` directly can block the blog's JSO
 
 ### 1. Create the repository
 
-On GitHub, create a repository named `AinKun-Portfolio`, or choose another project name. For the free public-repository route, choose **Public**. A repository called `YOUR_USERNAME.github.io` instead creates an account-level site. See [GitHub's site creation guide](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site).
+This site lives in the account-level repository **`ainkun/ainkun.github.io`** and is served at the custom domain **https://ainkun.com/** (the `CNAME` file plus the custom-domain field under **Settings → Pages**). To publish a copy elsewhere, create a repository: `YOUR_USERNAME.github.io` makes an account-level site, and any other name (for example `portfolio`) makes a project site under a subpath. For the free route, choose **Public**. See [GitHub's site creation guide](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site).
 
 For the first-time Git upload below, create an **empty repository**: leave GitHub's README, license, and `.gitignore` initialization options off because your local project already contains files.
 
@@ -207,7 +214,7 @@ Install Git and run these commands from the folder containing `index.html`. Thes
 git init -b main
 git add .
 git commit -m "Add ainkun portfolio"
-git remote add origin https://github.com/YOUR_USERNAME/AinKun-Portfolio.git
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
 git push -u origin main
 ```
 
@@ -217,43 +224,35 @@ Replace the remote URL with the one shown by your GitHub repository. Complete Gi
 
 Open your repository's upload-files screen, drag in the project contents, and commit the upload. Preserve the folder structure and include the empty `.nojekyll` file; enable hidden-file visibility in your file picker if needed.
 
-Upload the **contents** of the project folder, so `index.html` appears at the repository root rather than inside an extra `AinKun-Portfolio` folder. Uploading all project files preserves the documentation and design galleries too.
+Upload the **contents** of the project folder, so `index.html` appears at the repository root rather than inside an extra project folder. Uploading all project files preserves the documentation and design galleries too.
 
 The main website's files should be arranged like this:
 
 ```text
 repository-root/
-├── index.html
-├── blog.html
-├── styles.css
-├── themes.css
-├── theme-motion.css
-├── analyst-card.css
-├── analyst-card.js
-├── blog.css
-├── blog.js
-├── profile.js
-├── script.js
-├── themes.js
-├── mainimage.png
-├── card-main-image.jpeg
-├── card-back-main-clip.mp4
-├── card-top-left-small.jpeg
+├── index.html, blog.html
+├── styles.css, themes.css, theme-motion.css, responsive.css
+├── analyst-card.css, analyst-card.js
+├── blog.css, blog.js
+├── chapter-transition.js
+├── credit-transition.css, credit-transition.js
+├── profile.js, script.js, themes.js
+├── mainimage.png, pakcyberbot.png
+├── card-main-image.jpeg, card-back-main-clip.mp4, card-top-left-small.jpeg
+├── CNAME                     # Custom domain: ainkun.com
 ├── .nojekyll
 ├── README.md
-├── SUMMARY.md
-├── data/medium.json
-├── scripts/refresh_medium.py
-├── scripts/build_site.py
+├── data/
+│   ├── medium.json           # Article archive, refreshed from Medium RSS
+│   └── blog-labels.json      # Your card labels and search tags
+├── scripts/refresh_medium.py, scripts/build_site.py
+├── tests/                    # Node and Python checks
 ├── .github/workflows/pages.yml
 └── assets/
     ├── favicon.svg
-    ├── morning-street.png
-    ├── evening-street.png
-    ├── night-street.png
-    ├── blog/                 # Character, two MP3s, and asset credits
-    └── logo-clean/
-        └── ainkun-clean.png
+    ├── morning-street.png, evening-street.png, night-street.png
+    ├── blog/                 # Host portraits, greeting MP3s, and credits
+    └── logo-clean/ainkun-clean.png
 ```
 
 Keep the other preview HTML pages, reference images, tests, and historical asset folders as well if you want their existing links to remain usable.
@@ -271,10 +270,11 @@ For manual feed updates instead, omit/disable the custom workflow, select **Depl
 
 ### 4. Open the published site
 
-| Repository name | Typical published URL |
+| Repository | Published URL |
 | --- | --- |
-| `AinKun-Portfolio` | `https://YOUR_USERNAME.github.io/AinKun-Portfolio/` |
+| `ainkun.github.io` (this site) | **https://ainkun.com/**; `https://ainkun.github.io/` redirects there because of the custom domain |
 | `YOUR_USERNAME.github.io` | `https://YOUR_USERNAME.github.io/` |
+| Any other name, e.g. `portfolio` | `https://YOUR_USERNAME.github.io/portfolio/` |
 
 Use the actual address shown in Pages settings. Publication can take up to 10 minutes after a push. The included `.nojekyll` file disables Jekyll processing for this static site. See [GitHub's deployment and static-site notes](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site).
 
@@ -293,28 +293,22 @@ git push
 
 For browser uploads, upload the revised files into their existing paths and commit them. Changes pushed to the configured publishing branch trigger a new deployment; you do not need to reconfigure Pages each time. See [GitHub's branch publishing behavior](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
 
-After deployment, refresh the published page. Keep [SUMMARY.md](SUMMARY.md) updated when a change affects the site's design, files, or behavior.
+After deployment, refresh the published page. Keep this README updated when a change affects the site's design, files, or behavior.
 
 ## Development checks
 
 With Node.js installed, run from the project root:
 
 ```sh
-node --check script.js
-node --check themes.js
-node --check analyst-card.js
-node --check blog.js
-node tests/themes.test.cjs
-node tests/analyst-card.test.cjs
-node tests/blog.test.cjs
-python tests/test_medium.py
+node --test "tests/*.test.cjs"   # all 50 Node tests
+python tests/test_medium.py      # 5 RSS-parser tests
+node --check script.js           # syntax of the two scripts the tests do not load
+node --check profile.js
 ```
 
 The theme suite contains 10 behavior tests. Eleven additional card tests check proportional desktop/mobile sizing, opening, interrupting the animation with Escape, outside clicks, focus restoration, motion preferences, resizing, timed diagonal hints, clicks during hints, suspension/resumption when hidden or paused, and silent video playback without a background image. These use DOM models and do not replace browser checks for rendering, native focus trapping, or animation smoothness.
 
-Fourteen blog tests cover feed validation, caching/retry, portrait decoding and theme races, page navigation and modifier keys, greeting/farewell state, mute controls, blocked autoplay, interrupted audio, curated labels and their Medium-tag fallback, title/label search with tag filtering, and a check that every `data/blog-labels.json` entry matches a real article with 1–4 labels. Five Python tests cover RSS parsing, empty/error responses, duplicate/unsafe links, and keeping older archived articles during a refresh. Browser appearance and actual audio playback still need manual verification.
-
-For the latest validation results and outstanding browser checks, see [SUMMARY.md](SUMMARY.md#11-verification-status-and-limits).
+Fourteen blog tests cover feed validation, caching/retry, portrait decoding and theme races, page navigation and modifier keys, greeting/farewell state, mute controls, blocked autoplay, interrupted audio, curated labels and their Medium-tag fallback, title/label search with tag filtering, and a check that every `data/blog-labels.json` entry matches a real article with 1–4 labels. Five Python tests cover RSS parsing, empty/error responses, duplicate/unsafe links, and keeping older archived articles during a refresh. Eleven chapter-transition and four creator-transition tests complete the 50 Node tests. Layouts were also checked in a real browser engine (headless Microsoft Edge driven by Playwright) at desktop and phone sizes and at browser zoom levels from 50% to 500%; real audio playback still needs a check on a device with sound.
 
 ## Troubleshooting
 
@@ -324,7 +318,7 @@ For the latest validation results and outstanding browser checks, see [SUMMARY.m
 | Localhost refuses the connection | Keep the server terminal open and use the same port as the server command. |
 | Blog articles do not load | Use localhost rather than `file://`; check that `data/medium.json` is included, then use the retry button. |
 | Blog posts look out of date | Run the feed refresh script locally, or enable/run the GitHub Pages workflow. Check the visible sync date. |
-| Chibi is visible but silent | Click Enable voice; browsers can block playback before interaction. Check the voice toggle and device volume. |
+| The blog host is visible but silent | Click **Enable voice**; browsers can block playback before interaction. Check the voice toggle and device volume. |
 | The browser shows a directory listing | Start the server from the folder containing `index.html`. |
 | Port 8000 is in use | Start the server on 8001 and update the browser URL to match. |
 | Git asks for your identity | Configure your Git author name and email, then retry the commit. |
@@ -338,12 +332,20 @@ For the latest validation results and outstanding browser checks, see [SUMMARY.m
 
 For Pages deployment errors, consult the repository's Actions run and [GitHub's publishing troubleshooting](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#troubleshooting-publishing-from-a-branch).
 
+## Implementation notes
+
+Design and behavior details for maintainers.
+
 ### Current identity and interface details
 
 - Public identity: **ainkun**, **Security Researcher**. Keep the existing AINKUN / HUSSAIN K. hover animation, but do not display the full legal name.
-- Copy focuses on offensive security, reconnaissance, vulnerability research, and attack paths. The profile motto is **Recon / Research / Exploit**.
+- Copy focuses on offensive security, reconnaissance, vulnerability research, and attack paths. The profile motto is **Break / Build / Repeat**.
 - The homepage card's tagline is **LOW-LEVEL LIFE. PROLOGUE ARC.**; edit it in the `<figcaption>` of `index.html`. When the card is too narrow for one line, it splits evenly into two lines (`text-wrap:balance` in `styles.css`) instead of leaving one word alone.
-- The Japanese motto **偵察 · 研究 · 攻略** under the card always stays on one line. At any window size or browser zoom it keeps its normal size and shrinks only as much as its box requires (the last block of `responsive.css`).
+- The card's top bar shows **プロフィール** and **PROFILE** (`.profile-card-top` in `index.html`), with no number. The back of the card keeps its **PERSONAL COLLECTION / 01** edition line and **001** serial.
+- The motto box under the card reads **破壊 · 創造 · 反復 / BREAK · BUILD · REPEAT** (destruction, creation, repetition). Edit both lines in the `profile-motto` paragraph of `index.html`; the `motto` field in `profile.js` is a different text on the back of the collectible card.
+- The Japanese motto line always stays on one line. At any window size or browser zoom it keeps its normal size and shrinks only as much as its box requires (the motto block near the end of `responsive.css`). That sizing assumes three two-character words. The English line does not shrink, so keep it to 26 characters or fewer; longer lines wrap at some zoom levels.
+- The back of the collectible card shows **AinKun** with **Evolves from Hussain K.** underneath, like an evolved trading card (`name` and `evolvesFrom` in `profile.js`), a **GLITCH TYPE** ribbon on the artwork (`type`), and the ability **Security Researcher** (`ability.title`).
+- The card name and its Evolves line each stay on one line too. They keep their normal sizes (name 34px, or 30px on phones; Evolves line 9px) and shrink only when the card is very narrow, such as at 500% zoom on a laptop or on a folding phone (the last block of `responsive.css`). The sizing is set for the current texts, so recheck at high zoom if you make either one much longer.
 - Both sidebars end with the **ainkun.** home wordmark. The bottom-left footer contains **Created by [PakCyberbot](https://pakcyberbot.com)**. The previous learning status and decorative-motion button have been removed; OS reduced-motion support remains.
 - The favicon uses the current transparent `assets/logo-clean/ainkun-clean.png` logo.
 - Explore my work uses white text for morning/evening and transitions to black over 3.2 seconds for night. Its Japanese label inherits the same color.
@@ -353,7 +355,7 @@ For Pages deployment errors, consult the repository's Actions run and [GitHub's 
 
 The complete **Created by PakCyberbot** text at the bottom-left of the footer is one padded link in the site's Space Mono font at regular weight, 11px on desktop and 9px on mobile. Ordinary activation of PakCyberbot plays a 2.4-second Japanese character-rain transition, fading toward the bottom, then navigates the current tab to `https://pakcyberbot.com`. The supplied `pakcyberbot.png` appears in the center with a gently pulsing logo and rotating loading ring. Both pages preload it, and the Pages build includes it. The blog farewell can play during this send-off. Ctrl/Cmd/Shift/Alt-click and middle-click retain native behavior; reduced motion follows the link immediately. Escape cancels the transition. Page lifecycle cleanup prevents a stale overlay after Back navigation.
 
-Shared implementation: `credit-transition.js` and `credit-transition.css`, loaded after the page scripts on both pages and automatically included in the Pages build. `node tests/credit-transition.test.cjs` checks navigation timing, repeat clicks, native link behavior, reduced motion, cancellation, and cleanup (four passing tests). Actual browser appearance still needs visual verification.
+Shared implementation: `credit-transition.js` and `credit-transition.css`, loaded after the page scripts on both pages and automatically included in the Pages build. `node tests/credit-transition.test.cjs` checks navigation timing, repeat clicks, native link behavior, reduced motion, cancellation, and cleanup (four passing tests). The transition was also checked in headless Edge on 2026-10-23.
 
 ### Native-zoom layout and researcher content
 
@@ -361,7 +363,7 @@ Shared implementation: `credit-transition.js` and `credit-transition.css`, loade
 
 The About biography introduces Hussain / ainkun as a Security Researcher and experienced CTF participant, covering reverse engineering, malware, mobile security, red teaming, and vulnerability research. The card techniques are **Reverse Engineering** (including malware reversing) and **Mobile Security**. `analystCard.stats` and `skills` contain **Cryptography, Reversing, Programming, Malware Dev, Android Security, AI Automation**; these are labels without invented numerical scores. Optional `traits` remain supported but are omitted from the current card to keep it compact.
 
-Latest validation: all 11 card interaction tests and 4 creator-transition tests pass. Local browser inventory is empty and the in-app browser is unavailable, so native-zoom rendering still requires visual review on the user's display.
+Latest validation (2026-10-25): all 50 Node tests and 5 Python tests pass, and the layout was checked in headless Edge at desktop and phone sizes and at browser zoom levels from 50% to 500%, including the theme panel at several scroll positions, the one-line motto, and the back of the collectible card (name and Evolves line, ribbon, ability title).
 
 The homepage archive bar (`#chapters`) fades and rises into view over one second using the existing reveal observer as the visitor scrolls. **Scroll to explore** smoothly targets this bar before the About section. Scrolling within the content remains native; wheel and single-finger touch gestures at the opening boundary use the panel transition below. Keyboard focus reveals the bar, and system reduced-motion preferences skip the animation.
 
@@ -369,7 +371,7 @@ The homepage archive bar (`#chapters`) fades and rises into view over one second
 
 On the homepage, `chapter-transition.js` turns the opening/content boundary into a 620ms eased transition. A downward mouse-wheel gesture or upward finger swipe from Chapter 1 lands exactly at the archive bar (below the fixed mobile header). Upward scrolling that reaches this boundary returns to the beginning; scrolling farther down the content is normal. A short 180ms cooldown absorbs trailing wheel momentum. The scroll cue and Arrow/Page/Space keyboard scrolling support the same boundary behavior, with keyboard focus moved to the destination.
 
-Ctrl/Cmd-wheel zoom, horizontal gestures, sidebar scrolling, form controls, card dialogs, and the creator overlay are excluded. Reduced motion jumps immediately. If enlarged text makes the opening chapter taller than the available screen, its internal document range remains scrollable before transitioning out. Resizing settles an active transition; page lifecycle events clear stale frames. Scrollbar navigation remains native. Eleven DOM-model behavior checks pass with `node tests/chapter-transition.test.cjs`; live browser visual review remains unavailable in this environment.
+Ctrl/Cmd-wheel zoom, horizontal gestures, sidebar scrolling, form controls, card dialogs, and the creator overlay are excluded. Reduced motion jumps immediately. If enlarged text makes the opening chapter taller than the available screen, its internal document range remains scrollable before transitioning out. Resizing settles an active transition; page lifecycle events clear stale frames. Scrollbar navigation remains native. Eleven DOM-model behavior checks pass with `node tests/chapter-transition.test.cjs`, and the wheel transition was checked in headless Edge on 2026-10-23.
 
 The sidebar and footer wordmarks have been swapped on both pages: **ainkun.** in the sidebar links home; the footer creator credit retains its regular Space Mono styling and Japanese rain/logo transition to PakCyberbot.
 
@@ -379,4 +381,4 @@ The sidebar and footer wordmarks have been swapped on both pages: **ainkun.** in
 - Phone hero layout in `responsive.css` places the profile beside the description/actions beneath the full-width animated name. The section fills the viewport below the 124px header, with natural overflow retained for very short screens or enlarged text.
 - Both the initial `body::before` scene and `.scene-stack` use a fixed `100lvh` height with `bottom:auto` on mobile. Their cover crop therefore stays stable when browser toolbars collapse during scrolling; orientation changes may legitimately resize it. Theme crossfade layers share this geometry on both pages.
 - Mobile height-only resize events do not prematurely finish the 620ms transition; width/orientation changes settle it safely.
-- Latest checks: 11 chapter-transition and 11 card tests passed, plus JavaScript syntax/build checks. Browser inventory is empty, so device-level visual verification remains outstanding.
+- Latest checks: 11 chapter-transition and 11 card tests passed, plus JavaScript syntax/build checks. Phone layouts were checked in headless Edge at 320–430px wide; a check on a physical phone is still worthwhile.
