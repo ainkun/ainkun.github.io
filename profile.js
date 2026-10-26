@@ -2,9 +2,9 @@
 window.PORTFOLIO = {
   name: "ainkun",
   description: "Reverse engineering, mobile security, and offensive research. From CTF challenges to real-world attack surfaces — always curious about what lies underneath.",
-  about: "I'm Hussain, known as ainkun — a Security Researcher and an active CTF player. Competing in many CTFs has shaped how I approach unfamiliar systems: break a problem down, follow the evidence, and keep experimenting. My interests span reverse engineering, malware analysis and development, mobile security, red teaming, and vulnerability research. I work across cryptography, reversing, programming, Android security, and AI automation, bringing a hands-on, offensive perspective to the questions I explore.",
-  // Adjust these areas to reflect your actual skills.
-  skills: ["Cryptography", "Reversing", "Programming", "Malware Dev", "Android Security", "AI Automation"],
+  about: "I’m Hussain K., known as ainkun — a Security Researcher and a casual CTF player. I’m driven by curiosity about how things work under the hood, and even more by how they break. Most of my time goes into reverse engineering, malware analysis and development, mobile security, cryptography, and vulnerability research. I currently work across Android security, application security, and AI automation, with a focus on understanding systems deeply before securing them. I like sharing what I learn through writeups and notes, hoping they save someone else a few hours of head-scratching.",
+  // Shown as the `ls skills/` output in the About terminal. Adjust these areas to reflect your actual skills.
+  skills: ["Penetration Testing", "Cryptography", "Reversing", "Programming", "Malware Dev", "Android Security", "AI Automation"],
   // The collectible card opened by clicking the hero avatar. All text is editable.
   analystCard: {
     name: "AinKun",

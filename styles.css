@@ -105,16 +105,16 @@ h2 em{font-style:normal;color:var(--accent)}
 .word-note strong{font:9px var(--mono);letter-spacing:1px}
 .word-note p{margin:5px 0 0;font-size:12px;color:var(--muted);max-width:210px}
 .about-content>p:first-child{margin-top:0;font-size:16px;line-height:1.85}
-.muted,.section-note{color:var(--muted)}
-.muted{font-size:14px}
+.section-note{color:var(--muted)}
 .terminal{margin-top:25px;padding:0 17px 17px;background:var(--terminal-bg);color:var(--terminal-ink);box-shadow:0 8px 24px #3d57391a;font:11px/1.9 var(--mono);overflow-wrap:anywhere;border:1px solid var(--terminal-line);border-radius:7px;}
 .terminal-bar{margin:0 -17px 13px;padding:8px 14px;border-bottom:1px solid #a5b79040;font-size:9px;color:var(--terminal-muted);display:flex;gap:35px}
 .terminal-bar span{color:var(--terminal-accent);letter-spacing:4px}
 .terminal p{margin:4px 0}
-.terminal p>span,.terminal-answer{color:var(--terminal-ink)}
-.cursor{animation:pulse 1.5s infinite;color:var(--terminal-accent)!important}
-.skills{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
-.skill,.tags span{font-size:11px;border:1px solid var(--line);background:var(--surface-tint);padding:5px 9px;color:var(--accent);border-radius:4px;}
+.terminal p>span{color:var(--terminal-ink)}
+.terminal-out{color:var(--terminal-muted);margin-bottom:14px!important}
+.terminal-ls{display:flex;flex-wrap:wrap;gap:0 18px;margin-bottom:4px!important}
+.terminal-ls span{color:var(--terminal-accent)!important}
+.tags span{font-size:11px;border:1px solid var(--line);background:var(--surface-tint);padding:5px 9px;color:var(--accent);border-radius:4px;}
 .section-top{display:flex;justify-content:space-between;align-items:end;gap:25px;margin-bottom:30px}
 .section-note{font-size:13px;margin:0;line-height:1.8}
 .section-note>[lang=ja]{color:var(--accent);font-size:18px;letter-spacing:3px}
@@ -178,8 +178,6 @@ to{opacity:1;translate:0 0}
 @keyframes drift{0%{translate:0 40px;opacity:0}
 25%{opacity:.65}
 100%{translate:55px -140px;opacity:0}
-}
-@keyframes pulse{50%{opacity:.3}
 }
 @keyframes scroll-nudge{50%{translate:0 5px}
 }

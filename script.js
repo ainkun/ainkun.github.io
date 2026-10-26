@@ -7,8 +7,8 @@ function configureLink(link, url, label) {
 }
 document.querySelector('#hero-description').textContent = profile.description;
 document.querySelector('#about-copy').textContent = profile.about;
-document.querySelector('#terminal-name').textContent = `${profile.name} // Security Researcher`;
-profile.skills.forEach(skill => document.querySelector('#skills').append(make('span', 'skill', skill)));
+// Skills print as directory names in the About terminal's `ls skills/` output.
+profile.skills.forEach(skill => document.querySelector('#skills').append(make('span', '', `${skill.toLowerCase().replace(/\s+/g, '-')}/`)));
 profile.projects.forEach(project => {
   const card = make('article', 'project-card reveal');
   const top = make('div', 'card-top'); top.append(make('span', 'project-icon', project.icon), make('span', 'small-label', project.category));
