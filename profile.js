@@ -1,7 +1,7 @@
 // Edit this file to personalize the portfolio. Empty URLs show a clear placeholder.
 window.PORTFOLIO = {
   name: "ainkun",
-  description: "Reverse engineering, mobile security, and offensive research. From CTF challenges to real-world attack surfaces — always curious about what lies underneath.",
+  description: "Hands-on experience in penetration testing and Android security. Current research centers on Android platforms, with vuln research and AI automation in the mix.",
   about: "I’m Hussain K., known as ainkun — a Security Researcher and a casual CTF player. I’m driven by curiosity about how things work under the hood, and even more by how they break. Most of my time goes into reverse engineering, malware analysis and development, mobile security, cryptography, and vulnerability research. I currently work across Android security, application security, and AI automation, with a focus on understanding systems deeply before securing them. I like sharing what I learn through writeups and notes, hoping they save someone else a few hours of head-scratching.",
   // Shown as the `ls skills/` output in the About terminal. Adjust these areas to reflect your actual skills.
   skills: ["Penetration Testing", "Cryptography", "Reversing", "Programming", "Malware Dev", "Android Security", "AI Automation"],
@@ -21,7 +21,7 @@ window.PORTFOLIO = {
     imagePosition: "center 43%",
     ability: {
       title: "Security Researcher",
-      description: "CTF player working across reverse engineering, Android security and red teaming."
+      description: "Researching the Android platform with a focus on reversing and vuln research."
     },
     techniques: [
       { symbol: "◎", title: "Reverse Engineering", description: "Binary analysis and malware reversing.", tag: "REVERSE" },
