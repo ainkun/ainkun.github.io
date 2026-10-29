@@ -103,7 +103,6 @@ h2 em{font-style:normal;color:var(--accent)}
 .word-note{display:flex;align-items:center;gap:18px;margin-top:33px;border-left:2px solid var(--accent-soft);padding:5px 0 5px 16px}
 .word-note>[lang=ja]{font-size:31px;font-weight:700;color:var(--accent-soft);white-space:nowrap}
 .word-note strong{font:9px var(--mono);letter-spacing:1px}
-.word-note p{margin:5px 0 0;font-size:12px;color:var(--muted);max-width:210px}
 .about-content>p:first-child{margin-top:0;font-size:16px;line-height:1.85}
 .section-note{color:var(--muted)}
 .terminal{margin-top:25px;padding:0 17px 17px;background:var(--terminal-bg);color:var(--terminal-ink);box-shadow:0 8px 24px #3d57391a;font:11px/1.9 var(--mono);overflow-wrap:anywhere;border:1px solid var(--terminal-line);border-radius:7px;}
