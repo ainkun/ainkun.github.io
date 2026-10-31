@@ -1,0 +1,36 @@
+{
+  "about": "Reviews on the omikuji rack. The words live in data/reviews/<id>.md and the cover in assets/reviews/<id>.webp. kind is \"anime\" or \"manga\". rating is out of 10 and becomes the fortune: 9+ 大吉, 8+ 中吉, 7+ 小吉, 6+ 吉, 4+ 末吉, below 4 凶. screenshots appear right below the review: each is a path (assets/reviews/<id>/01.webp, …) or { \"src\": path, \"caption\": text }. Both entries below are 見本 (samples) for the preview.",
+  "reviews": [
+    {
+      "id": "sample-anime",
+      "title": "Sample Anime Review",
+      "jp": "見本",
+      "kind": "anime",
+      "rating": 9,
+      "date": "2026-10-31",
+      "summary": "A placeholder review for the preview.",
+      "screenshots": [
+        {
+          "src": "assets/reviews/sample-anime/01.webp",
+          "caption": "A caption under a screenshot is optional."
+        },
+        "assets/reviews/sample-anime/02.webp",
+        "assets/reviews/sample-anime/03.webp",
+        "assets/reviews/sample-anime/04.webp"
+      ]
+    },
+    {
+      "id": "sample-manga",
+      "title": "Sample Manga Review",
+      "jp": "見本",
+      "kind": "manga",
+      "rating": 6.5,
+      "date": "2026-10-20",
+      "summary": "A second placeholder, to show another fortune.",
+      "screenshots": [
+        "assets/reviews/sample-manga/01.webp",
+        "assets/reviews/sample-manga/02.webp"
+      ]
+    }
+  ]
+}

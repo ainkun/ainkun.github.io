@@ -1,6 +1,6 @@
 # ainkun — Cybersecurity Portfolio
 
-An anime-inspired, responsive portfolio for **ainkun**. Plain HTML, CSS, and JavaScript: no build, installation, or framework required. Features three matching morning, evening, and night neighborhood panoramas that stay fixed behind the full page, bilingual Japanese/English navigation, warm cream and sage-green game-menu panels, your profile avatar, sunlit drifting particles, scroll reveals, a translucent final contact section, and system reduced-motion support.
+An anime-inspired, responsive portfolio for **ainkun**. Plain HTML, CSS, and JavaScript: no build, installation, or framework required. Features three matching morning, evening, and night neighborhood panoramas that stay fixed behind the full page, bilingual Japanese/English navigation, warm cream and sage-green game-menu panels, your profile avatar, sunlit drifting particles, scroll reveals, a translucent final contact section, and system reduced-motion support. A hidden [Side Quests](#side-quests-yorimichi-shrine) area, a hilltop shrine with its own scenes, holds a manga library and reader, anime and manga reviews, and a travel blog.
 
 **Start here:** [Run on localhost](#run-on-localhost) · [Publish on GitHub Pages](#publish-on-github-pages) · [Update the live website](#update-the-live-website) · [Troubleshooting](#troubleshooting)
 
@@ -107,6 +107,80 @@ The included GitHub Pages workflow refreshes the feed on pushes to `main`, manua
 
 Character and audio files are in `assets/blog/`. The teenage host matches `mainimage.png` with tousled black hair, glasses, gray-green eyes and a dark hoodie. Three portraits cover the themes: `teen-host.png` (morning), `teen-evening.png` (sunset), and `teen-night.png` (sleepy). All three use their source orientation, horizontally flipped from the previous displayed version. Portraits follow automatic local-time and manual theme changes, crossfading over 3.2 seconds after the incoming image decodes; rapid changes keep the latest selection. Youthful male greetings are synthesized with **VOICEVOX:白上虎太郎**, saved locally as `teen-konnichiwa.mp3` and `teen-arigatou-gozaimasu.mp3`. No external speech service is needed during playback. See [asset credits](assets/blog/CREDITS.md) and [the generation prompts](assets/blog/TEEN-HOST-PROMPTS.md). Keep the VOICEVOX credit when reusing the audio. Previous variants are retained as design history.
 
+### Side Quests (Yorimichi Shrine)
+
+`side-quests.html` is a separate place: **寄り道神社 Yorimichi Shrine** (寄り道, *yorimichi*, is a detour on the way somewhere, the Japanese idea closest to a side quest). It is not in the sidebar menu. The only way in is the last line of the homepage's About terminal, `❯ ./side-quests`, a small easter egg with a faint dotted underline that turns gold on hover.
+
+The shrine has its own look: no sidebar, a hilltop shrine painting for the visitor's local time fixed behind everything, and its own **Morning / Evening / Night** panel at the top right with **Auto · Local** and the clock (the same hours as the home street). A scene chosen with the buttons lasts for the rest of the visit on every shrine page, until **Use local time**. Leaves fall by day, red dragonflies cross the sky at dusk and fireflies glow at night. **← 帰り道 / BACK HOME** returns to the homepage.
+
+The first screen shows the title and the **quest board (絵馬掛所)**, a small roofed rack with four ema: **漫画 Manga**, **感想 Anime/Manga Reviews**, **旅 Travel Blog** and a blank one for the next quest. On wide screens it stands on the right with the ema one above another; on short windows and phones it becomes 2×2. Clicking an ema opens its library right below the board (and adds `#manga`, `#reviews` or `#travel` to the address); **Close**, Back or **Esc** closes it.
+
+| Library | Looks like | Each entry opens |
+| --- | --- | --- |
+| Manga | A bookcase with the covers facing out, each with a library spine label (NDC 726.1 for manga, ア for ainkun, the volume) and a handwritten shop card | `manga.html?id=…`: the series page (cover, status seal, summary, chapters, **読む Start reading** and **続きから Continue**), then the reader |
+| Reviews | Omikuji fortune slips. The rating out of 10 becomes the fortune: 9+ 大吉, 8+ 中吉, 7+ 小吉, 6+ 吉, 4+ 末吉, below 4 凶 | `review.html?id=…`: the review, with a **Screenshots** section right below it |
+| Travel | A goshuin stamp book; each trip is a page with a red seal and its date brushed in kanji | `travel.html?id=…`: the trip and its photos |
+
+Opening an entry really opens it in Edge, Chrome and Safari: the manga cover lifts off the shelf and lands where it sits on the series page, the omikuji slip unfolds into the review sheet, and the stamp-book page flips over into the trip. The **←** chips, Back and **Esc** close it again in reverse, returning to the library exactly as it was left. Other browsers zoom and fade instead; reduced motion opens and closes at once.
+
+Everything in the libraries now is a **見本 (sample)** placeholder until real content replaces it.
+
+#### Add a manga
+
+1. Put the pages in `assets/manga/<id>/<chapter number>/` as `01.webp`, `02.webp`, … and the cover at `assets/manga/<id>/cover.webp`. Pages from a drawing app can be converted to WebP first (an assistant can do this).
+2. Add the manga to `data/manga.json`:
+   ```json
+   {
+     "id": "my-manga",
+     "title": "My Manga",
+     "jp": "私の漫画",
+     "status": "ongoing",
+     "direction": "rtl",
+     "summary": "One or two lines about it.",
+     "chapters": [{ "title": "Chapter 1", "pages": 24 }]
+   }
+   ```
+   `id` is lowercase words joined by hyphens (it names the folder). `direction` is `rtl` (right to left, like Japanese manga) or `ltr`. `status` is `ongoing` (連載中) or `complete` (完結; the last chapter then ends with 完 instead of つづく).
+3. Run `node --test "tests/*.test.cjs"`: it fails if a listed page or cover is missing.
+
+The reader scrolls down the chapter by default, with a progress bar that fills left to right. **ページ PAGES** switches to one page at a time: arrow keys, tapping either half or swiping turn the page (a right-to-left book turns forward with the left arrow, and its bar fills from the right). The choice and each visitor's last page are remembered in their browser for **Continue**. Esc closes the reader to the series page.
+
+#### Add a review
+
+Add the review to `data/reviews.json`, write it in `data/reviews/<id>.md`, and put the cover at `assets/reviews/<id>.webp`:
+
+```json
+{
+  "id": "my-review",
+  "title": "Anime Title",
+  "kind": "anime",
+  "rating": 8.5,
+  "date": "2026-11-01",
+  "summary": "One line under the title.",
+  "screenshots": ["assets/reviews/my-review/01.webp", { "src": "assets/reviews/my-review/02.webp", "caption": "Optional caption" }]
+}
+```
+
+`kind` is `anime` or `manga`. `rating` is out of 10 (halves allowed) and picks the fortune. Screenshots appear right below the review as prints; each opens large, and the arrow keys or a swipe move through them.
+
+#### Add a trip
+
+Add the trip to `data/travel.json`, write it in `data/travel/<id>.md`, and put its photos in `assets/travel/<id>/` (`cover.webp` heads the post):
+
+```json
+{ "id": "my-trip", "title": "Trip Title", "jp": "旅先", "stamp": "旅先", "place": "Place, Country", "date": "2026-11-01", "summary": "One line." }
+```
+
+`stamp` is the red seal's text (up to four characters) and `jp` is brushed down the middle of the stamp-book page. Trips appear in the order written.
+
+#### Writing reviews and trips
+
+Posts use a small, safe part of Markdown: a blank line between paragraphs, `## Heading`, `**bold**`, `*italic*`, `- lists`, `> quotes`, `[links](https://example.com)`, and a picture on its own line, `![What it shows](assets/travel/my-trip/01.webp "Optional caption")`. HTML is never inserted (it shows as plain text), and links must be relative or `https://`. The sample posts in `data/reviews/` and `data/travel/` show each mark.
+
+#### Shrine scenes
+
+The paintings are `assets/morning-shrine.webp`, `evening-shrine.webp` and `night-shrine.webp`, made with Gemini and converted to WebP. Their prompts and sources are in [assets/shrine-scenes.md](assets/shrine-scenes.md). To change a scene, replace its file with the same name. To preview a scene, add `?time=morning`, `?time=evening` or `?time=night` to any shrine address; `?time=auto` returns to the clock.
+
 ### More customization
 
 - Set `socials.github`, `medium`, `linkedin`, and `x` to complete `https://...` URLs.
@@ -137,6 +211,8 @@ The website chooses its initial theme using **the visitor's device time and loca
 Use the three buttons at the top right to preview any scene. **Use local time** returns to automatic mode. A preview lasts until you return to automatic mode or reload the page; no preference is stored. Automatic mode refreshes every minute and when you return to the tab. The clock always displays the visitor's local time. This is a fixed daily schedule, not a sunrise/sunset calculation.
 
 The panel sits at the top right of the page. On desktop it scrolls away with the page, so it never covers the profile card or other content at any browser zoom; scroll back to the top to change the scene. On phones it stays inside the fixed top bar. At very narrow widths (about 500% zoom on a laptop) its buttons show icons only, and their names stay available to screen readers. These position rules are in `themes.css`.
+
+The [Side Quests](#side-quests-yorimichi-shrine) pages have the same panel and hours with their own shrine paintings (`shrine.js` and `shrine.css`). There, a scene chosen with the buttons lasts for the rest of the visit across every shrine page, until **Use local time**.
 
 `themes.js` sets the initial theme before the page is painted and preloads only its background. Theme changes load and decode their image before blending the street scene and matching palette over 3.2 seconds with gentle easing. The incoming background uses an explicit opacity keyframe animation so the fade starts reliably even when the browser batches updates. Layered backgrounds preserve an in-progress blend during rapid clicks, and older requests cannot replace the latest choice. `theme-motion.css` animates the palette colors, including the logo, title, gradients, and translucent panels. System reduced-motion preferences make theme changes immediate. If a preview fails to load, the current theme remains available. Without JavaScript the morning palette is the fallback. All three images stay fixed during scrolling, with translucent section backgrounds above them.
 
@@ -190,6 +266,7 @@ Visit **[http://127.0.0.1:8000/](http://127.0.0.1:8000/)**. Keep the terminal ru
 
 Use the top-right theme buttons to check all three scenes. Additional preview pages:
 
+- [Side Quests shrine](http://127.0.0.1:8000/side-quests.html) (add `?time=evening` or `?time=night` to see the other scenes)
 - [Three logo colors](http://127.0.0.1:8000/logo-themes.html)
 - [Cleaned logo and download](http://127.0.0.1:8000/logo-clean.html)
 
@@ -232,9 +309,13 @@ The main website's files should be arranged like this:
 ```text
 repository-root/
 ├── index.html, blog.html
+├── side-quests.html, manga.html, review.html, travel.html   # Side Quests shrine
 ├── styles.css, themes.css, theme-motion.css, responsive.css
 ├── analyst-card.css, analyst-card.js
 ├── blog.css, blog.js
+├── shrine.css, shrine.js     # Shrine scenes, palettes, theme panel, page transitions
+├── side-quests.css, side-quests.js, quest-data.js
+├── manga.css, manga.js, quest-post.css, quest-post.js
 ├── chapter-transition.js
 ├── credit-transition.css, credit-transition.js
 ├── profile.js, script.js, themes.js
@@ -245,13 +326,18 @@ repository-root/
 ├── README.md
 ├── data/
 │   ├── medium.json           # Article archive, refreshed from Medium RSS
-│   └── blog-labels.json      # Your card labels and search tags
+│   ├── blog-labels.json      # Your card labels and search tags
+│   ├── side-quests.json      # The ema on the quest board
+│   ├── manga.json, reviews.json, travel.json
+│   └── reviews/, travel/     # The words of each review and trip (Markdown)
 ├── scripts/refresh_medium.py, scripts/build_site.py
 ├── tests/                    # Node and Python checks
 ├── .github/workflows/pages.yml
 └── assets/
     ├── favicon.svg
     ├── morning-street.png, evening-street.png, night-street.png
+    ├── morning-shrine.webp, evening-shrine.webp, night-shrine.webp
+    ├── manga/, reviews/, travel/   # Side Quests covers, pages and photos
     ├── blog/                 # Host portraits, greeting MP3s, and credits
     └── logo-clean/ainkun-clean.png
 ```
@@ -301,15 +387,16 @@ After deployment, refresh the published page. Keep this README updated when a ch
 With Node.js installed, run from the project root:
 
 ```sh
-node --test "tests/*.test.cjs"   # all 50 Node tests
+node --test "tests/*.test.cjs"   # all 63 Node tests
 python tests/test_medium.py      # 5 RSS-parser tests
-node --check script.js           # syntax of the two scripts the tests do not load
+node --check script.js           # syntax of the three scripts the tests do not load
 node --check profile.js
+node --check side-quests.js
 ```
 
 The theme suite contains 10 behavior tests. Eleven additional card tests check proportional desktop/mobile sizing, opening, interrupting the animation with Escape, outside clicks, focus restoration, motion preferences, resizing, timed diagonal hints, clicks during hints, suspension/resumption when hidden or paused, and silent video playback without a background image. These use DOM models and do not replace browser checks for rendering, native focus trapping, or animation smoothness.
 
-Fourteen blog tests cover feed validation, caching/retry, portrait decoding and theme races, page navigation and modifier keys, greeting/farewell state, mute controls, blocked autoplay, interrupted audio, curated labels and their Medium-tag fallback, title/label search with tag filtering, and a check that every `data/blog-labels.json` entry matches a real article with 1–4 labels. Five Python tests cover RSS parsing, empty/error responses, duplicate/unsafe links, and keeping older archived articles during a refresh. Eleven chapter-transition and four creator-transition tests complete the 50 Node tests. Layouts were also checked in a real browser engine (headless Microsoft Edge driven by Playwright) at desktop and phone sizes and at browser zoom levels from 50% to 500%; real audio playback still needs a check on a device with sound.
+Fourteen blog tests cover feed validation, caching/retry, portrait decoding and theme races, page navigation and modifier keys, greeting/farewell state, mute controls, blocked autoplay, interrupted audio, curated labels and their Medium-tag fallback, title/label search with tag filtering, and a check that every `data/blog-labels.json` entry matches a real article with 1–4 labels. Five Python tests cover RSS parsing, empty/error responses, duplicate/unsafe links, and keeping older archived articles during a refresh. Eleven chapter-transition and four creator-transition tests follow. Thirteen Side Quests tests complete the 63 Node tests: the shrine's hours match the home street, `?time=` and a chosen scene last for the visit, the board, manga, review and trip data rules (simple ids, safe links, fortunes from ratings, captioned screenshots, kanji dates), page turning across chapters with right-to-left keys, taps and swipes, the Markdown subset with unsafe links and HTML kept as text, and that every file a bundled entry needs exists. Layouts were also checked in a real browser engine (headless Microsoft Edge driven by Playwright) at desktop and phone sizes and at browser zoom levels from 50% to 500%; real audio playback still needs a check on a device with sound.
 
 ## Troubleshooting
 
@@ -349,26 +436,34 @@ Design and behavior details for maintainers.
 - The Japanese motto line always stays on one line. At any window size or browser zoom it keeps its normal size and shrinks only as much as its box requires (the motto block near the end of `responsive.css`). That sizing assumes three two-character words. The English line does not shrink, so keep it to 26 characters or fewer; longer lines wrap at some zoom levels.
 - The back of the collectible card shows **AinKun** with **Evolves from Hussain K.** underneath, like an evolved trading card (`name` and `evolvesFrom` in `profile.js`), a **GLITCH TYPE** ribbon on the artwork (`type`), and the ability **Security Researcher** (`ability.title`) with the line "Researching the Android platform with a focus on reversing and vuln research." (`ability.description`). Every extra line of description takes room from the artwork, because the card keeps a fixed shape; this one is two lines on desktop and phones.
 - The card name and its Evolves line each stay on one line too. They keep their normal sizes (name 34px, or 30px on phones; Evolves line 9px) and shrink only when the card is very narrow, such as at 500% zoom on a laptop or on a folding phone (the last block of `responsive.css`). The sizing is set for the current texts, so recheck at high zoom if you make either one much longer.
-- Both sidebars end with the **ainkun.** home wordmark. The bottom-left footer contains **Created by [PakCyberbot](https://pakcyberbot.com)**. The previous learning status and decorative-motion button have been removed; OS reduced-motion support remains.
+- The sidebar on every page ends with the **ainkun.** home wordmark. The bottom-left footer contains **Created by [PakCyberbot](https://pakcyberbot.com)**. The previous learning status and decorative-motion button have been removed; OS reduced-motion support remains.
 - The favicon uses the current transparent `assets/logo-clean/ainkun-clean.png` logo.
 - Explore my work uses white text for morning/evening and transitions to black over 3.2 seconds for night. Its Japanese label inherits the same color.
 - The card's upper-right diamond is drawn in CSS and geometrically centered inside its circle.
 
 ### Creator-credit transition
 
-The complete **Created by PakCyberbot** text at the bottom-left of the footer is one padded link in the site's Space Mono font at regular weight, 11px on desktop and 9px on mobile. Ordinary activation of PakCyberbot plays a 2.4-second Japanese character-rain transition, fading toward the bottom, then navigates the current tab to `https://pakcyberbot.com`. The supplied `pakcyberbot.png` appears in the center with a gently pulsing logo and rotating loading ring. Both pages preload it, and the Pages build includes it. The blog farewell can play during this send-off. Ctrl/Cmd/Shift/Alt-click and middle-click retain native behavior; reduced motion follows the link immediately. Escape cancels the transition. Page lifecycle cleanup prevents a stale overlay after Back navigation.
+The complete **Created by PakCyberbot** text at the bottom-left of the footer is one padded link in the site's Space Mono font at regular weight, 11px on desktop and 9px on mobile. Ordinary activation of PakCyberbot plays a 2.4-second Japanese character-rain transition, fading toward the bottom, then navigates the current tab to `https://pakcyberbot.com`. The supplied `pakcyberbot.png` appears in the center with a gently pulsing logo and rotating loading ring. Every page preloads it, and the Pages build includes it. The blog farewell can play during this send-off. Ctrl/Cmd/Shift/Alt-click and middle-click retain native behavior; reduced motion follows the link immediately. Escape cancels the transition. Page lifecycle cleanup prevents a stale overlay after Back navigation.
 
-Shared implementation: `credit-transition.js` and `credit-transition.css`, loaded after the page scripts on both pages and automatically included in the Pages build. `node tests/credit-transition.test.cjs` checks navigation timing, repeat clicks, native link behavior, reduced motion, cancellation, and cleanup (four passing tests). The transition was also checked in headless Edge on 2026-10-23.
+Shared implementation: `credit-transition.js` and `credit-transition.css`, loaded after the page scripts on every page and automatically included in the Pages build. `node tests/credit-transition.test.cjs` checks navigation timing, repeat clicks, native link behavior, reduced motion, cancellation, and cleanup (four passing tests). The transition was also checked in headless Edge on 2026-10-23.
 
 ### Native-zoom layout and researcher content
 
-`responsive.css` loads last on both pages. Desktop navigation uses a 184px rail with compact spacing; the opening hero fills at least one complete viewport (100dvh on desktop, minus the 124px reserved mobile header), with smaller fluid heading/card sizes. There is no maximum-height cap: the archive bar stays below the initial fold at every zoom level. Enlarged content may grow taller to remain accessible. Text remains readable without changing the browser zoom or applying a page-wide transform. On phones, the heading stays full width while the card sits beside the description and actions, using compact spacing to fit the opening screen without the previous 950px forced minimum. Desktop projects use two columns, stacking on narrower screens.
+`responsive.css` loads last on every page. Desktop navigation uses a 184px rail with compact spacing; the opening hero fills at least one complete viewport (100dvh on desktop, minus the 124px reserved mobile header), with smaller fluid heading/card sizes. There is no maximum-height cap: the archive bar stays below the initial fold at every zoom level. Enlarged content may grow taller to remain accessible. Text remains readable without changing the browser zoom or applying a page-wide transform. On phones, the heading stays full width while the card sits beside the description and actions, using compact spacing to fit the opening screen without the previous 950px forced minimum. Desktop projects use two columns, stacking on narrower screens.
 
-The About heading is **Who I am.** / ***What I do.*** (the second line in the accent colour, in the `<h2>` of `index.html`), with the 探索 **TANSAKU / EXPLORATION** label under it and no extra line. The About biography (`about` in `profile.js`) is the owner's own text: Hussain K., known as ainkun, a Security Researcher and casual CTF player, covering reverse engineering, malware analysis and development, mobile security, cryptography, vulnerability research, Android and application security, AI automation, and writeups. Below it, the About terminal shows `❯ cat README.md` with the line "This is my corner of the internet…" (written in `index.html`) and `❯ ls skills/`, which `script.js` builds from `skills` as lowercase directory names (Penetration Testing becomes `penetration-testing/`). There are no skill chips, `whoami` line or `cat mindset.txt` line any more. The card techniques are **Reverse Engineering** (including malware reversing) and **Mobile Security**. `skills` contains **Penetration Testing, Cryptography, Reversing, Programming, Malware Dev, Android Security, AI Automation**; `analystCard.stats` has the same list without Penetration Testing. These are labels without invented numerical scores. Optional `traits` remain supported but are omitted from the current card to keep it compact.
+The About heading is **Who I am.** / ***What I do.*** (the second line in the accent colour, in the `<h2>` of `index.html`), with the 探索 **TANSAKU / EXPLORATION** label under it and no extra line. The About biography (`about` in `profile.js`) is the owner's own text: Hussain K., known as ainkun, a Security Researcher and casual CTF player, covering reverse engineering, malware analysis and development, mobile security, cryptography, vulnerability research, Android and application security, AI automation, and writeups. Below it, the About terminal shows `❯ cat README.md` with the line "This is my corner of the internet…" (written in `index.html`) and `❯ ls skills/`, which `script.js` builds from `skills` as lowercase directory names (Penetration Testing becomes `penetration-testing/`). The terminal ends with `❯ ./side-quests`, a link to the [Side Quests page](#side-quests-page). There are no skill chips, `whoami` line or `cat mindset.txt` line any more. The card techniques are **Reverse Engineering** (including malware reversing) and **Mobile Security**. `skills` contains **Penetration Testing, Cryptography, Reversing, Programming, Malware Dev, Android Security, AI Automation**; `analystCard.stats` has the same list without Penetration Testing. These are labels without invented numerical scores. Optional `traits` remain supported but are omitted from the current card to keep it compact.
 
-Latest validation (2026-10-26): all 50 Node tests and 5 Python tests pass, and the layout was checked in headless Edge at desktop and phone sizes and at browser zoom levels from 50% to 500%, including the theme panel at several scroll positions, the one-line motto, the back of the collectible card (name and Evolves line, ribbon, ability title and description, caption, footer), the one-line hero prompt, the hero without its old kicker line, the right-aligned scroll cue, the About terminal at desktop and phone widths, and the new hero and card descriptions (2026-10-29).
+Latest validation (2026-10-30): all 50 Node tests and 5 Python tests pass, and the layout was checked in headless Edge at desktop and phone sizes and at browser zoom levels from 50% to 500%, including the theme panel at several scroll positions, the one-line motto, the back of the collectible card (name and Evolves line, ribbon, ability title and description, caption, footer), the one-line hero prompt, the hero without its old kicker line, the right-aligned scroll cue, the About terminal at desktop and phone widths, the new hero and card descriptions (2026-10-29), and the About terminal's `./side-quests` link with the Side Quests page at desktop, phone and 280px widths (2026-10-30).
 
 The homepage archive bar (`#chapters`) fades and rises into view over one second using the existing reveal observer as the visitor scrolls. **Scroll to explore** smoothly targets this bar before the About section. Scrolling within the content remains native; wheel and single-finger touch gestures at the opening boundary use the panel transition below. Keyboard focus reveals the bar, and system reduced-motion preferences skip the animation.
+
+### Side Quests implementation
+
+- `shrine.js` (in `<head>`) sets the scene from local time, runs the theme panel and crossfades scenes. `shrine.css` holds the palettes, the fixed `100lvh` painting, the panel and the page transitions. `quest-data.js` holds the data rules, the hand-off between pages, the way back and Esc. `side-quests.js` draws the board, the libraries and the particles.
+- The shrine and entry pages run their scripts at the end of `<body>` and hold their first frame with `<link rel="expect" href="#page-ready" blocking="render">`. An opened entry is handed to the next page in sessionStorage (`quest-handoff`), so its card is drawn at once. The shrine keeps the visit's listings (`quest-catalogs`) and refreshes them in the background, so returning never loads them again.
+- The openings are cross-document view transitions. The clicked piece and its match share a name: `quest-cover`, `quest-sheet` or `quest-flip`. `pageswap` and `pagereveal` play them in reverse on the way back. Links back to the shrine step back through history when the shrine opened the page, skipping the reader's own entries.
+
+Latest validation (2026-10-31): 63 Node and 5 Python tests pass. In headless Edge the shrine passed the 81-layout title check and the 13-size first-screen board check. The openings and their reverse were confirmed from the transitions' own animations. Returning showed no reload and no replay, and the reader, screenshot viewer, theme panel and Esc layers worked with no errors.
 
 ### Opening chapter panel transition
 
@@ -376,12 +471,12 @@ On the homepage, `chapter-transition.js` turns the opening/content boundary into
 
 Ctrl/Cmd-wheel zoom, horizontal gestures, sidebar scrolling, form controls, card dialogs, and the creator overlay are excluded. Reduced motion jumps immediately. If enlarged text makes the opening chapter taller than the available screen, its internal document range remains scrollable before transitioning out. Resizing settles an active transition; page lifecycle events clear stale frames. Scrollbar navigation remains native. Eleven DOM-model behavior checks pass with `node tests/chapter-transition.test.cjs`, and the wheel transition was checked in headless Edge on 2026-10-23.
 
-The sidebar and footer wordmarks have been swapped on both pages: **ainkun.** in the sidebar links home; the footer creator credit retains its regular Space Mono styling and Japanese rain/logo transition to PakCyberbot.
+The sidebar and footer wordmarks have been swapped on every page: **ainkun.** in the sidebar links home; the footer creator credit retains its regular Space Mono styling and Japanese rain/logo transition to PakCyberbot.
 
 ### Mobile chapter and background fixes
 
 - `chapter-transition.js` supports single-finger swipes at the hero/archive boundary. The initiating gesture is consumed through finger release so it cannot overshoot the landing point. A downward swipe at the archive top returns to Chapter 1; native upward momentum reaching the boundary is also handled. Deeper content scrolling, pinch zoom, horizontal gestures, form controls and modal card scrolling remain available.
 - Phone hero layout in `responsive.css` places the profile beside the description/actions beneath the full-width animated name. The section fills the viewport below the 124px header, with natural overflow retained for very short screens or enlarged text.
-- Both the initial `body::before` scene and `.scene-stack` use a fixed `100lvh` height with `bottom:auto` on mobile. Their cover crop therefore stays stable when browser toolbars collapse during scrolling; orientation changes may legitimately resize it. Theme crossfade layers share this geometry on both pages.
+- Both the initial `body::before` scene and `.scene-stack` use a fixed `100lvh` height with `bottom:auto` on mobile. Their cover crop therefore stays stable when browser toolbars collapse during scrolling; orientation changes may legitimately resize it. Theme crossfade layers share this geometry on every page.
 - Mobile height-only resize events do not prematurely finish the 620ms transition; width/orientation changes settle it safely.
 - Latest checks: 11 chapter-transition and 11 card tests passed, plus JavaScript syntax/build checks. Phone layouts were checked in headless Edge at 320–430px wide; a check on a physical phone is still worthwhile.

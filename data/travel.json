@@ -1,0 +1,23 @@
+{
+  "about": "Trips in the goshuin stamp book, in display order. The words live in data/travel/<id>.md and the photos in assets/travel/<id>/ (cover.webp opens the post). stamp is the text of the red seal (up to four characters); jp is brushed down the middle of the page. Both entries below are 見本 (samples) for the preview.",
+  "trips": [
+    {
+      "id": "sample-trip",
+      "title": "Sample Trip",
+      "jp": "見本",
+      "stamp": "見本",
+      "place": "Sample Place",
+      "date": "2026-10-31",
+      "summary": "A placeholder trip for the preview."
+    },
+    {
+      "id": "another-sample",
+      "title": "Another Sample Trip",
+      "jp": "試し",
+      "stamp": "試",
+      "place": "Another Place",
+      "date": "2026-08-14",
+      "summary": "A second placeholder page in the stamp book."
+    }
+  ]
+}

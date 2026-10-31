@@ -111,8 +111,11 @@ h2 em{font-style:normal;color:var(--accent)}
 .terminal p{margin:4px 0}
 .terminal p>span{color:var(--terminal-ink)}
 .terminal-out{color:var(--terminal-muted);margin-bottom:14px!important}
-.terminal-ls{display:flex;flex-wrap:wrap;gap:0 18px;margin-bottom:4px!important}
+.terminal-ls{display:flex;flex-wrap:wrap;gap:0 18px}
 .terminal-ls span{color:var(--terminal-accent)!important}
+/* The last command, ./side-quests, quietly links to side-quests.html: a dotted underline until hovered. */
+.terminal-link{text-decoration:underline dotted var(--terminal-muted);text-underline-offset:4px;transition:color .2s}
+.terminal-link:hover{color:var(--terminal-accent);text-decoration:underline solid}
 .tags span{font-size:11px;border:1px solid var(--line);background:var(--surface-tint);padding:5px 9px;color:var(--accent);border-radius:4px;}
 .section-top{display:flex;justify-content:space-between;align-items:end;gap:25px;margin-bottom:30px}
 .section-note{font-size:13px;margin:0;line-height:1.8}

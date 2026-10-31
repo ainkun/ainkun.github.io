@@ -1,0 +1,96 @@
+/* Review and travel posts (review.html, travel.html): a sheet of washi paper laid over the shrine scene.
+   A review carries its omikuji fortune beside the title; a trip opens on a wide photo with its goshuin seal. */
+.post-shell { position:relative;isolation:isolate;min-height:100vh;padding:clamp(18px,2.4vw,32px) clamp(12px,5vw,80px) clamp(60px,8vw,110px); }
+.post-shell::before { content:'';position:fixed;inset:0 0 auto;z-index:-1;height:100vh;height:100lvh;background:var(--board-veil);pointer-events:none; }
+.post {
+  position:relative;max-width:820px;margin:clamp(20px,4vw,44px) auto 0;padding:clamp(22px,4.6vw,60px);border-radius:6px;color:var(--paper-ink);
+  background:radial-gradient(circle at 20% 30%,#ffffff 0 1px,transparent 1.5px) 0 0/9px 11px,var(--paper);box-shadow:0 30px 70px #0000004d;
+  animation:quest-rise-in .65s cubic-bezier(.2,.8,.2,1) both;
+}
+.post-head { display:grid;grid-template-columns:auto 1fr auto;gap:clamp(16px,3vw,32px);align-items:start; }
+.post-cover { display:block;width:clamp(110px,16vw,170px);height:auto;aspect-ratio:2/3;object-fit:cover;border-radius:3px;background:var(--paper-deep);box-shadow:8px 12px 24px #00000040; }
+.post-kicker { margin:0;font:700 10px/1.5 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--paper-soft); }
+.post-kicker [lang=ja] { font:700 12px/1 var(--jp);letter-spacing:.1em;color:var(--seal); }
+.post h1 { margin:10px 0 0;font:800 clamp(30px,4vw,50px)/1.1 var(--serif);overflow-wrap:anywhere; }
+.post-jp { margin:10px 0 0;font:700 13px/1 var(--jp);letter-spacing:.25em;color:var(--seal); }
+.post-lead { max-width:52ch;margin:18px 0 0;font:600 18px/1.6 var(--hand);color:#4a3d30; }
+/* The review's fortune slip, a small omikuji beside the title. */
+.post-mark { display:flex;flex-direction:column;align-items:center;gap:6px;width:92px;margin:0;padding:0 0 12px;background:linear-gradient(#fffdf7,var(--paper-deep));box-shadow:0 8px 16px #00000026;rotate:2deg;text-align:center; }
+.post-mark-head { width:100%;padding:6px 0 5px;background:var(--seal);color:#fff6ea;font:700 9px/1 var(--jp);letter-spacing:.35em;text-indent:.35em; }
+.post-mark-fortune { margin:6px 0 2px;writing-mode:vertical-rl;font:800 34px/1 var(--serif);letter-spacing:.08em;color:var(--seal); }
+.post-mark-score { font:800 15px/1 var(--serif); }
+.post-mark-label { font:700 8px/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--paper-soft); }
+
+/* A trip: the photo spans the sheet, and the goshuin seal is stamped on its corner. */
+[data-post=travel] .post-head { grid-template-columns:1fr; }
+[data-post=travel] .post-cover { order:-1;width:100%;aspect-ratio:16/9;border-radius:4px; }
+[data-post=travel] .post-mark { position:absolute;top:clamp(22px,4.6vw,60px);right:clamp(22px,4.6vw,60px);width:auto;padding:0;background:none;box-shadow:none;rotate:0deg;translate:-14px 14px; }
+.post-mark-seal { padding:0;width:clamp(62px,9vw,86px);aspect-ratio:1;border-width:3px;outline:1.5px solid currentColor;outline-offset:-7px;background:#fffdf7d9;font-size:clamp(17px,2.4vw,24px);line-height:1.05;writing-mode:vertical-rl;rotate:-5deg; }
+
+/* The words. */
+.post-body { margin-top:clamp(26px,4vw,40px);padding-top:clamp(20px,3vw,30px);border-top:1px solid #2a21181f;font-size:17px;line-height:1.85; }
+.post-body>:first-child { margin-top:0; }
+.post-body h2,.post-body h3,.post-body h4 { margin:1.8em 0 .5em;font-family:var(--serif);font-weight:800;line-height:1.25; }
+.post-body h2 { font-size:clamp(24px,2.6vw,30px); }
+.post-body h3 { font-size:22px; }
+.post-body h4 { font-size:18px; }
+.post-body p { margin:0 0 1.1em; }
+.post-body a { color:var(--seal);text-decoration:underline;text-underline-offset:3px; }
+.post-body blockquote { margin:1.4em 0;padding:4px 0 4px 18px;border-left:3px solid var(--seal);font:600 18px/1.7 var(--hand);color:#4a3d30; }
+.post-body blockquote p { margin:0; }
+.post-body figure { margin:1.8em 0; }
+.post-body img { display:block;width:100%;height:auto;border-radius:4px;background:var(--paper-deep);box-shadow:0 12px 30px #0000002e; }
+.post-body figcaption { margin-top:10px;text-align:center;font:600 14px/1.5 var(--hand);color:var(--paper-soft); }
+.post-body code { padding:2px 6px;border-radius:4px;background:#2a211812;font:13px/1.5 var(--mono); }
+.post-body hr { width:60px;margin:2em auto;border:0;border-top:2px dotted #2a211840; }
+.post-body ul,.post-body ol { margin:0 0 1.1em;padding-left:1.4em; }
+.post-body li { margin:.25em 0; }
+.post-error { color:var(--paper-soft); }
+
+/* スクショ · Screenshots, right below the review: white-bordered prints that open large. */
+.post-shots { margin-top:clamp(28px,4vw,44px);padding-top:clamp(20px,3vw,28px);border-top:1px solid #2a21181f; }
+.post-shots-title { display:flex;align-items:baseline;gap:10px;margin:0 0 20px;font:800 clamp(22px,2.4vw,28px)/1.2 var(--serif); }
+.post-shots-title [lang=ja] { font:700 12px/1 var(--jp);letter-spacing:.3em;color:var(--seal); }
+.shots-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:20px 18px;list-style:none;margin:0;padding:0; }
+.shot { display:block;width:100%;padding:6px;border:0;border-radius:3px;background:#fff;box-shadow:0 8px 18px #0000002e;cursor:zoom-in;rotate:-.6deg;transition:transform .25s,box-shadow .25s; }
+.shots-grid li:nth-child(even) .shot { rotate:.5deg; }
+.shot img { display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:2px;background:var(--paper-deep); }
+.shot:hover,.shot:focus-visible { transform:translateY(-3px);box-shadow:0 14px 26px #00000038; }
+.shot:focus-visible { outline:2px solid var(--seal);outline-offset:4px; }
+.shot-caption { margin:9px 4px 0;font:600 13px/1.45 var(--hand);text-align:center;color:var(--paper-soft); }
+.shot-viewer { width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:56px 72px;border:0;background:none;color:#f3eee4;overflow:hidden; }
+.shot-viewer[open] { display:grid;place-items:center; }
+.shot-viewer::backdrop { background:#070b14e6;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px); }
+.shot-figure { display:flex;flex-direction:column;align-items:center;gap:12px;margin:0;max-width:min(100%,1400px); }
+.shot-large { display:block;max-width:100%;max-height:calc(100vh - 170px);max-height:calc(100svh - 170px);border-radius:4px;box-shadow:0 24px 70px #000000cc; }
+.shot-text { max-width:60ch;font:600 15px/1.5 var(--hand);text-align:center; }
+.shot-count { position:fixed;left:50%;bottom:18px;margin:0;translate:-50% 0;font:700 10px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:#f3eee4b3; }
+.shot-close,.shot-turn { position:fixed;display:grid;place-items:center;width:46px;height:46px;border:1px solid #ffffff40;border-radius:50%;background:#0b111f99;color:#f3eee4;font-size:20px;line-height:1;cursor:pointer;transition:background .2s; }
+.shot-close:hover,.shot-turn:hover { background:#ffffff26; }
+.shot-close { top:16px;right:16px;font-size:24px; }
+.shot-turn { top:50%;translate:0 -50%; }
+.shot-turn.is-prev { left:16px; }
+.shot-turn.is-next { right:16px; }
+.post-foot { margin:clamp(28px,4vw,40px) 0 0;padding-top:20px;border-top:1px solid #2a21181f; }
+.post-foot .shrine-back { background:#2a21180d;color:var(--paper-ink); }
+.post-foot .shrine-back [lang=ja] { color:var(--seal); }
+.post.is-missing { display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center; }
+.post.is-missing p { margin:0; }
+.post-missing-mark { font:800 28px/1.2 var(--serif);letter-spacing:.2em;color:var(--seal); }
+
+@media(prefers-reduced-motion:reduce) { .shot { transition:none; } .post { animation:none; } }
+@media(max-width:760px) {
+  .post-shell { padding:16px 10px 56px; }
+  .post { margin-top:16px;padding:20px 18px 26px; }
+  .post-head { grid-template-columns:auto 1fr; }
+  .post-cover { width:96px; }
+  /* On phones the fortune slip lies flat under the title instead of standing beside it. */
+  [data-post=reviews] .post-mark { grid-column:1/-1;flex-direction:row;justify-self:start;gap:14px;width:auto;padding:0 18px 0 0;rotate:0deg; }
+  .post-mark-head { align-self:stretch;width:auto;padding:8px 6px;writing-mode:vertical-rl;letter-spacing:.2em;text-indent:0; }
+  .post-mark-fortune { margin:0;writing-mode:horizontal-tb;font-size:26px; }
+  .post-lead { font-size:16px; }
+  .post-body { font-size:16px; }
+  .shots-grid { grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px 12px; }
+  .shot-viewer { padding:60px 10px 64px; }
+  .shot-turn { top:auto;bottom:10px;translate:none; }
+}

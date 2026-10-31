@@ -1,0 +1,20 @@
+{
+  "about": "Ema on the Side Quests board, in display order. Each one opens its library on the page: manga (data/manga.json), reviews (data/reviews.json) or travel (data/travel.json). jp is the large Japanese word written on the ema.",
+  "quests": [
+    {
+      "library": "manga",
+      "title": "Manga",
+      "jp": "漫画"
+    },
+    {
+      "library": "reviews",
+      "title": "Anime/Manga Reviews",
+      "jp": "感想"
+    },
+    {
+      "library": "travel",
+      "title": "Travel Blog",
+      "jp": "旅"
+    }
+  ]
+}

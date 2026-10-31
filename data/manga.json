@@ -1,0 +1,23 @@
+{
+  "about": "Manga on the library bookcase. Pages live at assets/manga/<id>/<chapter number>/<page>.webp with two-digit page numbers (01.webp, 02.webp, …), and the cover at assets/manga/<id>/cover.webp. Each chapter says how many pages it has. direction is \"rtl\" (read right to left, like Japanese manga) or \"ltr\"; status is \"ongoing\" (連載中) or \"complete\" (完結). The entry below is a 見本 (sample) for the preview.",
+  "manga": [
+    {
+      "id": "sample-manga",
+      "title": "Sample Manga",
+      "jp": "見本",
+      "status": "ongoing",
+      "direction": "rtl",
+      "summary": "A placeholder volume for the preview. Replace it with your own manga: its cover, chapters and pages.",
+      "chapters": [
+        {
+          "title": "Chapter 1",
+          "pages": 5
+        },
+        {
+          "title": "Chapter 2",
+          "pages": 3
+        }
+      ]
+    }
+  ]
+}

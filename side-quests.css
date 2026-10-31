@@ -1,0 +1,274 @@
+/* The shrine grounds (side-quests.html): the arrival scene, the ema board, and the library each ema opens on the page.
+   The shared palette, backdrop and footer live in shrine.css. */
+.shrine-particles { position:fixed;inset:0 0 auto;z-index:-1;height:100vh;height:100lvh;overflow:hidden;pointer-events:none; }
+
+/* Arrival: the painting fills the screen. The title stands in the open sky on the left, and the quest board stands on the
+   shrine grounds on the right, so both are there before any scrolling. */
+.shrine-hero { position:relative;isolation:isolate;overflow-x:clip;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:stretch;gap:20px clamp(16px,3vw,40px);min-height:100vh;min-height:100svh;padding:clamp(16px,2.4vw,28px) clamp(20px,5.5vw,92px) 0; }
+.shrine-intro { display:flex;flex-direction:column;align-items:flex-start;padding-bottom:clamp(20px,4vh,40px); }
+.shrine-heading { position:relative;display:flex;align-items:stretch;gap:clamp(14px,1.6vw,22px);margin-top:clamp(28px,9vh,110px);max-width:min(46vw,680px); }
+.shrine-heading::before { content:'';position:absolute;inset:-26% -40% -30% -24%;z-index:-1;background:radial-gradient(closest-side,var(--hero-veil),transparent);pointer-events:none; }
+.shrine-pillar { flex:none;display:flex;filter:drop-shadow(0 10px 14px #1d1a1440); }
+.shrine-pillar [lang=ja] {
+  display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;padding:26px clamp(10px,.9vw,12px) 18px;
+  font:800 clamp(17px,1.5vw,22px)/1 var(--serif);letter-spacing:.3em;color:var(--stone-ink);text-shadow:0 1px 0 #ffffff5c,0 -1px 0 #00000030;
+  clip-path:polygon(0 12px,50% 0,100% 12px,100% 100%,0 100%);
+  background:radial-gradient(circle,#ffffff30 0 .6px,transparent 1px) 0 0/6px 7px,radial-gradient(circle,#00000016 0 .7px,transparent 1.2px) 3px 2px/9px 8px,
+    linear-gradient(0deg,var(--moss),transparent 22%),linear-gradient(90deg,var(--stone-dark),var(--stone-light) 32%,var(--stone) 70%,var(--stone-dark));
+}
+.shrine-title { display:flex;flex-direction:column;justify-content:center; }
+.shrine-name { display:flex;align-items:center;gap:12px;margin:0;font:700 10px/1.4 var(--mono);letter-spacing:.32em;color:var(--accent); }
+.shrine-name::after { content:'';width:40px;height:1px;background:currentColor;opacity:.6; }
+.shrine-hero h1 { margin:10px 0 0;font:800 clamp(42px,4.5vw,68px)/1 var(--serif);letter-spacing:-.01em;color:var(--ink); }
+.shrine-hero h1 em { display:block;font-style:normal;color:var(--accent); }
+
+/* The ema board (絵馬掛所): a tall roofed rack on the right, under the time-of-day panel, four ema hanging one above another.
+   Each ema is sized from the window height (--ema-w), so the whole rack, roof to footings, fits on the first screen. */
+.quest-board {
+  --cols:1;--gap:14px;--pad:26px;--ema-w:clamp(104px,calc((100svh - 470px) / 2.936),160px);--ema-h:calc(var(--ema-w) * .734);--row:calc(var(--ema-h) + 54px);
+  display:flex;flex-direction:column;align-self:stretch;padding-top:72px;
+}
+.ema-rack {
+  --post-width:14px;--footing:linear-gradient(var(--stone-light),var(--stone) 45%,var(--stone-dark));
+  position:relative;flex:1;display:flex;flex-direction:column;width:calc(var(--cols) * var(--ema-w) + (var(--cols) - 1) * var(--gap) + 2 * var(--pad));padding:0 var(--pad) 30px;
+  background:var(--footing) left calc(var(--pad) * .35 - 8px) bottom 6px/calc(var(--post-width) + 16px) 14px no-repeat,var(--footing) right calc(var(--pad) * .35 - 8px) bottom 6px/calc(var(--post-width) + 16px) 14px no-repeat,
+    radial-gradient(closest-side,#00000052,transparent) center bottom/112% 22px no-repeat;
+}
+.ema-rack::before,.ema-rack::after { content:'';position:absolute;top:16px;bottom:20px;width:var(--post-width);border-radius:3px 3px 0 0;background:linear-gradient(90deg,var(--post-dark),var(--post) 45%,var(--post-dark));box-shadow:0 8px 18px #0000002e; }
+.ema-rack::before { left:calc(var(--pad) * .35); }
+.ema-rack::after { right:calc(var(--pad) * .35); }
+.rack-roof {
+  position:relative;z-index:1;flex:none;height:clamp(30px,calc(var(--ema-w) * .28),44px);margin:0 calc(var(--pad) * -.7);filter:drop-shadow(0 8px 10px #00000030);
+  clip-path:polygon(6% 0,94% 0,100% 74%,99.4% 100%,.6% 100%,0 74%);
+  background:radial-gradient(circle at 13px calc(100% - 9px),var(--roof-light) 0 3.5px,#1b1a19 4px 5px,transparent 5.5px) 0 0/24px 100% repeat-x,
+    linear-gradient(#1f1d1c 0 5px,transparent 5px calc(100% - 8px),var(--roof-light) calc(100% - 8px) calc(100% - 5px),#1b1a19 calc(100% - 5px)),
+    repeating-linear-gradient(90deg,#ffffff0f 0 3px,transparent 3px 24px),linear-gradient(var(--roof-light),var(--roof) 60%);
+}
+.rack-sign { position:relative;z-index:1;width:max-content;max-width:100%;margin:0 auto;padding:8px 16px 7px;border:3px solid var(--post-dark);border-top:0;border-radius:0 0 4px 4px;background:linear-gradient(var(--wood-light),var(--wood));text-align:center;font-weight:400;box-shadow:0 10px 20px #00000029; }
+.rack-sign [lang=ja] { display:block;margin-right:-.3em;font:800 clamp(15px,calc(var(--ema-w) * .14),22px)/1.2 var(--serif);letter-spacing:.3em;color:var(--ema-ink); }
+.rack-sign small { display:block;margin:3px -.26em 0 0;font:700 8px/1.2 var(--mono);letter-spacing:.26em;color:var(--seal); }
+.ema-grid {
+  display:grid;grid-template-columns:repeat(var(--cols),var(--ema-w));grid-auto-rows:var(--row);justify-content:center;column-gap:var(--gap);
+  list-style:none;margin:12px calc(var(--pad) * -1) 0;padding:0 var(--pad);
+  background:repeating-linear-gradient(transparent 0 10px,#ffffff26 10px 12px,var(--post) 12px 22px,var(--post-dark) 22px 25px,transparent 25px var(--row));
+}
+.ema-slot { position:relative;display:flex;justify-content:center;min-width:0; }
+.ema {
+  position:relative;display:block;width:var(--ema-w);height:var(--ema-h);margin:40px 0 0;padding:0;border:0;background:none;color:var(--ema-ink);
+  transform-origin:50% -22px;rotate:var(--tilt,0deg);filter:drop-shadow(0 7px 7px #24160b40);animation:ema-wind 7s ease-in-out var(--sway-delay,0s) infinite;
+}
+.ema::before { content:'';position:absolute;z-index:1;left:50%;top:-22px;width:2px;height:36px;translate:-50% 0;border-radius:2px;background:linear-gradient(var(--cord),#8f2219); }
+.ema-board { position:absolute;inset:0;isolation:isolate;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:calc(var(--ema-h) * .27) 9px calc(var(--ema-h) * .09);clip-path:polygon(0 24%,50% 0,100% 24%,100% 100%,0 100%);background:var(--wood-edge); }
+.ema-board::before {
+  content:'';position:absolute;inset:3px;z-index:-1;clip-path:polygon(0 24%,50% 0,100% 24%,100% 100%,0 100%);
+  background:radial-gradient(circle at 50% 15%,#24150a 0 2.8px,#5c3c22 3.2px 4px,transparent 4.6px),var(--grain-fine),
+    radial-gradient(ellipse 70% 45% at 30% 75%,#ffffff24,transparent),linear-gradient(172deg,var(--wood-light),var(--wood) 55%,var(--wood-deep));
+}
+.ema-jp { font:600 max(13px,calc(var(--ema-w) * .14))/1.15 var(--hand);letter-spacing:.06em; }
+.ema-title { display:-webkit-box;max-width:100%;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2;font:600 max(9px,calc(var(--ema-w) * .088))/1.2 var(--hand);text-align:center;overflow-wrap:anywhere; }
+.ema-count { margin-top:2px;font:700 max(7px,calc(var(--ema-w) * .05))/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;opacity:.65; }
+.ema.is-blank .ema-board::after { content:'';width:30%;aspect-ratio:1;margin-top:8px;opacity:.45;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23b5402a'%3E%3Cpath d='M2 5.6c4 1 16 1 20 0l-.7 2.3c-4 .6-14.6.6-18.6 0z'/%3E%3Cpath d='M4.6 10h14.8v1.7H4.6zM11.2 7.9h1.6v2.2h-1.6zM6.6 8.1h1.9V21H6.6zM15.5 8.1h1.9V21h-1.9z'/%3E%3C/svg%3E") center/contain no-repeat; }
+button.ema { cursor:pointer; }
+button.ema:hover,button.ema:focus-visible { animation:ema-swing 1.5s ease-in-out;filter:drop-shadow(0 10px 10px #24160b52) brightness(1.04); }
+button.ema:focus-visible { outline:2px solid var(--accent);outline-offset:6px;border-radius:4px; }
+/* The ema whose library is open glows like a lantern-lit plaque. */
+button.ema[aria-expanded=true] { filter:drop-shadow(0 0 1.5px var(--cord)) drop-shadow(0 0 12px #f0b45e8c) drop-shadow(0 7px 7px #24160b40); }
+@keyframes ema-wind { 0%,100% { rotate:var(--tilt,0deg); } 50% { rotate:calc(var(--tilt,0deg) + 1.2deg); } }
+@keyframes ema-swing { 0%,100% { rotate:var(--tilt,0deg); } 22% { rotate:calc(var(--tilt,0deg) + 7deg); } 48% { rotate:calc(var(--tilt,0deg) - 5deg); } 72% { rotate:calc(var(--tilt,0deg) + 2.5deg); } }
+
+/* A library opens under the board: the manga bookcase, the omikuji rack of reviews, or the goshuin book of trips. */
+.library { position:relative;isolation:isolate;padding:clamp(36px,5vw,64px) clamp(16px,5vw,80px) clamp(70px,8vw,110px); }
+/* A light veil, so the painting stays clear while scrolling; the title bar and small labels carry their own frosted backing. */
+.library::before { content:'';position:absolute;inset:0;z-index:-1;background:var(--board-light,none),var(--board-veil);-webkit-mask-image:linear-gradient(transparent,#000 160px);mask-image:linear-gradient(transparent,#000 160px); }
+.library-head { display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 18px;max-width:1100px;margin:0 auto 34px;padding:16px 20px;border-radius:12px;background:var(--chip);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px); }
+.library-head h2 { display:flex;flex-direction:column;gap:8px;margin:0;font:800 clamp(28px,3vw,42px)/1.1 var(--serif);outline:0; }
+.library-jp { font:700 13px/1 var(--jp);letter-spacing:.3em;color:var(--accent); }
+.library-count { margin:0 auto 6px 0;font:700 10px/1.4 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft); }
+.library-close { display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border:1px solid var(--line);border-radius:999px;background:var(--chip);font:700 10px/1.4 var(--mono);letter-spacing:.16em;cursor:pointer;transition:background .25s; }
+.library-close [lang=ja] { font:700 12px/1 var(--jp);letter-spacing:.1em;color:var(--accent); }
+.library-close:hover { background:var(--chip-hover); }
+.library-body { max-width:1100px;margin:0 auto; }
+.library-body>* { animation:library-open .7s cubic-bezier(.2,.8,.2,1) both; }
+.library-body.is-instant>* { animation:none; }
+.library-empty { display:flex;flex-direction:column;align-items:center;gap:6px;width:fit-content;margin:0 auto;padding:30px 44px;border-radius:12px;background:var(--chip);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font:700 10px/1.4 var(--mono);letter-spacing:.2em;color:var(--ink-soft); }
+.library-empty [lang=ja] { font:800 22px/1 var(--serif);letter-spacing:.3em;color:var(--accent); }
+@keyframes library-open { from { opacity:0;transform:translateY(22px); } to { opacity:1;transform:none; } }
+
+/* 書庫 · Manga bookcase: covers face out on wooden shelves, each with a library call-number label (NDC 726.1 is manga)
+   and a handwritten bookshop POP card taped in front. */
+.bookcase {
+  --cover-w:150px;--cover-h:225px;--row:356px;--plank:calc(var(--cover-h) + 28px);--inset:clamp(14px,2vw,26px);
+  position:relative;padding:0 var(--inset);border:clamp(10px,1.2vw,14px) solid var(--post);border-bottom-width:clamp(16px,1.8vw,22px);border-radius:3px;
+  background:linear-gradient(90deg,#0000004d,transparent 7%,transparent 93%,#0000004d),linear-gradient(#00000059,#00000026 30%,#0000004d),var(--post-dark);
+  box-shadow:inset 0 8px 18px #00000059,0 22px 40px #0000003d;
+}
+.shelf {
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));grid-auto-rows:var(--row);list-style:none;margin:0 calc(var(--inset) * -1);padding:0 var(--inset);
+  background:repeating-linear-gradient(transparent 0 var(--plank),#ffffff30 var(--plank) calc(var(--plank) + 2px),var(--post) calc(var(--plank) + 2px) calc(var(--plank) + 16px),
+    var(--post-dark) calc(var(--plank) + 16px) calc(var(--plank) + 19px),#00000040 calc(var(--plank) + 19px) calc(var(--plank) + 30px),transparent calc(var(--plank) + 30px) var(--row));
+}
+.shelf>li { display:flex;justify-content:center;min-width:0; }
+.volume { position:relative;display:flex;flex-direction:column;align-items:center;width:100%;padding-top:28px;color:var(--paper-ink); }
+/* A bookend stands after the last volume, so a short shelf looks arranged rather than empty. */
+.shelf>li:last-child .volume::after { content:'';position:absolute;top:calc(28px + var(--cover-h) - 118px);left:calc(50% + var(--cover-w) / 2 + 10px);width:12px;height:118px;border-radius:2px 2px 0 0;background:linear-gradient(90deg,#2b2a28,#55524d 45%,#2b2a28);box-shadow:3px 2px 6px #00000059; }
+.volume-cover { position:relative;display:block;width:var(--cover-w);height:var(--cover-h);overflow:hidden;border-radius:2px 4px 4px 2px;background:var(--paper-deep);box-shadow:5px 6px 14px #00000066;transform-origin:50% 100%;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s; }
+.volume-cover img { display:block;width:100%;height:100%;object-fit:cover; }
+.volume-cover::before { content:'';position:absolute;inset:0 auto 0 0;z-index:1;width:10px;background:linear-gradient(90deg,#00000059,#ffffff2e 55%,transparent); }
+.call-number { position:absolute;left:9px;bottom:10px;z-index:1;width:36px;padding:3px 0;border-top:5px solid var(--seal);border-radius:2px;background:#fffdf6;box-shadow:0 1px 3px #0000004d;font:700 8px/1.3 var(--mono);text-align:center;color:#2a2620; }
+.volume:hover .volume-cover,.volume:focus-visible .volume-cover { transform:translateY(-8px) rotate(-1.5deg);box-shadow:8px 14px 22px #00000073; }
+.volume:focus-visible { outline:0; }
+.volume:focus-visible .volume-cover { outline:3px solid var(--accent);outline-offset:4px; }
+.pop-card { position:relative;z-index:1;width:min(100%,170px);margin-top:14px;padding:10px 10px 8px;border-radius:2px;background:var(--paper);box-shadow:0 5px 12px #00000038;rotate:-1.2deg;text-align:center; }
+.pop-card::before { content:'';position:absolute;top:-7px;left:50%;width:46px;height:14px;translate:-50% 0;rotate:3deg;background:#e7a79c9e; }
+.pop-title { display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2;font:600 14px/1.3 var(--hand); }
+.pop-meta { display:flex;justify-content:center;align-items:center;gap:8px;margin-top:5px;font:700 9px/1.2 var(--mono);letter-spacing:.06em;color:var(--paper-soft); }
+.pop-meta .seal { padding:2px 3px 1px;font-size:9px; }
+
+/* おみくじ · Reviews: each review is a fortune slip tied to the rail. Its fortune is the rating, from 大吉 down to 凶. */
+.omikuji-rack {
+  --row:352px;display:grid;grid-template-columns:repeat(auto-fill,minmax(156px,1fr));grid-auto-rows:var(--row);column-gap:clamp(10px,1.6vw,20px);list-style:none;margin:0;padding:0 8px;
+  background:repeating-linear-gradient(transparent 0 16px,#ffffff2e 16px 17px,var(--post) 17px 25px,var(--post-dark) 25px 27px,transparent 27px var(--row));
+}
+.omikuji-rack>li { display:flex;justify-content:center;min-width:0; }
+.omikuji {
+  position:relative;display:flex;flex-direction:column;align-items:center;width:136px;height:296px;margin-top:40px;padding:0 12px 14px;color:var(--paper-ink);
+  background:linear-gradient(transparent 49.6%,#0000000d 50%,#ffffff40 50.6%,transparent 51.2%),radial-gradient(circle at 30% 20%,#ffffff 0 1px,transparent 1.5px) 0 0/9px 11px,linear-gradient(#fffdf7,var(--paper));
+  box-shadow:0 10px 18px #0000002e;transform-origin:50% -18px;rotate:var(--tilt,0deg);animation:ema-wind 7s ease-in-out var(--sway-delay,0s) infinite;
+}
+.omikuji::before { content:'';position:absolute;left:50%;top:-22px;width:22px;height:26px;translate:-50% 0;border-radius:6px 6px 3px 3px;background:linear-gradient(90deg,#e9e2d2,#fffdf7 45%,#ddd4c2);box-shadow:0 2px 3px #0000002e; }
+.omikuji-head { width:calc(100% + 24px);margin:0 -12px;padding:7px 0 6px;background:var(--seal);color:#fff6ea;font:700 10px/1 var(--jp);letter-spacing:.4em;text-indent:.4em;text-align:center; }
+.omikuji-fortune { margin:16px 0 10px;writing-mode:vertical-rl;font:800 40px/1 var(--serif);letter-spacing:.08em;color:var(--seal); }
+.omikuji.is-kyo .omikuji-fortune { color:#2b2622; }
+.omikuji-body { display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:auto;text-align:center; }
+.omikuji-title { display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:3;font:800 15px/1.3 var(--serif); }
+.omikuji-meta { font:700 9px/1.5 var(--mono);letter-spacing:.06em;color:var(--paper-soft); }
+.omikuji:hover,.omikuji:focus-visible { animation:ema-swing 1.5s ease-in-out;box-shadow:0 14px 24px #00000040; }
+.omikuji:focus-visible { outline:2px solid var(--accent);outline-offset:6px; }
+.omikuji-legend { display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;width:fit-content;max-width:100%;margin:18px auto 0;padding:9px 18px;border-radius:999px;background:var(--chip);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font:700 10px/1.4 var(--mono);letter-spacing:.08em;color:var(--ink-soft); }
+.omikuji-legend [lang=ja] { font:800 13px/1 var(--serif);color:var(--accent); }
+
+/* 御朱印帳 · Travel: an accordion stamp book opened flat. Each page is a trip, brushed and stamped like a shrine goshuin. */
+.goshuin-book { --page-w:clamp(168px,17vw,206px);--page-h:calc(var(--page-w) * 1.5);display:flex;width:max-content;max-width:100%;margin:0 auto;padding:10px 4px 24px;overflow-x:auto;scroll-snap-type:x proximity;filter:drop-shadow(0 18px 24px #0000003d); }
+.goshuin-cover {
+  flex:none;display:flex;justify-content:center;width:calc(var(--page-w) * .74);height:var(--page-h);padding-top:18px;border-radius:5px;box-shadow:inset 0 0 0 3px #ffffff1a;
+  background-color:#22345a;background-size:36px 18px;
+  background-image:radial-gradient(circle at 100% 150%,#22345a 24%,#3a5486 24% 28%,#22345a 28% 36%,#3a5486 36% 40%,transparent 40%),radial-gradient(circle at 0 150%,#22345a 24%,#3a5486 24% 28%,#22345a 28% 36%,#3a5486 36% 40%,transparent 40%),
+    radial-gradient(circle at 50% 100%,#3a5486 10%,#22345a 10% 23%,#3a5486 23% 30%,#22345a 30% 43%,#3a5486 43% 50%,#22345a 50% 63%,#3a5486 63% 71%,transparent 71%),
+    radial-gradient(circle at 100% 50%,#3a5486 5%,#22345a 5% 15%,#3a5486 15% 20%,#22345a 20% 29%,#3a5486 29% 34%,#22345a 34% 44%,#3a5486 44% 49%,transparent 49%),
+    radial-gradient(circle at 0 50%,#3a5486 5%,#22345a 5% 15%,#3a5486 15% 20%,#22345a 20% 29%,#3a5486 29% 34%,#22345a 34% 44%,#3a5486 44% 49%,transparent 49%);
+}
+.goshuin-label { height:fit-content;padding:12px 6px;writing-mode:vertical-rl;background:var(--paper);box-shadow:0 2px 4px #0003;font:800 15px/1 var(--serif);letter-spacing:.3em;color:var(--paper-ink); }
+.goshuin-pages { display:flex;list-style:none;margin:0;padding:0; }
+.goshuin-pages>li { flex:none;scroll-snap-align:center; }
+.goshuin-page {
+  position:relative;display:block;width:var(--page-w);height:var(--page-h);overflow:hidden;color:#1d1712;
+  background:radial-gradient(circle at 20% 30%,#ffffff 0 1px,transparent 1.5px) 0 0/8px 10px,linear-gradient(90deg,#00000014,transparent 8%,transparent 92%,#0000001f),linear-gradient(#fdf9ef,#f4ecdb);
+}
+.goshuin-pages>li+li .goshuin-page { box-shadow:inset 1px 0 0 #0000001c; }
+.gs-seal {
+  position:absolute;left:50%;top:40%;display:grid;place-items:center;width:46%;aspect-ratio:1;translate:-50% -50%;rotate:-4deg;border:3px solid var(--seal);border-radius:4px;outline:1.5px solid var(--seal);outline-offset:-8px;
+  writing-mode:vertical-rl;font:800 clamp(20px,2.2vw,28px)/1.05 var(--serif);color:var(--seal);opacity:.8;mix-blend-mode:multiply;transition:opacity .3s,scale .3s;
+}
+.gs-mark { position:absolute;top:10%;right:12%;display:grid;place-items:center;width:30px;height:30px;border:2px solid var(--seal);border-radius:50%;font:800 14px/1 var(--serif);color:var(--seal);opacity:.85;mix-blend-mode:multiply; }
+.gs-ink { position:absolute;inset:9% 11% 24%;display:flex;flex-direction:row-reverse;justify-content:space-between;align-items:flex-start;pointer-events:none; }
+.gs-hohai { margin-top:36px;writing-mode:vertical-rl;font:600 13px/1 var(--hand);letter-spacing:.3em; }
+.gs-place { align-self:center;writing-mode:vertical-rl;text-orientation:upright;font:600 clamp(24px,2.4vw,32px)/1 var(--hand);letter-spacing:.1em; }
+.gs-date { align-self:flex-end;writing-mode:vertical-rl;font:600 11px/1 var(--hand);letter-spacing:.08em; }
+.gs-caption { position:absolute;inset:auto 10px 10px;display:flex;flex-direction:column;gap:2px;padding-top:8px;border-top:1px dashed #00000026;text-align:center;font:700 9px/1.35 var(--mono);letter-spacing:.06em;color:#5f5244; }
+.gs-caption strong { font:800 13px/1.3 var(--serif);letter-spacing:0;color:#2a2118; }
+.goshuin-page:hover .gs-seal,.goshuin-page:focus-visible .gs-seal { opacity:1;scale:1.05; }
+.goshuin-page:focus-visible { outline:3px solid var(--accent);outline-offset:-3px; }
+
+/* Particles drift behind the page: leaves fall from the sacred tree, dragonflies cross the sky, fireflies glow near the ground. */
+.particle { position:absolute;left:0;top:0;will-change:transform; }
+.leaf { left:var(--x);top:-4vh;width:15px;height:9px;border-radius:0 80% 0 80%;background:linear-gradient(135deg,transparent 46%,#00000022 48% 52%,transparent 54%),var(--leaf);opacity:.9;animation:leaf-fall var(--duration) ease-in-out var(--delay) infinite; }
+.dragonfly { top:var(--y);width:42px;height:25px;animation:dragonfly-flight var(--duration) linear var(--delay) infinite;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 24'%3E%3Cg fill='%23fffaf2' fill-opacity='.72' stroke='%237a2214' stroke-opacity='.5' stroke-width='.6'%3E%3Cellipse cx='27' cy='6' rx='2.7' ry='6.2' transform='rotate(18 27 6)'/%3E%3Cellipse cx='27' cy='18' rx='2.7' ry='6.2' transform='rotate(-18 27 18)'/%3E%3Cellipse cx='23' cy='6.5' rx='2.5' ry='5.8' transform='rotate(-14 23 6.5)'/%3E%3Cellipse cx='23' cy='17.5' rx='2.5' ry='5.8' transform='rotate(14 23 17.5)'/%3E%3C/g%3E%3Crect x='3' y='10.7' width='22' height='2.6' rx='1.3' fill='%23b3311f'/%3E%3Cellipse cx='26.5' cy='12' rx='3.5' ry='2.6' fill='%239c2a18'/%3E%3Ccircle cx='31.2' cy='12' r='2.4' fill='%237a2214'/%3E%3C/svg%3E") center/contain no-repeat; }
+.firefly { left:var(--x);top:var(--y);width:5px;height:5px;border-radius:50%;background:#f6fbc0;box-shadow:0 0 7px 3px #e9f48cb3,0 0 22px 9px #d5ea5a38;opacity:0;animation:firefly-wander var(--duration) ease-in-out var(--delay) infinite alternate,firefly-glow var(--glow) ease-in-out var(--delay) infinite; }
+@keyframes leaf-fall {
+  0% { transform:translate(0,0) rotate(0); } 20% { transform:translate(calc(var(--drift) * .4),20vh) rotate(calc(var(--spin) * .2)); }
+  40% { transform:translate(calc(var(--drift) * .1),42vh) rotate(calc(var(--spin) * .4)); } 60% { transform:translate(calc(var(--drift) * .6),63vh) rotate(calc(var(--spin) * .6)); }
+  80% { transform:translate(calc(var(--drift) * .3),85vh) rotate(calc(var(--spin) * .8)); } 100% { transform:translate(var(--drift),108vh) rotate(var(--spin)); }
+}
+@keyframes dragonfly-flight {
+  0% { transform:translate(calc(var(--from) + var(--face) * -10vw),0) scaleX(var(--face)); } 20% { transform:translate(calc(var(--from) + var(--face) * 20vw),-4vh) scaleX(var(--face)); }
+  30% { transform:translate(calc(var(--from) + var(--face) * 22vw),-3vh) scaleX(var(--face)); } 50% { transform:translate(calc(var(--from) + var(--face) * 48vw),2vh) scaleX(var(--face)); }
+  62% { transform:translate(calc(var(--from) + var(--face) * 50vw),1vh) scaleX(var(--face)); } 82% { transform:translate(calc(var(--from) + var(--face) * 80vw),-2vh) scaleX(var(--face)); }
+  100% { transform:translate(calc(var(--from) + var(--face) * 112vw),0) scaleX(var(--face)); }
+}
+@keyframes firefly-wander {
+  0% { transform:translate(0,0); } 33% { transform:translate(var(--dx),calc(var(--dy) * -1)); }
+  66% { transform:translate(calc(var(--dx) * -.6),var(--dy)); } 100% { transform:translate(calc(var(--dx) * .4),calc(var(--dy) * .5)); }
+}
+@keyframes firefly-glow { 0%,100% { opacity:.06; } 45%,60% { opacity:1; } }
+
+/* Tall screens: the torii stays in view at the top, then the title and a 2×2 board rest on a mist at the foot of the painting. */
+@media(max-aspect-ratio:5/4) {
+  .shrine-hero { flex-direction:column;flex-wrap:nowrap;justify-content:flex-start;gap:14px; }
+  .shrine-intro { flex:1;padding-bottom:0; }
+  .shrine-heading { margin-top:auto;max-width:100%; }
+  .shrine-heading::before { display:none; }
+  .shrine-hero::after { content:'';position:absolute;inset:auto 0 0;z-index:-1;height:min(70%,780px);background:linear-gradient(transparent,var(--board-veil) 38%);pointer-events:none; }
+  .quest-board { --cols:2;--ema-w:clamp(80px,min(30vw,calc(((100svh - 450px) / 2 - 54px) / .734)),150px);align-self:center;padding-top:0; }
+  .ema-rack { flex:none; }
+  /* The painting sits a little larger and lower, so the torii's beams arch over the top of the screen, clear of the title. */
+  .shrine-scene { background-size:auto 115%;background-position:70% 100%; }
+}
+@media(max-width:760px) {
+  .shrine-hero { padding:16px 16px 26px; }
+  .shrine-heading { gap:12px; }
+  .shrine-pillar [lang=ja] { padding:22px 9px 15px;font-size:16px; }
+  .shrine-name { gap:10px;font-size:9px;letter-spacing:.26em; }
+  .shrine-name::after { width:28px; }
+  .shrine-hero h1 { font-size:clamp(36px,11vw,52px); }
+  .quest-board { --pad:20px;--gap:12px; }
+  .library { padding:30px 12px 64px; }
+  .library-head { margin-bottom:26px; }
+  .bookcase { --cover-w:112px;--cover-h:168px;--row:290px;--plank:calc(var(--cover-h) + 24px); }
+  .shelf { grid-template-columns:repeat(auto-fill,minmax(132px,1fr)); }
+  .volume { padding-top:24px; }
+  .shelf>li:last-child .volume::after { top:calc(24px + var(--cover-h) - 96px);height:96px; }
+  .pop-card { width:min(100%,136px);padding:8px 7px 7px; }
+  .pop-title { font-size:13px; }
+  .omikuji-rack { --row:322px;grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); }
+  .omikuji { width:120px;height:270px; }
+  .omikuji-fortune { font-size:34px; }
+  .goshuin-book { --page-w:156px; }
+}
+/* Phones: a compact title (a small stone plate, then "Side Quests" on one line) fits between the torii and the board. */
+@media(max-aspect-ratio:5/4) and (max-width:760px) {
+  .shrine-heading { flex-wrap:wrap;align-items:center;gap:8px 10px; }
+  .shrine-heading::before { display:block;inset:-55% -14% -60% -10%; }
+  .shrine-title { display:contents; }
+  .shrine-pillar [lang=ja] { writing-mode:horizontal-tb;padding:4px 10px;font-size:13px;letter-spacing:.22em;clip-path:none; }
+  .shrine-hero h1 { flex-basis:100%;margin:0;font-size:clamp(30px,9.5vw,40px); }
+  .shrine-hero h1 em { display:inline; }
+}
+@media(max-aspect-ratio:5/4) and (max-height:700px) { .ema-count { display:none; } }
+/* The smallest phones: smaller ema hung closer together, so the title still clears the torii. */
+@media(max-aspect-ratio:5/4) and (max-height:600px) {
+  .quest-board { --ema-w:72px;--row:calc(var(--ema-h) + 44px); }
+  .ema { margin-top:32px; }
+  .ema-board { padding-top:calc(var(--ema-h) * .24);padding-inline:4px; }
+  .ema-title { line-height:1.1; }
+  .rack-roof { height:26px; }
+}
+/* Short landscape windows: four ema in one column would not fit, so the board becomes 2×2. */
+@media(max-height:780px) and (min-aspect-ratio:5/4) {
+  .quest-board { --cols:2;--ema-w:clamp(96px,calc((100svh - 360px) / 1.468),150px); }
+}
+/* Very short landscape windows (large zoom): size the heading by height so it stays clear of the torii. */
+@media(max-height:500px) and (min-aspect-ratio:5/4) {
+  .shrine-heading { gap:10px;margin-top:clamp(12px,5vh,28px); }
+  .shrine-pillar [lang=ja] { padding:18px 8px 12px;font-size:clamp(13px,4.6vh,18px); }
+  .shrine-hero h1 { font-size:clamp(28px,12vh,52px); }
+}
+@media(max-height:260px) and (min-aspect-ratio:5/4) {
+  .shrine-heading { flex-direction:column;gap:6px;margin-top:8px; }
+  .shrine-pillar [lang=ja] { writing-mode:horizontal-tb;padding:4px 10px;font-size:13px;letter-spacing:.2em;clip-path:none; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .shrine-particles { display:none; }
+  .ema,button.ema:hover,button.ema:focus-visible,.omikuji,.omikuji:hover,.omikuji:focus-visible,.library-body>* { animation:none; }
+  .volume-cover,.gs-seal { transition:none; }
+}

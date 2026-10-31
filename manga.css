@@ -1,0 +1,95 @@
+/* Manga pages (manga.html): the series card on washi paper, then the reader. While reading, the shrine scene dims
+   and blurs behind the page so the art stands out; the bars stay dark in every time of day. */
+.manga-top { padding:clamp(18px,2.4vw,32px) clamp(20px,5.5vw,92px) 0; }
+body[data-view=reader] .manga-top,body[data-view=reader] footer,body[data-view=reader] .theme-controls { display:none; }
+.shrine-scene { transition:filter .6s ease,transform .6s ease; }
+body[data-view=reader] .shrine-scene { filter:blur(18px) brightness(.3) saturate(.75);transform:scale(1.08); }
+
+.button-ink { display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border-radius:999px;background:var(--seal);color:#fff8ee;font:700 11px/1 var(--mono);letter-spacing:.16em;box-shadow:0 8px 18px #a52c1c40;transition:transform .2s,filter .2s; }
+.button-ink [lang=ja] { font:700 13px/1 var(--jp);letter-spacing:.1em; }
+.button-ink:hover { transform:translateY(-2px);filter:brightness(1.06); }
+.button-ink.is-quiet { background:transparent;color:var(--paper-ink);box-shadow:inset 0 0 0 1.5px #2a211833; }
+.button-ink.is-quiet [lang=ja] { color:var(--seal); }
+
+/* The series card: cover, title, status seal, summary and the chapter list (目次). */
+.series { padding:clamp(20px,4vw,44px) clamp(14px,5.5vw,92px) clamp(60px,8vw,100px); }
+/* The card rises into place as the page opens (and again when the reader closes). */
+.series-card,.manga-missing { animation:quest-rise-in .65s cubic-bezier(.2,.8,.2,1) both; }
+.series-card {
+  display:grid;grid-template-columns:minmax(170px,300px) 1fr;gap:clamp(22px,4vw,56px);align-items:start;max-width:1040px;margin:0 auto;padding:clamp(20px,3.6vw,46px);
+  border-radius:6px;color:var(--paper-ink);box-shadow:0 30px 70px #0000004d;background:radial-gradient(circle at 20% 30%,#ffffff 0 1px,transparent 1.5px) 0 0/9px 11px,var(--paper);
+}
+.series-cover { display:block;width:100%;height:auto;aspect-ratio:2/3;object-fit:cover;border-radius:3px 5px 5px 3px;background:var(--paper-deep);box-shadow:8px 12px 26px #00000059; }
+.series-jp { margin:0;font:700 13px/1 var(--jp);letter-spacing:.3em;color:var(--seal); }
+.series-info h1 { margin:12px 0 0;font:800 clamp(34px,4vw,56px)/1.05 var(--serif); }
+.series-meta { display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin:18px 0 0;font:700 10px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--paper-soft); }
+.series-summary { max-width:56ch;margin:18px 0 0;font-size:16px;line-height:1.75; }
+.series-actions { display:flex;flex-wrap:wrap;gap:12px;margin:26px 0 0; }
+.series-chapters-title { display:flex;align-items:baseline;gap:10px;margin:36px 0 10px;font:800 20px/1.2 var(--serif); }
+.series-chapters-title [lang=ja] { font:700 12px/1 var(--jp);letter-spacing:.3em;color:var(--seal); }
+.series-chapters { list-style:none;margin:0;padding:0;border-top:1px solid #2a21181f; }
+.series-chapters a { display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding:14px 6px;border-bottom:1px solid #2a21181f;transition:background .2s,padding .2s; }
+.series-chapters a:hover { padding-left:12px;background:#2a21180a; }
+.chapter-number { font:700 13px/1 var(--jp);letter-spacing:.1em;color:var(--seal); }
+.chapter-title { font:600 17px/1.3 var(--hand); }
+.chapter-pages { font:700 9px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--paper-soft); }
+
+/* The reader: a dark bar on top, the page in the middle, page turns and progress below. */
+.reader { display:flex;flex-direction:column;min-height:100vh;min-height:100svh;color:#f3eee4; }
+.reader-bar,.reader-nav { position:sticky;z-index:5;display:flex;align-items:center;gap:10px 16px;padding:10px clamp(12px,3vw,28px);background:#0b1220c7;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px); }
+.reader-bar { top:0;border-bottom:1px solid #ffffff14; }
+.reader-nav { bottom:0;border-top:1px solid #ffffff14; }
+.reader-series { display:inline-flex;align-items:center;gap:8px;min-width:0;margin-right:auto;font:800 14px/1.3 var(--serif); }
+.reader-title { overflow:hidden;white-space:nowrap;text-overflow:ellipsis; }
+.reader-series:hover .reader-title { text-decoration:underline;text-underline-offset:4px; }
+.reader-chapter select {
+  max-width:38vw;padding:7px 28px 7px 12px;border:1px solid #ffffff2e;border-radius:999px;appearance:none;color:inherit;font:700 10px/1.2 var(--mono);letter-spacing:.08em;cursor:pointer;
+  background:#ffffff0f url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23f3eee4' stroke-width='1.5'/%3E%3C/svg%3E") right 11px center/10px no-repeat;
+}
+.reader-chapter option { color:#16120e; }
+.reader-count { font:700 11px/1 var(--mono);letter-spacing:.12em;white-space:nowrap; }
+.reader-mode,.reader-turn { display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border:1px solid #ffffff2e;border-radius:999px;background:#ffffff0f;font:700 10px/1 var(--mono);letter-spacing:.12em;white-space:nowrap;cursor:pointer;transition:background .2s; }
+.reader-mode [lang=ja],.reader-turn [lang=ja] { font:700 12px/1 var(--jp);letter-spacing:.06em;color:var(--accent); }
+html:not([data-time=night]) .reader-mode [lang=ja],html:not([data-time=night]) .reader-turn [lang=ja] { color:#f0b45e; }
+.reader-mode:hover,.reader-turn:hover:not(:disabled) { background:#ffffff24; }
+.reader-turn:disabled { opacity:.35;cursor:default; }
+.reader-stage { position:relative;flex:1;display:grid;place-items:center;padding:16px 12px;touch-action:pan-y pinch-zoom; }
+.reader-img { display:block;width:auto;height:auto;max-width:100%;max-height:calc(100vh - 150px);max-height:calc(100svh - 150px);background:#fff;box-shadow:0 20px 60px #000000b3;transition:opacity .25s;user-select:none;-webkit-user-drag:none; }
+.reader-img.is-loading { opacity:.35; }
+.reader-zone { position:absolute;top:0;bottom:0;z-index:2;width:50%;padding:0;border:0;background:none;opacity:0;cursor:pointer; }
+.reader-zone.is-left { left:0;cursor:w-resize; }
+.reader-zone.is-right { right:0;cursor:e-resize; }
+.reader-progress { flex:1;display:flex;height:4px;overflow:hidden;border-radius:2px;background:#ffffff24; }
+.reader-progress span { display:block;width:0;height:100%;border-radius:inherit;background:#f0b45e;transition:width .3s; }
+/* Turning pages of a right-to-left book fills the bar from the right; scrolling down always fills it left to right. */
+.reader[data-direction=rtl][data-mode=pages] .reader-progress { justify-content:flex-end; }
+.reader-scroll { display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 12px 48px; }
+.reader-strip { display:block;width:min(100%,760px);height:auto;aspect-ratio:auto 2/3;scroll-margin-top:64px;background:#fff;box-shadow:0 14px 40px #00000099; }
+.reader[data-mode=scroll] .reader-turn { display:none; }
+/* The end card: つづく (to be continued) after a chapter, 完 (the end) after a finished manga. */
+.reader-end { position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;gap:14px;width:min(440px,100%);margin:0 auto;padding:44px 28px 36px;border-radius:6px;background:var(--paper);color:var(--paper-ink);text-align:center;box-shadow:0 24px 60px #000000a6; }
+.reader-end-mark { margin:0;font:800 56px/1 var(--serif);letter-spacing:.06em;color:var(--seal); }
+.reader-end-text { margin:0;font:700 11px/1.4 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--paper-soft); }
+.reader-end-actions { display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:6px 0 0; }
+.manga-missing { display:flex;flex-direction:column;align-items:center;gap:12px;max-width:440px;margin:12vh auto;padding:40px 28px;border-radius:6px;background:var(--paper);color:var(--paper-ink);text-align:center;box-shadow:0 24px 60px #0000004d; }
+.manga-missing-mark { margin:0;font:800 28px/1.2 var(--serif);letter-spacing:.2em;color:var(--seal); }
+.manga-missing p { margin:0; }
+
+@media(max-width:760px) {
+  .manga-top { padding:16px 16px 0; }
+  .series { padding:18px 12px 56px; }
+  .series-card { grid-template-columns:1fr;gap:22px; }
+  .series-cover { width:min(62%,240px);margin:0 auto; }
+  .series-info h1 { font-size:clamp(30px,9vw,40px); }
+  .reader-bar { flex-wrap:wrap;gap:8px 10px;padding:8px 10px; }
+  .reader-series { flex-basis:100%;font-size:13px; }
+  .reader-chapter select { max-width:52vw; }
+  .reader-nav { gap:10px;padding:8px 10px; }
+  .reader-turn { padding:8px 10px; }
+  .reader-stage { padding:10px 6px; }
+  .reader-img { max-height:calc(100svh - 170px); }
+}
+@media(prefers-reduced-motion:reduce) {
+  .shrine-scene,.reader-img,.reader-progress span,.button-ink,.series-chapters a { transition:none; }
+  .series-card,.manga-missing { animation:none; }
+}
