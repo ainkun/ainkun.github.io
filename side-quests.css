@@ -1,11 +1,54 @@
-/* The shrine grounds (side-quests.html): the arrival scene, the ema board, and the library each ema opens on the page.
-   The shared palette, backdrop and footer live in shrine.css. */
-.shrine-particles { position:fixed;inset:0 0 auto;z-index:-1;height:100vh;height:100lvh;overflow:hidden;pointer-events:none; }
+/* The shrine grounds (side-quests.html): one screen that never scrolls. The painting fills it, the title stands in the open
+   sky, and the ema rack (絵馬掛所) painted beside the torii opens the quest board: the rack up close. Choosing an ema turns it
+   over into its library, all in place. The shared palette, painting and way-back chip live in shrine.css. */
+.grounds,.grounds body { height:100%;overflow:hidden;overscroll-behavior:none; }
+.grounds {
+  /* The painting (2752×1536) covers the screen at 66% 42% (shrine.css). These give its box, so what is painted in it can be
+     found at every size. Nothing scrolls here, so the visible height (dvh) is the whole height. */
+  --stage-w:max(100vw,100dvh * 1.79167);--stage-h:max(100dvh,100vw * .55814);
+  --stage-x:calc((100vw - var(--stage-w)) * .66);--stage-y:calc((100dvh - var(--stage-h)) * .42);
+  --way-top:clamp(16px,2.4vw,28px);--edge:clamp(20px,5.5vw,92px);
+  --prop-tone:saturate(1);--ema-tone:saturate(1);--glint:#fff6d8;
+}
+html[data-time=evening].grounds { --prop-tone:sepia(.22) saturate(1.15) brightness(.9) hue-rotate(-8deg);--ema-tone:sepia(.14) saturate(1.1) brightness(.96) hue-rotate(-6deg);--glint:#ffe6c7; }
+/* At night the close-up's frame sits in shadow and its ema catch the lantern light. */
+html[data-time=night].grounds { --prop-tone:brightness(.62) saturate(.72) hue-rotate(6deg);--ema-tone:sepia(.35) saturate(1.08) brightness(.9);--glint:#f3ecdf; }
+.grounds body { min-height:0; }
+.grounds main { position:relative;height:100%; }
+.shrine-particles { position:fixed;inset:0 0 auto;z-index:-1;height:100vh;height:100dvh;overflow:hidden;pointer-events:none; }
+.grounds .shrine-scene { height:100vh;height:100dvh;transform-origin:var(--zoom-x,45%) var(--zoom-y,65%);transition:transform 1s cubic-bezier(.2,.8,.2,1),filter 1s ease; }
+/* Walking up to the rack, the painting comes closer and softens, like a camera focusing on what is in front of it. */
+[data-state=board] .shrine-scene { transform:scale(1.18);filter:blur(3px) brightness(.92); }
+[data-state=library] .shrine-scene { transform:scale(1.2);filter:blur(5px) brightness(.84); }
+/* The same painting without the rack (the scene before it was painted in). Up close, the rack has come forward out of the
+   scene, so the painting behind it fades to this one; stepping back, the rack settles into its place again.
+   side-quests.js loads it after the page is shown (is-ready), so the first screen stays light. */
+.grounds { --plate:url('assets/morning-shrine-bare.webp');--rack-mask:url('assets/morning-rack-mask.webp'); }
+html[data-time=evening].grounds { --plate:url('assets/evening-shrine-bare.webp');--rack-mask:url('assets/evening-rack-mask.webp'); }
+html[data-time=night].grounds { --plate:url('assets/night-shrine-bare.webp');--rack-mask:url('assets/night-rack-mask.webp'); }
+.scene-plate { position:absolute;inset:0;background:66% 42%/cover no-repeat;opacity:0;transition:opacity .45s ease .35s; }
+.scene-plate.is-ready { background-image:var(--plate); }
+[data-state=board] .scene-plate,[data-state=library] .scene-plate { opacity:1;transition:opacity .45s ease; }
+/* A short clip of the rack lies exactly over it, so its ema swing on their cords (one for each time of day; side-quests.js
+   adds it, but not with reduced motion or data saving). Nothing changes when it starts: in the morning the painting around
+   the rack is the clip's own first frame and the clip's edges fade into it; in the evening and at night only the band
+   where the ema swing shows (<time>-rack-band.webp), so the painting around them stays as painted, and the painting holds
+   the clip's first frame in that band. */
+.scene-clip {
+  position:absolute;left:calc(var(--stage-x) + var(--stage-w) * .36589);top:calc(var(--stage-y) + var(--stage-h) * .43148);
+  width:calc(var(--stage-w) * .23359);height:calc(var(--stage-h) * .47778);object-fit:fill;pointer-events:none;
+  -webkit-mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent),linear-gradient(transparent,#000 9%,#000 91%,transparent);-webkit-mask-composite:source-in;
+  mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent),linear-gradient(transparent,#000 9%,#000 91%,transparent);mask-composite:intersect;
+}
+html[data-time=evening] .scene-clip { -webkit-mask:url('assets/evening-rack-band.webp') 0 0/100% 100% no-repeat;mask:url('assets/evening-rack-band.webp') 0 0/100% 100% no-repeat; }
+html[data-time=night] .scene-clip { -webkit-mask:url('assets/night-rack-band.webp') 0 0/100% 100% no-repeat;mask:url('assets/night-rack-band.webp') 0 0/100% 100% no-repeat; }
 
-/* Arrival: the painting fills the screen. The title stands in the open sky on the left, and the quest board stands on the
-   shrine grounds on the right, so both are there before any scrolling. */
-.shrine-hero { position:relative;isolation:isolate;overflow-x:clip;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:stretch;gap:20px clamp(16px,3vw,40px);min-height:100vh;min-height:100svh;padding:clamp(16px,2.4vw,28px) clamp(20px,5.5vw,92px) 0; }
-.shrine-intro { display:flex;flex-direction:column;align-items:flex-start;padding-bottom:clamp(20px,4vh,40px); }
+/* The way back, top left: 帰り道 to the homepage, or one step out of the quest board or a library. */
+.grounds-way { position:absolute;z-index:6;top:var(--way-top);left:var(--edge); }
+
+/* The title stands in the open sky on the left, and steps aside when the rack is opened. */
+.shrine-hero { position:absolute;z-index:2;top:calc(var(--way-top) + 36px);left:var(--edge);pointer-events:none;transition:opacity .5s ease .15s,translate .7s cubic-bezier(.2,.8,.2,1) .1s; }
+[data-state=board] .shrine-hero,[data-state=library] .shrine-hero { opacity:0;translate:-28px 0;visibility:hidden;transition:opacity .3s ease,translate .5s ease,visibility 0s .5s; }
 .shrine-heading { position:relative;display:flex;align-items:stretch;gap:clamp(14px,1.6vw,22px);margin-top:clamp(28px,9vh,110px);max-width:min(46vw,680px); }
 .shrine-heading::before { content:'';position:absolute;inset:-26% -40% -30% -24%;z-index:-1;background:radial-gradient(closest-side,var(--hero-veil),transparent);pointer-events:none; }
 .shrine-pillar { flex:none;display:flex;filter:drop-shadow(0 10px 14px #1d1a1440); }
@@ -22,77 +65,114 @@
 .shrine-hero h1 { margin:10px 0 0;font:800 clamp(42px,4.5vw,68px)/1 var(--serif);letter-spacing:-.01em;color:var(--ink); }
 .shrine-hero h1 em { display:block;font-style:normal;color:var(--accent); }
 
-/* The ema board (絵馬掛所): a tall roofed rack on the right, under the time-of-day panel, four ema hanging one above another.
-   Each ema is sized from the window height (--ema-w), so the whole rack, roof to footings, fits on the first screen. */
-.quest-board {
-  --cols:1;--gap:14px;--pad:26px;--ema-w:clamp(104px,calc((100svh - 470px) / 2.936),160px);--ema-h:calc(var(--ema-w) * .734);--row:calc(var(--ema-h) + 54px);
-  display:flex;flex-direction:column;align-self:stretch;padding-top:72px;
+/* The painting's box, and a button over the rack painted in it, just left of the torii (the painting's 38.5–58% across,
+   46.5–87.5% down). Everything on the button is sized from its width (cqw). */
+.scene-stage { position:fixed;z-index:1;left:var(--stage-x);top:var(--stage-y);width:var(--stage-w);height:var(--stage-h);pointer-events:none; }
+.rack-spot {
+  position:absolute;left:38.5%;top:46.5%;width:19.5%;height:41%;padding:0;border:0;border-radius:14px;background:none;
+  container-type:inline-size;pointer-events:auto;cursor:pointer;
 }
-.ema-rack {
-  --post-width:14px;--footing:linear-gradient(var(--stone-light),var(--stone) 45%,var(--stone-dark));
-  position:relative;flex:1;display:flex;flex-direction:column;width:calc(var(--cols) * var(--ema-w) + (var(--cols) - 1) * var(--gap) + 2 * var(--pad));padding:0 var(--pad) 30px;
-  background:var(--footing) left calc(var(--pad) * .35 - 8px) bottom 6px/calc(var(--post-width) + 16px) 14px no-repeat,var(--footing) right calc(var(--pad) * .35 - 8px) bottom 6px/calc(var(--post-width) + 16px) 14px no-repeat,
-    radial-gradient(closest-side,#00000052,transparent) center bottom/112% 22px no-repeat;
+.rack-spot:focus-visible { outline:2px solid var(--accent);outline-offset:4px; }
+/* So the rack is noticed: hovering or focusing it lights up the rack itself, in its own shape (--rack-mask, the painted
+   rack cut out of each painting; it covers the button grown by 3% each side), like an object you can use in a game; every
+   few seconds a glint runs along it and a few leaves (fireflies at night) blow past. */
+.rack-spot::after {
+  content:'';position:absolute;inset:-3%;pointer-events:none;opacity:0;transition:opacity .35s ease;
+  -webkit-backdrop-filter:brightness(1.2);backdrop-filter:brightness(1.2);
+  -webkit-mask:var(--rack-mask) 0 0/100% 100% no-repeat;mask:var(--rack-mask) 0 0/100% 100% no-repeat;
 }
-.ema-rack::before,.ema-rack::after { content:'';position:absolute;top:16px;bottom:20px;width:var(--post-width);border-radius:3px 3px 0 0;background:linear-gradient(90deg,var(--post-dark),var(--post) 45%,var(--post-dark));box-shadow:0 8px 18px #0000002e; }
-.ema-rack::before { left:calc(var(--pad) * .35); }
-.ema-rack::after { right:calc(var(--pad) * .35); }
-.rack-roof {
-  position:relative;z-index:1;flex:none;height:clamp(30px,calc(var(--ema-w) * .28),44px);margin:0 calc(var(--pad) * -.7);filter:drop-shadow(0 8px 10px #00000030);
-  clip-path:polygon(6% 0,94% 0,100% 74%,99.4% 100%,.6% 100%,0 74%);
-  background:radial-gradient(circle at 13px calc(100% - 9px),var(--roof-light) 0 3.5px,#1b1a19 4px 5px,transparent 5.5px) 0 0/24px 100% repeat-x,
-    linear-gradient(#1f1d1c 0 5px,transparent 5px calc(100% - 8px),var(--roof-light) calc(100% - 8px) calc(100% - 5px),#1b1a19 calc(100% - 5px)),
-    repeating-linear-gradient(90deg,#ffffff0f 0 3px,transparent 3px 24px),linear-gradient(var(--roof-light),var(--roof) 60%);
+.rack-spot:hover::after,.rack-spot:focus-visible::after { opacity:1; }
+/* Up close or in a library, the painted rack is not a button. */
+[data-state=board] .rack-spot,[data-state=library] .rack-spot { visibility:hidden; }
+/* The quest marker: a tiny ema with a red "!" bobbing over the roof, like the mark over a quest-giver in a game. It comes a
+   moment after arriving (is-hinting) and leaves for the visit once the rack has been opened (is-seen). Above it stands a
+   small wooden nameplate, like the signs beside a shrine's ema rack: it stays, and settles onto the roof once the marker
+   has gone. Hovering or focusing the rack brightens it. */
+.rack-hint { position:absolute;left:50%;bottom:calc(100% - 2px);translate:-50% 0;display:flex;flex-direction:column;align-items:center; }
+.rack-marker {
+  position:relative;display:grid;place-items:end center;width:clamp(34px,13cqw,52px);aspect-ratio:480/530;padding-bottom:6%;opacity:0;
+  background:url('assets/ema.webp') center/100% 100% no-repeat;filter:drop-shadow(0 0 5px #ffe4a3cc) drop-shadow(0 2px 3px #24160b66);
+  font:800 clamp(16px,6.2cqw,26px)/1 var(--serif);color:var(--seal);transition:opacity .6s ease;
 }
-.rack-sign { position:relative;z-index:1;width:max-content;max-width:100%;margin:0 auto;padding:8px 16px 7px;border:3px solid var(--post-dark);border-top:0;border-radius:0 0 4px 4px;background:linear-gradient(var(--wood-light),var(--wood));text-align:center;font-weight:400;box-shadow:0 10px 20px #00000029; }
-.rack-sign [lang=ja] { display:block;margin-right:-.3em;font:800 clamp(15px,calc(var(--ema-w) * .14),22px)/1.2 var(--serif);letter-spacing:.3em;color:var(--ema-ink); }
-.rack-sign small { display:block;margin:3px -.26em 0 0;font:700 8px/1.2 var(--mono);letter-spacing:.26em;color:var(--seal); }
-.ema-grid {
-  display:grid;grid-template-columns:repeat(var(--cols),var(--ema-w));grid-auto-rows:var(--row);justify-content:center;column-gap:var(--gap);
-  list-style:none;margin:12px calc(var(--pad) * -1) 0;padding:0 var(--pad);
-  background:repeating-linear-gradient(transparent 0 10px,#ffffff26 10px 12px,var(--post) 12px 22px,var(--post-dark) 22px 25px,transparent 25px var(--row));
+.rack-spot.is-hinting .rack-marker { opacity:1;animation:marker-bob 2.4s ease-in-out infinite,marker-glow 2.4s ease-in-out infinite; }
+.rack-spot.is-seen .rack-marker { display:none; }
+.rack-label {
+  position:absolute;left:50%;bottom:calc(100% + 6px);display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 11px 4px;opacity:0;translate:-50% 4px;
+  border:1.5px solid #5a3a22;border-radius:4px;background:linear-gradient(var(--wood-light),var(--wood));box-shadow:0 4px 10px #0000003d;white-space:nowrap;
+  transition:opacity .5s ease,translate .5s ease,background .25s,box-shadow .25s;
 }
-.ema-slot { position:relative;display:flex;justify-content:center;min-width:0; }
+.rack-label [lang=ja] { margin-right:-.25em;font:800 12px/1.1 var(--serif);letter-spacing:.25em;color:var(--ema-ink); }
+.rack-label small { margin-right:-.2em;font:700 7px/1.2 var(--mono);letter-spacing:.2em;color:var(--seal); }
+.rack-spot.is-hinting .rack-label,.rack-spot.is-seen .rack-label { opacity:1;translate:-50% 0; }
+.rack-spot:hover .rack-label,.rack-spot:focus-visible .rack-label { background:linear-gradient(#f7e6c4,var(--wood-light));box-shadow:0 6px 14px #00000052; }
+@keyframes marker-bob { 0%,100% { translate:0 0; } 50% { translate:0 -6px; } }
+@keyframes marker-glow { 0%,100% { filter:drop-shadow(0 0 3px #ffe4a399) drop-shadow(0 2px 3px #24160b66); } 50% { filter:drop-shadow(0 0 12px #ffe4a3) drop-shadow(0 0 4px #fff3cf) drop-shadow(0 2px 3px #24160b66); } }
+.rack-gust { position:absolute;inset:0;pointer-events:none; }
+.rack-gust::before {
+  content:'';position:absolute;inset:-3%;opacity:0;
+  background:linear-gradient(105deg,transparent 38%,color-mix(in srgb,var(--glint) 50%,transparent) 50%,transparent 62%) -150% 0/300% 100% no-repeat;
+  -webkit-mask:var(--rack-mask) 0 0/100% 100% no-repeat;mask:var(--rack-mask) 0 0/100% 100% no-repeat;
+}
+.rack-spot.is-gust .rack-gust::before { animation:rack-glint 1.8s ease; }
+.gust-leaf { position:absolute;left:var(--from-x);top:var(--from-y);width:max(13px,4.6cqw);height:max(8px,2.7cqw);border-radius:0 80% 0 80%;background:linear-gradient(135deg,transparent 46%,#00000022 48% 52%,transparent 54%),var(--leaf);opacity:0;animation:gust-blow 2.2s cubic-bezier(.3,.5,.4,1) var(--delay) both; }
+.gust-spark { position:absolute;left:var(--from-x);top:var(--from-y);width:max(5px,1.7cqw);height:max(5px,1.7cqw);border-radius:50%;background:#f6fbc0;box-shadow:0 0 1.4cqw .6cqw #e9f48cb3,0 0 4cqw 1.6cqw #d5ea5a38;opacity:0;animation:gust-rise 2.4s ease-in-out var(--delay) both; }
+@keyframes rack-glint { 0% { opacity:0;background-position:-150% 0; } 30% { opacity:1; } 100% { opacity:0;background-position:250% 0; } }
+@keyframes gust-blow { 0% { opacity:0;transform:translate(0,0) rotate(0); } 15%,70% { opacity:.95; } 100% { opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--spin)); } }
+@keyframes gust-rise { 0% { opacity:0;transform:translate(0,0); } 30%,65% { opacity:1; } 100% { opacity:0;transform:translate(var(--dx),var(--dy)); } }
+
+/* The quest board: the rack up close, in the middle of the screen, grown out of the painted one (side-quests.js). Its posts
+   may run off the bottom, like a close-up. Everything on it is sized from its width (cqw). */
+.rack {
+  --rack-w:min(92vw,860px,(100dvh - 120px) * 1.78);
+  position:fixed;left:calc(50vw - var(--rack-w) / 2);top:max(min(64px,9dvh),calc(50dvh - var(--rack-w) * .4));
+  width:var(--rack-w);aspect-ratio:1052/952;margin:0;container-type:inline-size;pointer-events:auto;opacity:0;visibility:hidden;
+}
+.rack.is-shown { opacity:1;visibility:visible; }
+/* A warm glow from the lanterns behind it at dusk and at night. */
+.rack::after { content:'';position:absolute;z-index:-1;inset:6% -32% 8%;background:radial-gradient(closest-side,#f0b45e66,transparent 78%);opacity:0;pointer-events:none; }
+html[data-time=evening] .rack::after { opacity:.5; }
+html[data-time=night] .rack::after { opacity:1; }
+.rack-art { position:absolute;inset:0;width:100%;height:100%;filter:var(--prop-tone);transition:filter 1.6s ease;user-select:none;-webkit-user-drag:none; }
+/* The sign hangs from the roof beam, above the rail. */
+.rack-sign {
+  position:absolute;z-index:2;left:50%;top:17%;translate:-50% 0;margin:0;padding:.7cqw 2.2cqw .6cqw;border:.45cqw solid #5a3a22;border-top-width:.25cqw;border-radius:0 0 .6cqw .6cqw;
+  background:linear-gradient(var(--wood-light),var(--wood));box-shadow:0 .8cqw 1.6cqw #00000038;text-align:center;font-weight:400;white-space:nowrap;filter:var(--prop-tone);transition:filter 1.6s ease;
+}
+.rack-sign [lang=ja] { display:block;margin-right:-.3em;font:800 3.1cqw/1.15 var(--serif);letter-spacing:.3em;color:var(--ema-ink); }
+.rack-sign small { display:block;margin:.3cqw -.26em 0 0;font:700 1.25cqw/1.2 var(--mono);letter-spacing:.26em;color:var(--seal); }
+
+/* The ema hang from the rail's hooks (--hook, a share of the rack's width): the quests on hooks 1, 3 and 5, and a fourth
+   quest would hang lower down on hook 4, behind them. Each sways from its hook. */
+.rack-ema { position:absolute;inset:0;z-index:1;margin:0;padding:0;list-style:none;isolation:isolate; }
+.ema-slot { position:absolute;z-index:2;top:31.5%;left:var(--hook);width:22%;translate:-50% 0; }
+.ema-slot.is-low { z-index:1;top:47%;width:18.5%; }
 .ema {
-  position:relative;display:block;width:var(--ema-w);height:var(--ema-h);margin:40px 0 0;padding:0;border:0;background:none;color:var(--ema-ink);
-  transform-origin:50% -22px;rotate:var(--tilt,0deg);filter:drop-shadow(0 7px 7px #24160b40);animation:ema-wind 7s ease-in-out var(--sway-delay,0s) infinite;
+  position:relative;display:block;width:100%;aspect-ratio:480/530;padding:0;border:0;color:var(--ema-ink);
+  background:url('assets/ema.webp') center/100% 100% no-repeat;transform-origin:50% 2%;rotate:var(--tilt,0deg);
+  filter:var(--ema-tone) drop-shadow(0 .5cqw .5cqw #24160b59);animation:ema-wind 7s ease-in-out var(--sway-delay,0s) infinite;transition:filter 1.6s ease;
 }
-.ema::before { content:'';position:absolute;z-index:1;left:50%;top:-22px;width:2px;height:36px;translate:-50% 0;border-radius:2px;background:linear-gradient(var(--cord),#8f2219); }
-.ema-board { position:absolute;inset:0;isolation:isolate;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:calc(var(--ema-h) * .27) 9px calc(var(--ema-h) * .09);clip-path:polygon(0 24%,50% 0,100% 24%,100% 100%,0 100%);background:var(--wood-edge); }
-.ema-board::before {
-  content:'';position:absolute;inset:3px;z-index:-1;clip-path:polygon(0 24%,50% 0,100% 24%,100% 100%,0 100%);
-  background:radial-gradient(circle at 50% 15%,#24150a 0 2.8px,#5c3c22 3.2px 4px,transparent 4.6px),var(--grain-fine),
-    radial-gradient(ellipse 70% 45% at 30% 75%,#ffffff24,transparent),linear-gradient(172deg,var(--wood-light),var(--wood) 55%,var(--wood-deep));
-}
-.ema-jp { font:600 max(13px,calc(var(--ema-w) * .14))/1.15 var(--hand);letter-spacing:.06em; }
-.ema-title { display:-webkit-box;max-width:100%;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2;font:600 max(9px,calc(var(--ema-w) * .088))/1.2 var(--hand);text-align:center;overflow-wrap:anywhere; }
-.ema-count { margin-top:2px;font:700 max(7px,calc(var(--ema-w) * .05))/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;opacity:.65; }
-.ema.is-blank .ema-board::after { content:'';width:30%;aspect-ratio:1;margin-top:8px;opacity:.45;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23b5402a'%3E%3Cpath d='M2 5.6c4 1 16 1 20 0l-.7 2.3c-4 .6-14.6.6-18.6 0z'/%3E%3Cpath d='M4.6 10h14.8v1.7H4.6zM11.2 7.9h1.6v2.2h-1.6zM6.6 8.1h1.9V21H6.6zM15.5 8.1h1.9V21h-1.9z'/%3E%3C/svg%3E") center/contain no-repeat; }
+.ema-board { position:absolute;left:8%;right:8%;top:50%;bottom:4%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center; }
+.ema-jp { font:600 4.2cqw/1.1 var(--hand);letter-spacing:.04em; }
+.ema-title { max-width:100%;font:600 max(9px,1.85cqw)/1.08 var(--hand);overflow-wrap:anywhere; }
+.ema-count { margin-top:.3cqw;font:700 max(7.5px,1.2cqw)/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.65; }
 button.ema { cursor:pointer; }
-button.ema:hover,button.ema:focus-visible { animation:ema-swing 1.5s ease-in-out;filter:drop-shadow(0 10px 10px #24160b52) brightness(1.04); }
-button.ema:focus-visible { outline:2px solid var(--accent);outline-offset:6px;border-radius:4px; }
-/* The ema whose library is open glows like a lantern-lit plaque. */
-button.ema[aria-expanded=true] { filter:drop-shadow(0 0 1.5px var(--cord)) drop-shadow(0 0 12px #f0b45e8c) drop-shadow(0 7px 7px #24160b40); }
+button.ema:hover,button.ema:focus-visible { animation:ema-swing 1.5s ease-in-out;filter:var(--ema-tone) brightness(1.06) drop-shadow(0 .8cqw .8cqw #24160b6b); }
+button.ema:focus-visible { outline:2px solid var(--accent);outline-offset:.8cqw;border-radius:.6cqw; }
 @keyframes ema-wind { 0%,100% { rotate:var(--tilt,0deg); } 50% { rotate:calc(var(--tilt,0deg) + 1.2deg); } }
 @keyframes ema-swing { 0%,100% { rotate:var(--tilt,0deg); } 22% { rotate:calc(var(--tilt,0deg) + 7deg); } 48% { rotate:calc(var(--tilt,0deg) - 5deg); } 72% { rotate:calc(var(--tilt,0deg) + 2.5deg); } }
 
-/* A library opens under the board: the manga bookcase, the omikuji rack of reviews, or the goshuin book of trips. */
-.library { position:relative;isolation:isolate;padding:clamp(36px,5vw,64px) clamp(16px,5vw,80px) clamp(70px,8vw,110px); }
-/* A light veil, so the painting stays clear while scrolling; the title bar and small labels carry their own frosted backing. */
-.library::before { content:'';position:absolute;inset:0;z-index:-1;background:var(--board-light,none),var(--board-veil);-webkit-mask-image:linear-gradient(transparent,#000 160px);mask-image:linear-gradient(transparent,#000 160px); }
-.library-head { display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 18px;max-width:1100px;margin:0 auto 34px;padding:16px 20px;border-radius:12px;background:var(--chip);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px); }
+/* A library: the chosen ema turns over into it, in the middle of the screen. What does not fit scrolls inside it. */
+.library {
+  position:fixed;z-index:4;top:calc(var(--way-top) + 50px);bottom:clamp(12px,3vh,28px);left:50%;translate:-50% 0;
+  display:flex;flex-direction:column;gap:clamp(10px,2vh,20px);width:min(1100px,calc(100vw - 2 * clamp(12px,4vw,60px)));
+}
+.library-head { flex:none;display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px 18px;padding:14px 20px;border-radius:12px;background:var(--chip);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px); }
 .library-head h2 { display:flex;flex-direction:column;gap:8px;margin:0;font:800 clamp(28px,3vw,42px)/1.1 var(--serif);outline:0; }
 .library-jp { font:700 13px/1 var(--jp);letter-spacing:.3em;color:var(--accent); }
-.library-count { margin:0 auto 6px 0;font:700 10px/1.4 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft); }
-.library-close { display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border:1px solid var(--line);border-radius:999px;background:var(--chip);font:700 10px/1.4 var(--mono);letter-spacing:.16em;cursor:pointer;transition:background .25s; }
-.library-close [lang=ja] { font:700 12px/1 var(--jp);letter-spacing:.1em;color:var(--accent); }
-.library-close:hover { background:var(--chip-hover); }
-.library-body { max-width:1100px;margin:0 auto; }
-.library-body>* { animation:library-open .7s cubic-bezier(.2,.8,.2,1) both; }
-.library-body.is-instant>* { animation:none; }
+.library-count { margin:0 0 6px;font:700 10px/1.4 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft); }
+.library-body { flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:6px 4px 12px;scrollbar-width:thin; }
 .library-empty { display:flex;flex-direction:column;align-items:center;gap:6px;width:fit-content;margin:0 auto;padding:30px 44px;border-radius:12px;background:var(--chip);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font:700 10px/1.4 var(--mono);letter-spacing:.2em;color:var(--ink-soft); }
 .library-empty [lang=ja] { font:800 22px/1 var(--serif);letter-spacing:.3em;color:var(--accent); }
-@keyframes library-open { from { opacity:0;transform:translateY(22px); } to { opacity:1;transform:none; } }
 
 /* 書庫 · Manga bookcase: covers face out on wooden shelves, each with a library call-number label (NDC 726.1 is manga)
    and a handwritten bookshop POP card taped in front. */
@@ -203,28 +283,25 @@ button.ema[aria-expanded=true] { filter:drop-shadow(0 0 1.5px var(--cord)) drop-
 }
 @keyframes firefly-glow { 0%,100% { opacity:.06; } 45%,60% { opacity:1; } }
 
-/* Tall screens: the torii stays in view at the top, then the title and a 2×2 board rest on a mist at the foot of the painting. */
+/* Tall screens: the painting sits larger and lower, so the torii's beams arch over the top, and it is centred on the rack
+   (the painting's 48.25% across). The title stands in the sky above the rack. */
 @media(max-aspect-ratio:5/4) {
-  .shrine-hero { flex-direction:column;flex-wrap:nowrap;justify-content:flex-start;gap:14px; }
-  .shrine-intro { flex:1;padding-bottom:0; }
-  .shrine-heading { margin-top:auto;max-width:100%; }
-  .shrine-heading::before { display:none; }
-  .shrine-hero::after { content:'';position:absolute;inset:auto 0 0;z-index:-1;height:min(70%,780px);background:linear-gradient(transparent,var(--board-veil) 38%);pointer-events:none; }
-  .quest-board { --cols:2;--ema-w:clamp(80px,min(30vw,calc(((100svh - 450px) / 2 - 54px) / .734)),150px);align-self:center;padding-top:0; }
-  .ema-rack { flex:none; }
-  /* The painting sits a little larger and lower, so the torii's beams arch over the top of the screen, clear of the title. */
-  .shrine-scene { background-size:auto 115%;background-position:70% 100%; }
+  .grounds { --stage-h:115dvh;--stage-w:calc(115dvh * 1.79167);--stage-x:calc(50vw - var(--stage-w) * .4825);--stage-y:-15dvh; }
+  .grounds .shrine-scene,.scene-plate { background-size:auto 115%;background-position:var(--stage-x) 100%; }
+  .shrine-heading { margin-top:clamp(16px,4dvh,48px);max-width:calc(100vw - 2 * var(--edge)); }
+  .rack { --rack-w:min(max(92vw,min(112vw,430px)),860px,(100dvh - 120px) * 1.78); }
+  /* The marker and its label stand over the right of the roof, clear of the title. */
+  .rack-hint { left:76%; }
 }
 @media(max-width:760px) {
-  .shrine-hero { padding:16px 16px 26px; }
+  .grounds { --way-top:16px;--edge:16px; }
   .shrine-heading { gap:12px; }
   .shrine-pillar [lang=ja] { padding:22px 9px 15px;font-size:16px; }
   .shrine-name { gap:10px;font-size:9px;letter-spacing:.26em; }
   .shrine-name::after { width:28px; }
   .shrine-hero h1 { font-size:clamp(36px,11vw,52px); }
-  .quest-board { --pad:20px;--gap:12px; }
-  .library { padding:30px 12px 64px; }
-  .library-head { margin-bottom:26px; }
+  .library { top:calc(var(--way-top) + 44px);bottom:10px;width:calc(100vw - 16px); }
+  .library-head { padding:12px 16px; }
   .bookcase { --cover-h:168px;--row:290px;--plank:calc(var(--cover-h) + 24px); }
   .shelf { grid-template-columns:repeat(auto-fill,minmax(132px,1fr)); }
   .volume { padding-top:24px; }
@@ -236,40 +313,44 @@ button.ema[aria-expanded=true] { filter:drop-shadow(0 0 1.5px var(--cord)) drop-
   .omikuji-fortune { font-size:34px; }
   .goshuin-book { --page-w:156px; }
 }
-/* Phones: a compact title (a small stone plate, then "Side Quests" on one line) fits between the torii and the board. */
+/* Phones: a smaller title, so it stays in the sky left of the torii's beams. */
 @media(max-aspect-ratio:5/4) and (max-width:760px) {
-  .shrine-heading { flex-wrap:wrap;align-items:center;gap:8px 10px; }
-  .shrine-heading::before { display:block;inset:-55% -14% -60% -10%; }
-  .shrine-title { display:contents; }
-  .shrine-pillar [lang=ja] { writing-mode:horizontal-tb;padding:4px 10px;font-size:13px;letter-spacing:.22em;clip-path:none; }
-  .shrine-hero h1 { flex-basis:100%;margin:0;font-size:clamp(30px,9.5vw,40px); }
-  .shrine-hero h1 em { display:inline; }
+  .shrine-pillar [lang=ja] { padding:20px 8px 13px;font-size:clamp(13px,4vw,16px); }
+  .shrine-hero h1 { font-size:clamp(28px,10vw,44px); }
 }
-@media(max-aspect-ratio:5/4) and (max-height:700px) { .ema-count { display:none; } }
-/* The smallest phones: smaller ema hung closer together, so the title still clears the torii. */
-@media(max-aspect-ratio:5/4) and (max-height:600px) {
-  .quest-board { --ema-w:72px;--row:calc(var(--ema-h) + 44px); }
-  .ema { margin-top:32px; }
-  .ema-board { padding-top:calc(var(--ema-h) * .24);padding-inline:4px; }
-  .ema-title { line-height:1.1; }
-  .rack-roof { height:26px; }
+/* The narrowest phones: smaller still, and the label without its rule, so both end before the torii's beams. */
+@media(max-aspect-ratio:5/4) and (max-width:300px) {
+  .shrine-heading { gap:9px; }
+  .shrine-name { font-size:8px;letter-spacing:.2em; }
+  .shrine-name::after { display:none; }
+  .shrine-pillar [lang=ja] { padding:17px 7px 11px;font-size:12px; }
+  .shrine-hero h1 { font-size:25px; }
 }
-/* Short landscape windows: four ema in one column would not fit, so the board becomes 2×2. */
-@media(max-height:780px) and (min-aspect-ratio:5/4) {
-  .quest-board { --cols:2;--ema-w:clamp(96px,calc((100svh - 360px) / 1.468),150px); }
-}
-/* Very short landscape windows (large zoom): size the heading by height so it stays clear of the torii. */
+/* Short landscape windows (large zoom): size the heading by height and start it at the top, so it stays clear of the
+   torii and to the left of the rack. */
 @media(max-height:500px) and (min-aspect-ratio:5/4) {
   .shrine-heading { gap:10px;margin-top:clamp(12px,5vh,28px); }
-  .shrine-pillar [lang=ja] { padding:18px 8px 12px;font-size:clamp(13px,4.6vh,18px); }
-  .shrine-hero h1 { font-size:clamp(28px,12vh,52px); }
+  .shrine-title { justify-content:flex-start; }
+  .shrine-pillar [lang=ja] { padding:clamp(12px,5vh,18px) clamp(6px,2vh,8px) clamp(9px,3.4vh,12px);font-size:clamp(10px,3.6vh,18px); }
+  .shrine-hero h1 { font-size:clamp(14px,8.5vh,52px); }
+  .library { top:calc(var(--way-top) + 40px);bottom:8px; }
+  .library-head { padding:8px 14px; }
+  .library-head h2 { flex-direction:row;align-items:baseline;gap:10px;font-size:24px; }
+}
+/* Very short windows (large zoom): no room for the label over the marker; the marker and the glow remain. */
+@media(max-height:420px) and (min-aspect-ratio:5/4) {
+  .rack-label { display:none; }
 }
 @media(max-height:260px) and (min-aspect-ratio:5/4) {
   .shrine-heading { flex-direction:column;gap:6px;margin-top:8px; }
   .shrine-pillar [lang=ja] { writing-mode:horizontal-tb;padding:4px 10px;font-size:13px;letter-spacing:.2em;clip-path:none; }
 }
 @media(prefers-reduced-motion:reduce) {
-  .shrine-particles { display:none; }
-  .ema,button.ema:hover,button.ema:focus-visible,.omikuji,.omikuji:hover,.omikuji:focus-visible,.library-body>* { animation:none; }
+  .shrine-particles,.rack-gust { display:none; }
+  .ema,button.ema:hover,button.ema:focus-visible,.omikuji,.omikuji:hover,.omikuji:focus-visible { animation:none; }
+  .grounds .shrine-scene,.scene-plate,[data-state] .scene-plate,.shrine-hero,[data-state] .shrine-hero,.rack-art,.rack-sign,.ema,.rack-spot::after { transition:none; }
+  /* Without motion, the marker stays still; the nameplate and the hover highlight remain. */
+  .rack-spot.is-hinting .rack-marker { animation:none; }
+  .rack-marker,.rack-label { transition:none; }
   .volume-cover,.gs-seal { transition:none; }
 }

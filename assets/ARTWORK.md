@@ -16,7 +16,7 @@ Use case: stylized-concept. Asset type: full-width background illustration for a
 
 ## Side Quests shrine scenes
 
-The Side Quests pages use their own backgrounds: `assets/morning-shrine.webp`, `evening-shrine.webp` and `night-shrine.webp`, a hilltop shrine above the same kind of quiet town, generated with Gemini and converted to WebP. Prompts, sources and the conversion are in [shrine-scenes.md](shrine-scenes.md).
+The Side Quests pages use their own backgrounds: `assets/morning-shrine.webp`, `evening-shrine.webp` and `night-shrine.webp`, a hilltop shrine above the same kind of quiet town, generated with Gemini and converted to WebP. Since 2026-11-01 a small ema rack, the quest board, is painted into each beside the torii, and its ema swing in short clips made from Gemini videos (`*-rack.mp4`). The first paintings, without the rack, are kept as `*-shrine-bare.webp`, and the rack up close is `ema-rack.webp` with `ema.webp` (ChatGPT). Prompts, sources and how the clips were made are in [shrine-scenes.md](shrine-scenes.md).
 
 ## Japanese copy
 
@@ -42,7 +42,9 @@ The Side Quests pages use their own backgrounds: `assets/morning-shrine.webp`, `
 | またね | See you again |
 | 寄り道神社 | Yorimichi Shrine, "detour shrine": the Side Quests place (its stone pillar) |
 | 帰り道 | The way home (back link from the shrine) |
-| 絵馬掛所 | Ema hanging place (the quest board's sign) |
+| 絵馬掛所 | Ema hanging place: the quest board's nameplate in the scene and its sign up close |
+| 戻る | Back (the way-back chip on the quest board, to the shrine) |
+| 絵馬 | Ema (the way-back chip in a library, to the quest board, with QUESTS) |
 | 漫画 · 感想 · 旅 | Manga · reviews (impressions) · travel: the three ema on the board |
 | 御神籤 | Omikuji, a shrine fortune slip (the head of each review slip) |
 | 大吉 · 中吉 · 小吉 · 吉 · 末吉 · 凶 | Fortunes from great blessing to curse, used as review ratings (9+, 8+, 7+, 6+, 4+, below 4) |
@@ -55,7 +57,7 @@ The Side Quests pages use their own backgrounds: `assets/morning-shrine.webp`, `
 | 書庫 | Library (back to the bookcase) |
 | 縦読み · ページ · 次へ · 前へ | Scroll reading · pages · next · previous (the reader) |
 | スクショ | Screenshots (casual), under each review |
-| 閉じる · 準備中 | Close · coming soon |
+| 準備中 | Coming soon (an empty library) |
 | 見本 · 試し | Sample · trial (placeholder content) |
 
 Design direction requested by the owner: https://2026.ctf.sekai.team/. The reference's bilingual navigation was available through search indexing; its live visual view could not be rendered in this session. This portfolio uses original markup, styling, and generated artwork, with no copied site assets.

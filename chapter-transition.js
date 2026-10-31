@@ -19,7 +19,7 @@
   const headerHeight = () => window.innerWidth <= 760 ? 124 : 0;
   const boundary = () => Math.max(0, hero.getBoundingClientRect().bottom + window.scrollY - headerHeight());
   const target = () => destination === 'home' ? 0 : boundary();
-  const ignored = event => event.target.closest('dialog, .sidebar, .creator-transition, input, textarea, select, [contenteditable="true"]') ||
+  const ignored = event => event.target.closest('dialog, .sidebar, input, textarea, select, [contenteditable="true"]') ||
     document.body.classList.contains('card-popup-open');
   const motionOff = () => reduced.matches || document.documentElement.dataset.motionPaused === 'true';
 

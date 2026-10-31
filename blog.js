@@ -374,7 +374,6 @@
   });
   window.addEventListener('pageshow', event => { if (event.persisted) visit.sync(true, true); });
 
-  document.querySelector('#year').textContent = new Date().getFullYear();
   function updateMotion() {
     document.body.classList.toggle('motion-paused', reduced.matches);
     document.documentElement.dataset.motionPaused = String(reduced.matches);

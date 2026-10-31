@@ -63,7 +63,11 @@
   document.head.append(preload);
 
   document.addEventListener('DOMContentLoaded', () => {
+    // A small button in the top-right corner shows the scene and the local time; it opens the three scenes and Auto.
     const controls = document.querySelector('.theme-controls');
+    const toggle = document.querySelector('.theme-toggle');
+    const menu = document.querySelector('.theme-menu');
+    const icon = document.querySelector('.theme-now');
     const buttons = [...document.querySelectorAll('[data-set-time]')];
     const autoButton = document.querySelector('.theme-auto');
     const clockText = document.querySelector('.theme-clock');
@@ -92,8 +96,13 @@
     function show(time) {
       const scene = document.querySelector('.shrine-scene:not(.is-leaving)');
       if (scene && time !== current && !reducedMotion.matches) {
-        const leaving = scene.cloneNode(false);
+        const leaving = scene.cloneNode(true);
         leaving.style.backgroundImage = getComputedStyle(scene).backgroundImage;
+        // Layers inside the scene (on the shrine grounds, the painting without its rack) keep their old picture too.
+        const layers = leaving.querySelectorAll('*');
+        scene.querySelectorAll('*').forEach((layer, index) => { layers[index].style.backgroundImage = getComputedStyle(layer).backgroundImage; });
+        // A clip playing in the scene is not copied: the painting under it shows the same picture.
+        leaving.querySelectorAll('video').forEach(video => video.remove());
         leaving.classList.add('is-leaving');
         scene.after(leaving);
         const retire = () => leaving.remove();
@@ -109,10 +118,32 @@
       autoButton.textContent = automatic ? 'Auto · Local' : 'Use local time';
       autoButton.setAttribute('aria-pressed', String(automatic));
       autoButton.title = automatic ? 'Following your local time' : 'Return to automatic local time';
-      clockText.textContent = `${clock.format(new Date())} Local`;
+      const time = clock.format(new Date());
+      clockText.textContent = time;
+      const shown = buttons.find(button => button.dataset.setTime === current)?.querySelector('svg');
+      if (shown && icon.dataset.time !== current) {
+        icon.replaceChildren(shown.cloneNode(true));
+        icon.dataset.time = current;
+      }
+      toggle.setAttribute('aria-label', `Time of day: ${scenes[current].label}, ${automatic ? 'following your local time' : 'preview'}, ${time}`);
       controls.dataset.mode = automatic ? 'auto' : 'preview';
       controls.setAttribute('aria-busy', String(pending !== null));
     }
+    function setOpen(open, returnFocus = false) {
+      menu.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      if (!open && returnFocus) toggle.focus();
+    }
+    toggle?.addEventListener('click', () => setOpen(menu.hidden));
+    // A click anywhere else closes it. Esc closes it before anything else on the page, such as an open library.
+    document.addEventListener('click', event => {
+      if (!menu.hidden && !controls.contains(event.target)) setOpen(false);
+    });
+    window.addEventListener('keydown', event => {
+      if (event.key !== 'Escape' || !menu || menu.hidden || !toggle.getClientRects().length) return;
+      event.preventDefault();
+      setOpen(false, controls.contains(document.activeElement));
+    }, true);
     async function select(time, spoken = true) {
       const version = ++request;
       pending = time;

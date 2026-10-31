@@ -111,9 +111,9 @@ Character and audio files are in `assets/blog/`. The teenage host matches `maini
 
 `side-quests.html` is a separate place: **寄り道神社 Yorimichi Shrine** (寄り道, *yorimichi*, is a detour on the way somewhere, the Japanese idea closest to a side quest). It is not in the sidebar menu. The only way in is the last line of the homepage's About terminal, `❯ ./side-quests`, a small easter egg with a faint dotted underline that turns gold on hover.
 
-The shrine has its own look: no sidebar, a hilltop shrine painting for the visitor's local time fixed behind everything, and its own **Morning / Evening / Night** panel at the top right with **Auto · Local** and the clock (the same hours as the home street). A scene chosen with the buttons lasts for the rest of the visit on every shrine page, until **Use local time**. Leaves fall by day, red dragonflies cross the sky at dusk and fireflies glow at night. **← 帰り道 / BACK HOME** returns to the homepage.
+The shrine has its own look: no sidebar, a hilltop shrine painting for the visitor's local time behind everything, and a small **time chip** at the top right: the time of day's icon and the local time. It opens **Morning / Evening / Night** and **Auto · Local** (the same hours as the home street). A scene chosen there lasts for the rest of the visit on every shrine page, until **Use local time**. Leaves fall by day, red dragonflies cross the sky at dusk and fireflies glow at night. **← 帰り道 / BACK HOME** returns to the homepage.
 
-The first screen shows the title and the **quest board (絵馬掛所)**, a small roofed rack with four ema: **漫画 Manga**, **感想 Anime/Manga Reviews**, **旅 Travel Blog** and a blank one for the next quest. On wide screens it stands on the right with the ema one above another; on short windows and phones it becomes 2×2. Clicking an ema opens its library right below the board (and adds `#manga`, `#reviews` or `#travel` to the address); **Close**, Back or **Esc** closes it.
+The shrine is **one screen that never scrolls**. Just left of the torii stands a small **ema rack (絵馬掛所)**, painted into the scene, with a wooden nameplate **絵馬掛所 / QUEST BOARD** above it. Its three ema swing gently on their cords. Until it is first opened, a bobbing **!** ema marks it, and every few seconds a gust of leaves (fireflies at night) blows past it. Hovering lights up the rack in its own shape. Clicking it walks up to the **quest board**, the rack up close with three ema: **漫画 Manga**, **感想 Anime/Manga Reviews** and **旅 Travel Blog** (`#quests` in the address). Clicking an ema turns it over into its library, on the same screen (`#manga`, `#reviews` or `#travel`). The chip at the top left steps back: **← 絵馬 / QUESTS** from a library, **← 戻る / BACK** from the board. The browser's Back and **Esc** do the same. A library longer than the screen scrolls inside its own frame.
 
 | Library | Looks like | Each entry opens |
 | --- | --- | --- |
@@ -180,7 +180,15 @@ Posts use a small, safe part of Markdown: a blank line between paragraphs, `## H
 
 #### Shrine scenes
 
-The paintings are `assets/morning-shrine.webp`, `evening-shrine.webp` and `night-shrine.webp`, made with Gemini and converted to WebP. Their prompts and sources are in [assets/shrine-scenes.md](assets/shrine-scenes.md). To change a scene, replace its file with the same name. To preview a scene, add `?time=morning`, `?time=evening` or `?time=night` to any shrine address; `?time=auto` returns to the clock.
+The paintings are `assets/morning-shrine.webp`, `evening-shrine.webp` and `night-shrine.webp`, made with Gemini and converted to WebP. Gemini painted the ema rack into each of the earlier rack-free scenes. Those stay as `*-shrine-bare.webp` and show behind the quest board when it opens. The close-up board itself is `ema-rack.webp` with `ema.webp` for each quest.
+
+Each time of day also has these files:
+
+- `*-rack-mask.webp`: the painted rack's shape, for the hover light and the gust's glint.
+- `*-rack.mp4`: a 5–7 second loop of the ema swinging, cut from the owner's Gemini videos. The morning clip covers the rack and the ground around it. The evening and night clips show only through `*-rack-band.webp`, the band where the ema swing.
+- The painting itself holds its clip's first frame (around the rack in the morning, in the ema band in the evening and at night), so nothing changes when a clip starts.
+
+The clips are left out with reduced motion or data saving, and the painting then shows the ema still. Prompts, sources and how the clips and masks were made are in [assets/shrine-scenes.md](assets/shrine-scenes.md). Replacing a painting or a video therefore means making its clip, band, mask and baked first frame again (an assistant can do this). To preview a scene, add `?time=morning`, `?time=evening` or `?time=night` to any shrine address; `?time=auto` returns to the clock.
 
 ### More customization
 
@@ -213,7 +221,7 @@ Use the three buttons at the top right to preview any scene. **Use local time** 
 
 The panel sits at the top right of the page. On desktop it scrolls away with the page, so it never covers the profile card or other content at any browser zoom; scroll back to the top to change the scene. On phones it stays inside the fixed top bar. At very narrow widths (about 500% zoom on a laptop) its buttons show icons only, and their names stay available to screen readers. These position rules are in `themes.css`.
 
-The [Side Quests](#side-quests-yorimichi-shrine) pages have the same panel and hours with their own shrine paintings (`shrine.js` and `shrine.css`). There, a scene chosen with the buttons lasts for the rest of the visit across every shrine page, until **Use local time**.
+The [Side Quests](#side-quests-yorimichi-shrine) pages use the same hours with their own shrine paintings (`shrine.js` and `shrine.css`). Instead of the panel they have a compact time chip, the time of day's icon and the local time, which opens the same choices. There, a scene chosen lasts for the rest of the visit across every shrine page, until **Use local time**.
 
 `themes.js` sets the initial theme before the page is painted and preloads only its background. Theme changes load and decode their image before blending the street scene and matching palette over 3.2 seconds with gentle easing. The incoming background uses an explicit opacity keyframe animation so the fade starts reliably even when the browser batches updates. Layered backgrounds preserve an in-progress blend during rapid clicks, and older requests cannot replace the latest choice. `theme-motion.css` animates the palette colors, including the logo, title, gradients, and translucent panels. System reduced-motion preferences make theme changes immediate. If a preview fails to load, the current theme remains available. Without JavaScript the morning palette is the fallback. All three images stay fixed during scrolling, with translucent section backgrounds above them.
 
@@ -318,9 +326,8 @@ repository-root/
 ├── side-quests.css, side-quests.js, quest-data.js
 ├── manga.css, manga.js, quest-post.css, quest-post.js
 ├── chapter-transition.js
-├── credit-transition.css, credit-transition.js
 ├── profile.js, script.js, themes.js
-├── mainimage.png, pakcyberbot.png
+├── mainimage.png
 ├── card-main-image.jpeg, card-back-main-clip.mp4, card-top-left-small.jpeg
 ├── CNAME                     # Custom domain: ainkun.com
 ├── .nojekyll
@@ -337,7 +344,9 @@ repository-root/
 └── assets/
     ├── favicon.svg
     ├── morning-street.png, evening-street.png, night-street.png
-    ├── morning-shrine.webp, evening-shrine.webp, night-shrine.webp
+    ├── morning-shrine.webp, evening-shrine.webp, night-shrine.webp   # the shrine, with the ema rack
+    ├── *-shrine-bare.webp, *-rack-mask.webp, *-rack.mp4, *-rack-band.webp   # per time: no rack, its shape, the ema clip, the clip's band
+    ├── ema-rack.webp, ema.webp     # the quest board up close
     ├── manga/, reviews/, travel/   # Side Quests covers, pages and photos
     ├── blog/                 # Host portraits, greeting MP3s, and credits
     └── logo-clean/ainkun-clean.png
@@ -388,7 +397,7 @@ After deployment, refresh the published page. Keep this README updated when a ch
 With Node.js installed, run from the project root:
 
 ```sh
-node --test "tests/*.test.cjs"   # all 64 Node tests
+node --test "tests/*.test.cjs"   # all 60 Node tests
 python tests/test_medium.py      # 5 RSS-parser tests
 node --check script.js           # syntax of the three scripts the tests do not load
 node --check profile.js
@@ -397,7 +406,7 @@ node --check side-quests.js
 
 The theme suite contains 10 behavior tests. Eleven additional card tests check proportional desktop/mobile sizing, opening, interrupting the animation with Escape, outside clicks, focus restoration, motion preferences, resizing, timed diagonal hints, clicks during hints, suspension/resumption when hidden or paused, and silent video playback without a background image. These use DOM models and do not replace browser checks for rendering, native focus trapping, or animation smoothness.
 
-Fourteen blog tests cover feed validation, caching/retry, portrait decoding and theme races, page navigation and modifier keys, greeting/farewell state, mute controls, blocked autoplay, interrupted audio, curated labels and their Medium-tag fallback, title/label search with tag filtering, and a check that every `data/blog-labels.json` entry matches a real article with 1–4 labels. Five Python tests cover RSS parsing, empty/error responses, duplicate/unsafe links, and keeping older archived articles during a refresh. Eleven chapter-transition and four creator-transition tests follow. Fourteen Side Quests tests complete the 64 Node tests: the shrine's hours match the home street, `?time=` and a chosen scene last for the visit, the board, manga, review and trip data rules (simple ids, safe links, manga page shapes, fortunes from ratings, captioned screenshots, kanji dates), page turning across chapters with right-to-left keys, taps and swipes, the Markdown subset with unsafe links and HTML kept as text, and that every file a bundled entry needs exists. Layouts were also checked in a real browser engine (headless Microsoft Edge driven by Playwright) at desktop and phone sizes and at browser zoom levels from 50% to 500%; real audio playback still needs a check on a device with sound.
+Fourteen blog tests cover feed validation, caching/retry, portrait decoding and theme races, page navigation and modifier keys, greeting/farewell state, mute controls, blocked autoplay, interrupted audio, curated labels and their Medium-tag fallback, title/label search with tag filtering, and a check that every `data/blog-labels.json` entry matches a real article with 1–4 labels. Five Python tests cover RSS parsing, empty/error responses, duplicate/unsafe links, and keeping older archived articles during a refresh. Eleven chapter-transition tests follow. Fourteen Side Quests tests complete the 60 Node tests: the shrine's hours match the home street, `?time=` and a chosen scene last for the visit, the board, manga, review and trip data rules (simple ids, safe links, manga page shapes, fortunes from ratings, captioned screenshots, kanji dates), page turning across chapters with right-to-left keys, taps and swipes, the Markdown subset with unsafe links and HTML kept as text, and that every file a bundled entry needs exists. Layouts were also checked in a real browser engine (headless Microsoft Edge driven by Playwright) at desktop and phone sizes and at browser zoom levels from 50% to 500%; real audio playback still needs a check on a device with sound.
 
 ## Troubleshooting
 
@@ -417,6 +426,7 @@ Fourteen blog tests cover feed validation, caching/retry, portrait decoding and 
 | Images or styles are missing | Upload the referenced files and preserve exact filename capitalization and relative paths. |
 | The live site shows older content | Wait for the deployment to finish, then hard-refresh: Ctrl+Shift+R on Windows/Linux or Cmd+Shift+R on macOS. |
 | Theme changes or hover effects are instant | Check your operating system's reduced-motion setting. |
+| The shrine's ema don't swing | The clips are left out with reduced motion or a data-saving setting; check both. |
 | Japanese text becomes question marks | Save the file as UTF-8; preserve the original characters when editing. |
 
 For Pages deployment errors, consult the repository's Actions run and [GitHub's publishing troubleshooting](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#troubleshooting-publishing-from-a-branch).
@@ -437,22 +447,16 @@ Design and behavior details for maintainers.
 - The Japanese motto line always stays on one line. At any window size or browser zoom it keeps its normal size and shrinks only as much as its box requires (the motto block near the end of `responsive.css`). That sizing assumes three two-character words. The English line does not shrink, so keep it to 26 characters or fewer; longer lines wrap at some zoom levels.
 - The back of the collectible card shows **AinKun** with **Evolves from Hussain K.** underneath, like an evolved trading card (`name` and `evolvesFrom` in `profile.js`), a **GLITCH TYPE** ribbon on the artwork (`type`), and the ability **Security Researcher** (`ability.title`) with the line "Researching the Android platform with a focus on reversing and vuln research." (`ability.description`). Every extra line of description takes room from the artwork, because the card keeps a fixed shape; this one is two lines on desktop and phones.
 - The card name and its Evolves line each stay on one line too. They keep their normal sizes (name 34px, or 30px on phones; Evolves line 9px) and shrink only when the card is very narrow, such as at 500% zoom on a laptop or on a folding phone (the last block of `responsive.css`). The sizing is set for the current texts, so recheck at high zoom if you make either one much longer.
-- The sidebar on every page ends with the **ainkun.** home wordmark. The bottom-left footer contains **Created by [PakCyberbot](https://pakcyberbot.com)**. The previous learning status and decorative-motion button have been removed; OS reduced-motion support remains.
+- The sidebar on every page ends with the **ainkun.** home wordmark. The pages have no footer strip: the bottom strip with **Created by PakCyberbot**, the year and またね / SEE YOU AGAIN, with its send-off animation, was removed from every page on 2026-11-01. The previous learning status and decorative-motion button have been removed; OS reduced-motion support remains.
 - The favicon uses the current transparent `assets/logo-clean/ainkun-clean.png` logo.
 - Explore my work uses white text for morning/evening and transitions to black over 3.2 seconds for night. Its Japanese label inherits the same color.
 - The card's upper-right diamond is drawn in CSS and geometrically centered inside its circle.
-
-### Creator-credit transition
-
-The complete **Created by PakCyberbot** text at the bottom-left of the footer is one padded link in the site's Space Mono font at regular weight, 11px on desktop and 9px on mobile. Ordinary activation of PakCyberbot plays a 2.4-second Japanese character-rain transition, fading toward the bottom, then navigates the current tab to `https://pakcyberbot.com`. The supplied `pakcyberbot.png` appears in the center with a gently pulsing logo and rotating loading ring. Every page preloads it, and the Pages build includes it. The blog farewell can play during this send-off. Ctrl/Cmd/Shift/Alt-click and middle-click retain native behavior; reduced motion follows the link immediately. Escape cancels the transition. Page lifecycle cleanup prevents a stale overlay after Back navigation.
-
-Shared implementation: `credit-transition.js` and `credit-transition.css`, loaded after the page scripts on every page and automatically included in the Pages build. `node tests/credit-transition.test.cjs` checks navigation timing, repeat clicks, native link behavior, reduced motion, cancellation, and cleanup (four passing tests). The transition was also checked in headless Edge on 2026-10-23.
 
 ### Native-zoom layout and researcher content
 
 `responsive.css` loads last on every page. Desktop navigation uses a 184px rail with compact spacing; the opening hero fills at least one complete viewport (100dvh on desktop, minus the 124px reserved mobile header), with smaller fluid heading/card sizes. There is no maximum-height cap: the archive bar stays below the initial fold at every zoom level. Enlarged content may grow taller to remain accessible. Text remains readable without changing the browser zoom or applying a page-wide transform. On phones, the heading stays full width while the card sits beside the description and actions, using compact spacing to fit the opening screen without the previous 950px forced minimum. Desktop projects use two columns, stacking on narrower screens.
 
-The About heading is **Who I am.** / ***What I do.*** (the second line in the accent colour, in the `<h2>` of `index.html`), with the 探索 **TANSAKU / EXPLORATION** label under it and no extra line. The About biography (`about` in `profile.js`) is the owner's own text: Hussain K., known as ainkun, a Security Researcher and casual CTF player, covering reverse engineering, malware analysis and development, mobile security, cryptography, vulnerability research, Android and application security, AI automation, and writeups. Below it, the About terminal shows `❯ cat README.md` with the line "This is my corner of the internet…" (written in `index.html`) and `❯ ls skills/`, which `script.js` builds from `skills` as lowercase directory names (Penetration Testing becomes `penetration-testing/`). The terminal ends with `❯ ./side-quests`, a link to the [Side Quests page](#side-quests-page). There are no skill chips, `whoami` line or `cat mindset.txt` line any more. The card techniques are **Reverse Engineering** (including malware reversing) and **Mobile Security**. `skills` contains **Penetration Testing, Cryptography, Reversing, Programming, Malware Dev, Android Security, AI Automation**; `analystCard.stats` has the same list without Penetration Testing. These are labels without invented numerical scores. Optional `traits` remain supported but are omitted from the current card to keep it compact.
+The About heading is **Who I am.** / ***What I do.*** (the second line in the accent colour, in the `<h2>` of `index.html`), with the 探索 **TANSAKU / EXPLORATION** label under it and no extra line. The About biography (`about` in `profile.js`) is the owner's own text: Hussain K., known as ainkun, a Security Researcher and casual CTF player, covering reverse engineering, malware analysis and development, mobile security, cryptography, vulnerability research, Android and application security, AI automation, and writeups. Below it, the About terminal shows `❯ cat README.md` with the line "This is my corner of the internet…" (written in `index.html`) and `❯ ls skills/`, which `script.js` builds from `skills` as lowercase directory names (Penetration Testing becomes `penetration-testing/`). The terminal ends with `❯ ./side-quests`, a link to the [Side Quests page](#side-quests-yorimichi-shrine). There are no skill chips, `whoami` line or `cat mindset.txt` line any more. The card techniques are **Reverse Engineering** (including malware reversing) and **Mobile Security**. `skills` contains **Penetration Testing, Cryptography, Reversing, Programming, Malware Dev, Android Security, AI Automation**; `analystCard.stats` has the same list without Penetration Testing. These are labels without invented numerical scores. Optional `traits` remain supported but are omitted from the current card to keep it compact.
 
 Latest validation (2026-10-30): all 50 Node tests and 5 Python tests pass, and the layout was checked in headless Edge at desktop and phone sizes and at browser zoom levels from 50% to 500%, including the theme panel at several scroll positions, the one-line motto, the back of the collectible card (name and Evolves line, ribbon, ability title and description, caption, footer), the one-line hero prompt, the hero without its old kicker line, the right-aligned scroll cue, the About terminal at desktop and phone widths, the new hero and card descriptions (2026-10-29), and the About terminal's `./side-quests` link with the Side Quests page at desktop, phone and 280px widths (2026-10-30).
 
@@ -460,20 +464,26 @@ The homepage archive bar (`#chapters`) fades and rises into view over one second
 
 ### Side Quests implementation
 
-- `shrine.js` (in `<head>`) sets the scene from local time, runs the theme panel and crossfades scenes. `shrine.css` holds the palettes, the fixed `100lvh` painting, the panel and the page transitions. `quest-data.js` holds the data rules, the hand-off between pages, the way back and Esc. `side-quests.js` draws the board, the libraries and the particles.
+- `shrine.js` (in `<head>`) sets the scene from local time, runs the time chip and its menu, and crossfades scenes (leaving clips out of the fading copy). `shrine.css` holds the palettes, the fixed `100lvh` painting, the time chip and the page transitions. `quest-data.js` holds the data rules, the hand-off between pages, the way back and Esc. `side-quests.js` runs the grounds: the rack, the quest board, the libraries, the clips and the particles.
+- **One screen:** `side-quests.html` is `<html class="grounds">`, and nothing on it scrolls. `body[data-state]` is `scene`, `board` or `library`. The `--stage-*` variables in `side-quests.css` give the painting's box on screen, so the rack's button (`.rack-spot`, at 38.5–58% across and 46.5–87.5% down the painting) and the clip (`.scene-clip`) sit exactly on the painted rack at every size. On tall screens the painting is drawn 115% high and centred on the rack.
+- **Moving between the three:** opening the board or a library adds `#quests`, `#manga`, `#reviews` or `#travel` with `history.pushState`. The way-back chip, Back and Esc each step back one place. Moves are queued, so quick clicks can't overlap. The close-up board grows out of the painted rack and shrinks back into it, and an ema turns over (rotateY) into its library and back (Web Animations). Behind the board the painting fades to its rack-free version (`.scene-plate`, loaded just after the page is shown).
+- **Cues:** the nameplate `.rack-label` shows after 1.2 seconds and stays. The `!` ema `.rack-marker` bobs until the rack is first opened in the visit (sessionStorage `quest-rack-opened`). A gust (`.rack-gust`) blows past every 7 seconds, every 22 once the rack has been opened. Hover and keyboard focus brighten the rack in its own shape: `backdrop-filter:brightness(1.2)` masked by `--rack-mask`.
+- **Clips:** `sway()` adds `<video class="scene-clip">` playing `assets/<time>-rack.mp4` under the rack-free plate. It plays only in the scene state while the tab is visible, swaps when the time changes, and is left out with reduced motion or Save-Data. The morning clip fades out at its box's edges; the evening and night clips are masked to their band (`*-rack-band.webp`).
 - The shrine and entry pages run their scripts at the end of `<body>` and hold their first frame with `<link rel="expect" href="#page-ready" blocking="render">`. An opened entry is handed to the next page in sessionStorage (`quest-handoff`), so its card is drawn at once. The shrine keeps the visit's listings (`quest-catalogs`) and refreshes them in the background, so returning never loads them again.
 - The openings are cross-document view transitions. The clicked piece and its match share a name: `quest-cover`, `quest-sheet` or `quest-flip`. `pageswap` and `pagereveal` play them in reverse on the way back. Links back to the shrine step back through history when the shrine opened the page, skipping the reader's own entries.
 - A manga's `shape` becomes the `--shape` CSS variable. On the bookcase every cover keeps the shelf height and takes its width from its shape (`--cover-w` on `.volume` in `side-quests.css`); `manga.css` uses it for the series cover and for each page still loading. So a cover lands in a box of its own shape when the manga opens.
 
-Latest validation (2026-10-31): 64 Node and 5 Python tests pass. In headless Edge the shrine passed the 81-layout title check and the 13-size first-screen board check. The openings and their reverse were confirmed from the transitions' own animations. Returning showed no reload and no replay, and the reader, screenshot viewer, theme panel and Esc layers worked with no errors. With A Date with Prime Numbers added, its 3:4 cover stands first on the shelf beside the 2:3 sample at desktop and phone sizes and keeps its shape through the opening, and the reader turns it left to right in both modes and ends with 完.
+Latest validation (2026-11-01): 60 Node and 5 Python tests pass. In headless Edge the grounds passed an 81-layout check (5 window sizes × 15 zoom levels, plus 6 phone sizes) of the scene, the board and a library. Nothing scrolls, and the title, rack, nameplate, marker and chips stay clear of each other. The board and library moves with the chip, Back and Esc work with the page cache on and off, with no errors. Each time of day's clip plays, and its first frame matches the painting (in the evening and at night a mean difference of 0.3 out of 255 per colour). Switching the time swaps the clip, reduced motion leaves it out, and hovering brightens only the rack itself.
+
+Earlier (2026-10-31), the shrine passed the 81-layout title check and the 13-size first-screen board check. The openings and their reverse were confirmed from the transitions' own animations. Returning showed no reload and no replay, and the reader, screenshot viewer, theme panel and Esc layers worked with no errors. With A Date with Prime Numbers added, its 3:4 cover stands first on the shelf beside the 2:3 sample at desktop and phone sizes and keeps its shape through the opening, and the reader turns it left to right in both modes and ends with 完.
 
 ### Opening chapter panel transition
 
 On the homepage, `chapter-transition.js` turns the opening/content boundary into a 620ms eased transition. A downward mouse-wheel gesture or upward finger swipe from Chapter 1 lands exactly at the archive bar (below the fixed mobile header). Upward scrolling that reaches this boundary returns to the beginning; scrolling farther down the content is normal. A short 180ms cooldown absorbs trailing wheel momentum. The scroll cue and Arrow/Page/Space keyboard scrolling support the same boundary behavior, with keyboard focus moved to the destination.
 
-Ctrl/Cmd-wheel zoom, horizontal gestures, sidebar scrolling, form controls, card dialogs, and the creator overlay are excluded. Reduced motion jumps immediately. If enlarged text makes the opening chapter taller than the available screen, its internal document range remains scrollable before transitioning out. Resizing settles an active transition; page lifecycle events clear stale frames. Scrollbar navigation remains native. Eleven DOM-model behavior checks pass with `node tests/chapter-transition.test.cjs`, and the wheel transition was checked in headless Edge on 2026-10-23.
+Ctrl/Cmd-wheel zoom, horizontal gestures, sidebar scrolling, form controls and card dialogs are excluded. Reduced motion jumps immediately. If enlarged text makes the opening chapter taller than the available screen, its internal document range remains scrollable before transitioning out. Resizing settles an active transition; page lifecycle events clear stale frames. Scrollbar navigation remains native. Eleven DOM-model behavior checks pass with `node tests/chapter-transition.test.cjs`, and the wheel transition was checked in headless Edge on 2026-10-23.
 
-The sidebar and footer wordmarks have been swapped on every page: **ainkun.** in the sidebar links home; the footer creator credit retains its regular Space Mono styling and Japanese rain/logo transition to PakCyberbot.
+On every page the **ainkun.** wordmark in the sidebar links home.
 
 ### Mobile chapter and background fixes
 

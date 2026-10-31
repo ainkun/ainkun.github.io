@@ -12,7 +12,6 @@
 @property --paper-overlay { syntax: "<color>"; inherits: true; initial-value: #f7f5ebd1; }
 @property --contact-overlay { syntax: "<color>"; inherits: true; initial-value: #f7f5ebbd; }
 @property --band-overlay { syntax: "<color>"; inherits: true; initial-value: #e9eddfc7; }
-@property --footer-overlay { syntax: "<color>"; inherits: true; initial-value: #e9eddfd1; }
 @property --secondary-ink { syntax: "<color>"; inherits: true; initial-value: #41513d; }
 @property --accent-soft { syntax: "<color>"; inherits: true; initial-value: #6e8d60; }
 @property --title { syntax: "<color>"; inherits: true; initial-value: #304e38; }
@@ -43,7 +42,7 @@
 
 :root { --theme-fade-duration: 3.2s; --theme-fade-easing: cubic-bezier(.4,0,.2,1); }
 html[data-theme] {
-  transition-property: --ink, --muted, --accent, --sunlight, --paper, --line, --surface, --surface-hover, --surface-tint, --surface-glass, --paper-overlay, --contact-overlay, --band-overlay, --footer-overlay, --secondary-ink, --accent-soft, --title, --title-shadow, --title-shadow-soft, --button-ink, --button-edge, --label-fill, --ornament, --card-edge, --selection, --terminal-bg, --terminal-ink, --terminal-line, --terminal-muted, --terminal-accent, --portrait-start, --portrait-mid, --portrait-end, --particle, --particle-glow, --leaf, --wash-strong, --wash-middle, --wash-faint, --wash-bottom, --wash-top;
+  transition-property: --ink, --muted, --accent, --sunlight, --paper, --line, --surface, --surface-hover, --surface-tint, --surface-glass, --paper-overlay, --contact-overlay, --band-overlay, --secondary-ink, --accent-soft, --title, --title-shadow, --title-shadow-soft, --button-ink, --button-edge, --label-fill, --ornament, --card-edge, --selection, --terminal-bg, --terminal-ink, --terminal-line, --terminal-muted, --terminal-accent, --portrait-start, --portrait-mid, --portrait-end, --particle, --particle-glow, --leaf, --wash-strong, --wash-middle, --wash-faint, --wash-bottom, --wash-top;
   transition-duration: var(--theme-fade-duration);
   transition-timing-function: var(--theme-fade-easing);
 }

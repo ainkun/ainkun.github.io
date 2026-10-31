@@ -140,10 +140,10 @@
       window.history.go(-1 - (window.history.state?.depth || 0));
     });
     // Esc closes an opened entry the same way as its way-back chip. Layers close one at a time: the reader closes to its
-    // series page first (manga.js), and an open screenshot or the creator's send-off closes before the page does.
+    // series page first (manga.js), and an open screenshot closes before the page does.
     document.addEventListener('keydown', event => {
       if (event.key !== 'Escape' || event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
-      if (document.body.dataset.view === 'reader' || document.querySelector('dialog[open], .creator-transition')) return;
+      if (document.body.dataset.view === 'reader' || document.querySelector('dialog[open]')) return;
       const way = [...document.querySelectorAll('main a.shrine-back[href^="side-quests.html"]')].find(link => link.offsetParent !== null);
       if (!way) return;
       event.preventDefault();
