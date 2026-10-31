@@ -97,7 +97,7 @@ button.ema[aria-expanded=true] { filter:drop-shadow(0 0 1.5px var(--cord)) drop-
 /* 書庫 · Manga bookcase: covers face out on wooden shelves, each with a library call-number label (NDC 726.1 is manga)
    and a handwritten bookshop POP card taped in front. */
 .bookcase {
-  --cover-w:150px;--cover-h:225px;--row:356px;--plank:calc(var(--cover-h) + 28px);--inset:clamp(14px,2vw,26px);
+  --cover-h:225px;--row:356px;--plank:calc(var(--cover-h) + 28px);--inset:clamp(14px,2vw,26px);
   position:relative;padding:0 var(--inset);border:clamp(10px,1.2vw,14px) solid var(--post);border-bottom-width:clamp(16px,1.8vw,22px);border-radius:3px;
   background:linear-gradient(90deg,#0000004d,transparent 7%,transparent 93%,#0000004d),linear-gradient(#00000059,#00000026 30%,#0000004d),var(--post-dark);
   box-shadow:inset 0 8px 18px #00000059,0 22px 40px #0000003d;
@@ -108,7 +108,8 @@ button.ema[aria-expanded=true] { filter:drop-shadow(0 0 1.5px var(--cord)) drop-
     var(--post-dark) calc(var(--plank) + 16px) calc(var(--plank) + 19px),#00000040 calc(var(--plank) + 19px) calc(var(--plank) + 30px),transparent calc(var(--plank) + 30px) var(--row));
 }
 .shelf>li { display:flex;justify-content:center;min-width:0; }
-.volume { position:relative;display:flex;flex-direction:column;align-items:center;width:100%;padding-top:28px;color:var(--paper-ink); }
+/* Covers share the shelf height; each is as wide as its manga's page shape (--shape, set per volume) makes it. */
+.volume { --cover-w:calc(var(--cover-h) * (var(--shape, 2 / 3)));position:relative;display:flex;flex-direction:column;align-items:center;width:100%;padding-top:28px;color:var(--paper-ink); }
 /* A bookend stands after the last volume, so a short shelf looks arranged rather than empty. */
 .shelf>li:last-child .volume::after { content:'';position:absolute;top:calc(28px + var(--cover-h) - 118px);left:calc(50% + var(--cover-w) / 2 + 10px);width:12px;height:118px;border-radius:2px 2px 0 0;background:linear-gradient(90deg,#2b2a28,#55524d 45%,#2b2a28);box-shadow:3px 2px 6px #00000059; }
 .volume-cover { position:relative;display:block;width:var(--cover-w);height:var(--cover-h);overflow:hidden;border-radius:2px 4px 4px 2px;background:var(--paper-deep);box-shadow:5px 6px 14px #00000066;transform-origin:50% 100%;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s; }
@@ -224,7 +225,7 @@ button.ema[aria-expanded=true] { filter:drop-shadow(0 0 1.5px var(--cord)) drop-
   .quest-board { --pad:20px;--gap:12px; }
   .library { padding:30px 12px 64px; }
   .library-head { margin-bottom:26px; }
-  .bookcase { --cover-w:112px;--cover-h:168px;--row:290px;--plank:calc(var(--cover-h) + 24px); }
+  .bookcase { --cover-h:168px;--row:290px;--plank:calc(var(--cover-h) + 24px); }
   .shelf { grid-template-columns:repeat(auto-fill,minmax(132px,1fr)); }
   .volume { padding-top:24px; }
   .shelf>li:last-child .volume::after { top:calc(24px + var(--cover-h) - 96px);height:96px; }

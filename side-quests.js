@@ -75,6 +75,7 @@
         const chapters = `${manga.chapters.length} ${manga.chapters.length === 1 ? 'chapter' : 'chapters'}`;
         const volume = make('a', 'volume');
         volume.href = `manga.html?id=${manga.id}`;
+        volume.style.setProperty('--shape', manga.shape);
         entries.set(volume, manga);
         volume.setAttribute('aria-label', `${manga.title}. ${chapters}, ${status.label.toLowerCase()}`);
         const cover = make('span', 'volume-cover');

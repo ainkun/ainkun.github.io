@@ -1,6 +1,20 @@
 {
-  "about": "Manga on the library bookcase. Pages live at assets/manga/<id>/<chapter number>/<page>.webp with two-digit page numbers (01.webp, 02.webp, …), and the cover at assets/manga/<id>/cover.webp. Each chapter says how many pages it has. direction is \"rtl\" (read right to left, like Japanese manga) or \"ltr\"; status is \"ongoing\" (連載中) or \"complete\" (完結). The entry below is a 見本 (sample) for the preview.",
+  "about": "Manga on the library bookcase, in the order written. Pages live at assets/manga/<id>/<chapter number>/<page>.webp with two-digit page numbers (01.webp, 02.webp, …), and the cover at assets/manga/<id>/cover.webp. Each chapter says how many pages it has. direction is \"rtl\" (read right to left, like Japanese manga) or \"ltr\"; status is \"ongoing\" (連載中) or \"complete\" (完結); shape is the shape of the pages and cover, width:height (2:3 if left out). The sample-manga entry is a 見本 (sample) for the preview.",
   "manga": [
+    {
+      "id": "a-date-with-prime-numbers",
+      "title": "A Date with Prime Numbers",
+      "status": "complete",
+      "direction": "ltr",
+      "shape": "3:4",
+      "summary": "A Cat Café, Cryptography, and One Very Long Explanation",
+      "chapters": [
+        {
+          "title": "One-shot",
+          "pages": 14
+        }
+      ]
+    },
     {
       "id": "sample-manga",
       "title": "Sample Manga",

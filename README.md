@@ -123,12 +123,12 @@ The first screen shows the title and the **quest board (絵馬掛所)**, a small
 
 Opening an entry really opens it in Edge, Chrome and Safari: the manga cover lifts off the shelf and lands where it sits on the series page, the omikuji slip unfolds into the review sheet, and the stamp-book page flips over into the trip. The **←** chips, Back and **Esc** close it again in reverse, returning to the library exactly as it was left. Other browsers zoom and fade instead; reduced motion opens and closes at once.
 
-Everything in the libraries now is a **見本 (sample)** placeholder until real content replaces it.
+The manga library holds the owner's one-shot **A Date with Prime Numbers** (14 pages, read left to right), shelved before the 見本 sample. Everything else in the libraries is still a **見本 (sample)** placeholder until real content replaces it.
 
 #### Add a manga
 
-1. Put the pages in `assets/manga/<id>/<chapter number>/` as `01.webp`, `02.webp`, … and the cover at `assets/manga/<id>/cover.webp`. Pages from a drawing app can be converted to WebP first (an assistant can do this).
-2. Add the manga to `data/manga.json`:
+1. Put the pages in `assets/manga/<id>/<chapter number>/` as `01.webp`, `02.webp`, … and the cover at `assets/manga/<id>/cover.webp`. Pages from a drawing app can be converted to WebP first (an assistant can do this). About 1600 px wide at quality 82 keeps lettering and screentone sharp at a fraction of the size (A Date with Prime Numbers went from about 40 MB of JPEGs to 8.5 MB), and the cover can be the first page at 800 px.
+2. Add the manga to `data/manga.json`. The bookcase shows them in the order written.
    ```json
    {
      "id": "my-manga",
@@ -136,11 +136,12 @@ Everything in the libraries now is a **見本 (sample)** placeholder until real 
      "jp": "私の漫画",
      "status": "ongoing",
      "direction": "rtl",
+     "shape": "2:3",
      "summary": "One or two lines about it.",
      "chapters": [{ "title": "Chapter 1", "pages": 24 }]
    }
    ```
-   `id` is lowercase words joined by hyphens (it names the folder). `direction` is `rtl` (right to left, like Japanese manga) or `ltr`. `status` is `ongoing` (連載中) or `complete` (完結; the last chapter then ends with 完 instead of つづく).
+   `id` is lowercase words joined by hyphens (it names the folder). `direction` is `rtl` (right to left, like Japanese manga) or `ltr`. `status` is `ongoing` (連載中) or `complete` (完結; the last chapter then ends with 完 instead of つづく). `shape` is the shape of the pages and cover as width:height, such as `3:4` for A Date with Prime Numbers. It sizes the cover on the shelf and on the series page, and each page while it loads; leave it out for 2:3. A one-shot is a single chapter.
 3. Run `node --test "tests/*.test.cjs"`: it fails if a listed page or cover is missing.
 
 The reader scrolls down the chapter by default, with a progress bar that fills left to right. **ページ PAGES** switches to one page at a time: arrow keys, tapping either half or swiping turn the page (a right-to-left book turns forward with the left arrow, and its bar fills from the right). The choice and each visitor's last page are remembered in their browser for **Continue**. Esc closes the reader to the series page.
@@ -387,7 +388,7 @@ After deployment, refresh the published page. Keep this README updated when a ch
 With Node.js installed, run from the project root:
 
 ```sh
-node --test "tests/*.test.cjs"   # all 63 Node tests
+node --test "tests/*.test.cjs"   # all 64 Node tests
 python tests/test_medium.py      # 5 RSS-parser tests
 node --check script.js           # syntax of the three scripts the tests do not load
 node --check profile.js
@@ -396,7 +397,7 @@ node --check side-quests.js
 
 The theme suite contains 10 behavior tests. Eleven additional card tests check proportional desktop/mobile sizing, opening, interrupting the animation with Escape, outside clicks, focus restoration, motion preferences, resizing, timed diagonal hints, clicks during hints, suspension/resumption when hidden or paused, and silent video playback without a background image. These use DOM models and do not replace browser checks for rendering, native focus trapping, or animation smoothness.
 
-Fourteen blog tests cover feed validation, caching/retry, portrait decoding and theme races, page navigation and modifier keys, greeting/farewell state, mute controls, blocked autoplay, interrupted audio, curated labels and their Medium-tag fallback, title/label search with tag filtering, and a check that every `data/blog-labels.json` entry matches a real article with 1–4 labels. Five Python tests cover RSS parsing, empty/error responses, duplicate/unsafe links, and keeping older archived articles during a refresh. Eleven chapter-transition and four creator-transition tests follow. Thirteen Side Quests tests complete the 63 Node tests: the shrine's hours match the home street, `?time=` and a chosen scene last for the visit, the board, manga, review and trip data rules (simple ids, safe links, fortunes from ratings, captioned screenshots, kanji dates), page turning across chapters with right-to-left keys, taps and swipes, the Markdown subset with unsafe links and HTML kept as text, and that every file a bundled entry needs exists. Layouts were also checked in a real browser engine (headless Microsoft Edge driven by Playwright) at desktop and phone sizes and at browser zoom levels from 50% to 500%; real audio playback still needs a check on a device with sound.
+Fourteen blog tests cover feed validation, caching/retry, portrait decoding and theme races, page navigation and modifier keys, greeting/farewell state, mute controls, blocked autoplay, interrupted audio, curated labels and their Medium-tag fallback, title/label search with tag filtering, and a check that every `data/blog-labels.json` entry matches a real article with 1–4 labels. Five Python tests cover RSS parsing, empty/error responses, duplicate/unsafe links, and keeping older archived articles during a refresh. Eleven chapter-transition and four creator-transition tests follow. Fourteen Side Quests tests complete the 64 Node tests: the shrine's hours match the home street, `?time=` and a chosen scene last for the visit, the board, manga, review and trip data rules (simple ids, safe links, manga page shapes, fortunes from ratings, captioned screenshots, kanji dates), page turning across chapters with right-to-left keys, taps and swipes, the Markdown subset with unsafe links and HTML kept as text, and that every file a bundled entry needs exists. Layouts were also checked in a real browser engine (headless Microsoft Edge driven by Playwright) at desktop and phone sizes and at browser zoom levels from 50% to 500%; real audio playback still needs a check on a device with sound.
 
 ## Troubleshooting
 
@@ -462,8 +463,9 @@ The homepage archive bar (`#chapters`) fades and rises into view over one second
 - `shrine.js` (in `<head>`) sets the scene from local time, runs the theme panel and crossfades scenes. `shrine.css` holds the palettes, the fixed `100lvh` painting, the panel and the page transitions. `quest-data.js` holds the data rules, the hand-off between pages, the way back and Esc. `side-quests.js` draws the board, the libraries and the particles.
 - The shrine and entry pages run their scripts at the end of `<body>` and hold their first frame with `<link rel="expect" href="#page-ready" blocking="render">`. An opened entry is handed to the next page in sessionStorage (`quest-handoff`), so its card is drawn at once. The shrine keeps the visit's listings (`quest-catalogs`) and refreshes them in the background, so returning never loads them again.
 - The openings are cross-document view transitions. The clicked piece and its match share a name: `quest-cover`, `quest-sheet` or `quest-flip`. `pageswap` and `pagereveal` play them in reverse on the way back. Links back to the shrine step back through history when the shrine opened the page, skipping the reader's own entries.
+- A manga's `shape` becomes the `--shape` CSS variable. On the bookcase every cover keeps the shelf height and takes its width from its shape (`--cover-w` on `.volume` in `side-quests.css`); `manga.css` uses it for the series cover and for each page still loading. So a cover lands in a box of its own shape when the manga opens.
 
-Latest validation (2026-10-31): 63 Node and 5 Python tests pass. In headless Edge the shrine passed the 81-layout title check and the 13-size first-screen board check. The openings and their reverse were confirmed from the transitions' own animations. Returning showed no reload and no replay, and the reader, screenshot viewer, theme panel and Esc layers worked with no errors.
+Latest validation (2026-10-31): 64 Node and 5 Python tests pass. In headless Edge the shrine passed the 81-layout title check and the 13-size first-screen board check. The openings and their reverse were confirmed from the transitions' own animations. Returning showed no reload and no replay, and the reader, screenshot viewer, theme panel and Esc layers worked with no errors. With A Date with Prime Numbers added, its 3:4 cover stands first on the shelf beside the 2:3 sample at desktop and phone sizes and keeps its shape through the opening, and the reader turns it left to right in both modes and ends with 完.
 
 ### Opening chapter panel transition
 

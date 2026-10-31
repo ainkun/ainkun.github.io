@@ -303,6 +303,8 @@
       $('.manga-missing').hidden = false;
       return;
     }
+    // The cover and the pages waiting to load take the manga's page shape.
+    body.style.setProperty('--shape', manga.shape);
     data.noteReturn('manga', manga.id);
     route();
   }

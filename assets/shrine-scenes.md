@@ -50,4 +50,4 @@ No people, animals or insects (no fireflies). No text, logos or neon. No added l
 
 ## Sample art (見本)
 
-The placeholder manga cover and pages, review covers and screenshots, and travel photos in `assets/manga/`, `assets/reviews/` and `assets/travel/` were drawn with Pillow for the preview and are marked 見本 / SAMPLE. Replace them with real content; the steps are in the README's Side Quests section.
+The placeholder manga cover and pages, review covers and screenshots, and travel photos in `assets/manga/sample-manga/`, `assets/reviews/` and `assets/travel/` were drawn with Pillow for the preview and are marked 見本 / SAMPLE. Replace them with real content; the steps are in the README's Side Quests section. `assets/manga/a-date-with-prime-numbers/` is real: the owner's one-shot, converted from its page images.

@@ -59,6 +59,17 @@ test('manga need a simple id, a title and at least one chapter with pages', () =
   assert.equal(plain.cover, 'assets/manga/plain/cover.webp');
 });
 
+test('a manga page shape is width:height, read as a CSS ratio, and 2:3 unless it is a sensible one', () => {
+  const shapeOf = shape => data.normalizeManga({ manga: [{ id: 'shaped', title: 'Shaped', shape, chapters: [{ pages: 1 }] }] })[0].shape;
+  for (const [shape, css] of [['3:4', '3 / 4'], [' 1792 / 2400 ', '1792 / 2400'], ['4:3', '4 / 3'], ['0.7:1', '0.7 / 1'],
+    [undefined, '2 / 3'], ['', '2 / 3'], ['wide', '2 / 3'], ['3:0', '2 / 3'], ['0:4', '2 / 3'], ['9:1', '2 / 3'], ['-3:4', '2 / 3'], ['3:4;color:red', '2 / 3'], [34, '2 / 3']]) {
+    assert.equal(shapeOf(shape), css, String(shape));
+  }
+  // A manga handed from the bookcase to its page is read again there, and keeps its shape.
+  const [handed] = data.normalizeManga({ manga: [{ id: 'shaped', title: 'Shaped', shape: '3:4', chapters: [{ pages: 1 }] }] });
+  assert.equal(data.normalizeManga({ manga: [handed] })[0].shape, '3 / 4');
+});
+
 test('a review rating becomes its omikuji fortune', () => {
   for (const [rating, fortune] of [[10, '大吉'], [9, '大吉'], [8.5, '中吉'], [7, '小吉'], [6.5, '吉'], [4, '末吉'], [3.5, '凶'], [0, '凶']]) {
     assert.equal(data.fortuneFor(rating).jp, fortune, String(rating));

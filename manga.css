@@ -19,7 +19,7 @@ body[data-view=reader] .shrine-scene { filter:blur(18px) brightness(.3) saturate
   display:grid;grid-template-columns:minmax(170px,300px) 1fr;gap:clamp(22px,4vw,56px);align-items:start;max-width:1040px;margin:0 auto;padding:clamp(20px,3.6vw,46px);
   border-radius:6px;color:var(--paper-ink);box-shadow:0 30px 70px #0000004d;background:radial-gradient(circle at 20% 30%,#ffffff 0 1px,transparent 1.5px) 0 0/9px 11px,var(--paper);
 }
-.series-cover { display:block;width:100%;height:auto;aspect-ratio:2/3;object-fit:cover;border-radius:3px 5px 5px 3px;background:var(--paper-deep);box-shadow:8px 12px 26px #00000059; }
+.series-cover { display:block;width:100%;height:auto;aspect-ratio:var(--shape,2/3);object-fit:cover;border-radius:3px 5px 5px 3px;background:var(--paper-deep);box-shadow:8px 12px 26px #00000059; }
 .series-jp { margin:0;font:700 13px/1 var(--jp);letter-spacing:.3em;color:var(--seal); }
 .series-info h1 { margin:12px 0 0;font:800 clamp(34px,4vw,56px)/1.05 var(--serif); }
 .series-meta { display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin:18px 0 0;font:700 10px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--paper-soft); }
@@ -64,7 +64,7 @@ html:not([data-time=night]) .reader-mode [lang=ja],html:not([data-time=night]) .
 /* Turning pages of a right-to-left book fills the bar from the right; scrolling down always fills it left to right. */
 .reader[data-direction=rtl][data-mode=pages] .reader-progress { justify-content:flex-end; }
 .reader-scroll { display:flex;flex-direction:column;align-items:center;gap:14px;padding:16px 12px 48px; }
-.reader-strip { display:block;width:min(100%,760px);height:auto;aspect-ratio:auto 2/3;scroll-margin-top:64px;background:#fff;box-shadow:0 14px 40px #00000099; }
+.reader-strip { display:block;width:min(100%,760px);height:auto;aspect-ratio:auto var(--shape,2/3);scroll-margin-top:64px;background:#fff;box-shadow:0 14px 40px #00000099; }
 .reader[data-mode=scroll] .reader-turn { display:none; }
 /* The end card: つづく (to be continued) after a chapter, 完 (the end) after a finished manga. */
 .reader-end { position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;gap:14px;width:min(440px,100%);margin:0 auto;padding:44px 28px 36px;border-radius:6px;background:var(--paper);color:var(--paper-ink);text-align:center;box-shadow:0 24px 60px #000000a6; }

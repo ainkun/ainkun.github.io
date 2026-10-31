@@ -31,6 +31,12 @@
   }
 
   const mangaStatus = { ongoing: { jp: '連載中', label: 'Ongoing' }, complete: { jp: '完結', label: 'Complete' } };
+  // The shape of the pages and cover, width:height ("3:4"), written as CSS reads it ("3 / 4"). Pages are 2:3 unless told.
+  function pageShape(value) {
+    const match = /^(\d+(?:\.\d+)?)\s*[:/]\s*(\d+(?:\.\d+)?)$/.exec(clean(value));
+    const ratio = match ? match[1] / match[2] : 0;
+    return ratio >= 0.3 && ratio <= 2 ? `${Number(match[1])} / ${Number(match[2])}` : '2 / 3';
+  }
   function normalizeManga(payload) {
     return list(payload, 'manga').map(manga => {
       const id = slug(manga?.id);
@@ -42,7 +48,7 @@
       if (!id || !clean(manga.title) || !chapters.length) return null;
       return { id, title: clean(manga.title), jp: clean(manga.jp), summary: clean(manga.summary),
         status: Object.hasOwn(mangaStatus, manga.status) ? manga.status : 'ongoing', direction: manga.direction === 'ltr' ? 'ltr' : 'rtl',
-        cover: safeLink(manga.cover) || `assets/manga/${id}/cover.webp`, chapters };
+        shape: pageShape(manga.shape), cover: safeLink(manga.cover) || `assets/manga/${id}/cover.webp`, chapters };
     }).filter(Boolean);
   }
   const pagePath = (manga, chapter, page) => `assets/manga/${manga.id}/${chapter.number}/${String(page).padStart(2, '0')}.webp`;
