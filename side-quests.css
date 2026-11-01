@@ -84,18 +84,10 @@ html[data-time=night] .scene-clip { -webkit-mask:url('assets/night-rack-band.web
 .rack-spot:hover::after,.rack-spot:focus-visible::after { opacity:1; }
 /* Up close or in a library, the painted rack is not a button. */
 [data-state=board] .rack-spot,[data-state=library] .rack-spot { visibility:hidden; }
-/* The quest marker: a tiny ema with a red "!" bobbing over the roof, like the mark over a quest-giver in a game. It comes a
-   moment after arriving (is-hinting) and leaves for the visit once the rack has been opened (is-seen). Above it stands a
-   small wooden nameplate, like the signs beside a shrine's ema rack: it stays, and settles onto the roof once the marker
-   has gone. Hovering or focusing the rack brightens it. */
-.rack-hint { position:absolute;left:50%;bottom:calc(100% - 2px);translate:-50% 0;display:flex;flex-direction:column;align-items:center; }
-.rack-marker {
-  position:relative;display:grid;place-items:end center;width:clamp(34px,13cqw,52px);aspect-ratio:480/530;padding-bottom:6%;opacity:0;
-  background:url('assets/ema.webp') center/100% 100% no-repeat;filter:drop-shadow(0 0 5px #ffe4a3cc) drop-shadow(0 2px 3px #24160b66);
-  font:800 clamp(16px,6.2cqw,26px)/1 var(--serif);color:var(--seal);transition:opacity .6s ease;
-}
-.rack-spot.is-hinting .rack-marker { opacity:1;animation:marker-bob 2.4s ease-in-out infinite,marker-glow 2.4s ease-in-out infinite; }
-.rack-spot.is-seen .rack-marker { display:none; }
+/* A small wooden nameplate resting on the roof, like the signs beside a shrine's ema rack. It comes a moment after arriving
+   (is-hinting; at once when the rack was already opened in this visit, is-seen) and stays. Hovering or focusing the rack
+   brightens it. */
+.rack-hint { position:absolute;left:50%;bottom:calc(100% - 2px);translate:-50% 0; }
 .rack-label {
   position:absolute;left:50%;bottom:calc(100% + 6px);display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 11px 4px;opacity:0;translate:-50% 4px;
   border:1.5px solid #5a3a22;border-radius:4px;background:linear-gradient(var(--wood-light),var(--wood));box-shadow:0 4px 10px #0000003d;white-space:nowrap;
@@ -105,8 +97,6 @@ html[data-time=night] .scene-clip { -webkit-mask:url('assets/night-rack-band.web
 .rack-label small { margin-right:-.2em;font:700 7px/1.2 var(--mono);letter-spacing:.2em;color:var(--seal); }
 .rack-spot.is-hinting .rack-label,.rack-spot.is-seen .rack-label { opacity:1;translate:-50% 0; }
 .rack-spot:hover .rack-label,.rack-spot:focus-visible .rack-label { background:linear-gradient(#f7e6c4,var(--wood-light));box-shadow:0 6px 14px #00000052; }
-@keyframes marker-bob { 0%,100% { translate:0 0; } 50% { translate:0 -6px; } }
-@keyframes marker-glow { 0%,100% { filter:drop-shadow(0 0 3px #ffe4a399) drop-shadow(0 2px 3px #24160b66); } 50% { filter:drop-shadow(0 0 12px #ffe4a3) drop-shadow(0 0 4px #fff3cf) drop-shadow(0 2px 3px #24160b66); } }
 .rack-gust { position:absolute;inset:0;pointer-events:none; }
 .rack-gust::before {
   content:'';position:absolute;inset:-3%;opacity:0;
@@ -349,8 +339,6 @@ button.ema:focus-visible { outline:2px solid var(--accent);outline-offset:.8cqw;
   .shrine-particles,.rack-gust { display:none; }
   .ema,button.ema:hover,button.ema:focus-visible,.omikuji,.omikuji:hover,.omikuji:focus-visible { animation:none; }
   .grounds .shrine-scene,.scene-plate,[data-state] .scene-plate,.shrine-hero,[data-state] .shrine-hero,.rack-art,.rack-sign,.ema,.rack-spot::after { transition:none; }
-  /* Without motion, the marker stays still; the nameplate and the hover highlight remain. */
-  .rack-spot.is-hinting .rack-marker { animation:none; }
-  .rack-marker,.rack-label { transition:none; }
+  .rack-label { transition:none; }
   .volume-cover,.gs-seal { transition:none; }
 }
