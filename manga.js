@@ -195,7 +195,11 @@
       spotLink(nextLink, { ch: spot.ch + 1, p: 1 });
     }
     document.title = `${manga.title} · ${chapter.title} | ainkun — Security Researcher`;
-    history.replaceState(history.state, '', address(spot));
+    // Google Analytics counts each new address as a page view, through its own wrapper around history.replaceState.
+    // Opening another chapter goes through it; a page turned within the chapter uses the browser's own replaceState,
+    // so a chapter counts once rather than once a page.
+    const sameChapter = new URLSearchParams(window.location.search).get('ch') === String(spot.ch);
+    (sameChapter ? History.prototype.replaceState : history.replaceState).call(history, history.state, '', address(spot));
     storage.set(`manga:${manga.id}`, JSON.stringify(spot));
     status.textContent = atEnd ? `End of ${chapter.title}. ${finished ? 'The end.' : 'To be continued.'}` : `Page ${shown} of ${chapter.pages}`;
   }

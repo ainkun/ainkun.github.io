@@ -101,12 +101,15 @@
 }
 .chapter-menu.reveal-ready:focus-within { opacity:1;transform:none; }
 
-/* Sidebar home wordmark. */
+/* Sidebar home wordmark and the full clickable footer credit. */
 .sidebar-bottom { padding:14px 0 0; }
 .sidebar-bottom .brand { display:flex;justify-content:center;width:100%;gap:0;padding:9px 6px;font:800 23px/1.1 'DM Sans',sans-serif;letter-spacing:-1.6px;text-decoration:none;color:var(--ink); }
+.creator-credit { display:inline-block;padding:9px 0;font:400 11px/1.5 var(--mono);letter-spacing:0;color:var(--accent);text-decoration:none;white-space:nowrap; }
+.creator-credit:hover { text-decoration:underline;text-underline-offset:4px; }
 @media(max-width:760px) {
   .sidebar-bottom { top:54px;padding:0; }
   .sidebar-bottom .brand { padding:0;justify-content:flex-start;font-size:14px;letter-spacing:-.6px; }
+  .creator-credit { font-size:9px; }
 }
 
 /* Stats stay editable and carry no invented numerical proficiency ratings. */

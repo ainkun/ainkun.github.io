@@ -423,6 +423,7 @@
     if (state === 'scene' && target !== 'scene') await walkUp();
     if (state === 'board' && target === 'scene') await stepAway();
     if (state === 'board' && target === 'library') await turnOver(name);
+    countView(target, name);
   }
   // Moves run one after another, so quick clicks or Back presses never cross.
   let moving = Promise.resolve();
@@ -440,6 +441,20 @@
     const key = window.location.hash.slice(1);
     if (quests.has(key)) return ['library', key];
     return [key === 'quests' ? 'board' : 'scene', null];
+  }
+  // Google Analytics counts a page load or a new address, but not a change after the # alone. So each move to the board,
+  // a library or back to the scene is counted here, with its own address and title; the place a visit starts at is
+  // counted with the page load.
+  let viewed = window.location.href;
+  function countView(target, name) {
+    const where = target === 'library' ? quests.get(name).title : target === 'board' ? 'Quest Board' : '';
+    const address = window.location.origin + window.location.pathname + window.location.search + hashFor(target, name);
+    window.gtag?.('event', 'page_view', {
+      page_location: address,
+      page_referrer: viewed,
+      page_title: where ? document.title.replace(' | ', ` · ${where} | `) : document.title
+    });
+    viewed = address;
   }
   const visit = {
     seen() { try { return sessionStorage.getItem('quest-rack-opened') === 'true'; } catch { return false; } },

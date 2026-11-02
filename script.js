@@ -33,6 +33,7 @@ const labels = {github: 'GitHub', medium: 'Medium', linkedin: 'LinkedIn', x: 'X 
 Object.entries(labels).forEach(([key, label]) => { const link = make('a', 'social-link', `${label} ↗`); configureLink(link, key === 'email' && profile.socials.email ? `mailto:${profile.socials.email}` : profile.socials[key], label); document.querySelector('#socials').append(link); });
 document.querySelectorAll('[data-social]').forEach(link => configureLink(link, profile.socials[link.dataset.social], 'Medium'));
 if (!Object.values(profile.socials).some(Boolean)) document.querySelector('#contact-note').textContent = 'Social links will be added soon.';
+document.querySelector('#year').textContent = new Date().getFullYear();
 let toastTimer;
 document.addEventListener('click', event => { const link = event.target.closest('[data-placeholder]'); if (!link) return; event.preventDefault(); const toast = document.querySelector('.toast'); toast.textContent = `${link.dataset.placeholder}: coming soon.`; toast.classList.add('visible'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('visible'), 3000); });
 if ('IntersectionObserver' in window) { const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('revealed'); observer.unobserve(entry.target); } }), {threshold: 0.1}); document.querySelectorAll('.reveal').forEach(el => { el.classList.add('reveal-ready'); observer.observe(el); }); }

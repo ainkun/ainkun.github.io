@@ -205,7 +205,7 @@ The clips are left out with reduced motion or data saving, and the painting then
 - The separate-character concepts based on `take-logo-position-and-size.png` are archived at `logo-separated.html`. Their PNGs and prompts are in `assets/logo-separated/`. The final choice returned to the cleaned original reference instead.
 - The street backgrounds are `assets/morning-street.png`, `assets/evening-street.png`, and `assets/night-street.png`. The original morning is unchanged; the two new images are edits of it. See `assets/day-scenes.md` for the full prompts and `assets/morning-street-prompt.md` for the original reference. The earlier `assets/cyber-city.png` is preserved.
 
-The fonts load from Google Fonts; local fallback fonts keep the page usable offline. All other assets are local. No analytics or tracking scripts are included.
+The fonts load from Google Fonts and the analytics tag from Google (see [Visitor analytics](#visitor-analytics)); local fallback fonts keep the page usable offline. All other assets are local.
 
 ## Time-of-day themes
 
@@ -226,6 +226,28 @@ The [Side Quests](#side-quests-yorimichi-shrine) pages use the same hours with t
 `themes.js` sets the initial theme before the page is painted and preloads only its background. Theme changes load and decode their image before blending the street scene and matching palette over 3.2 seconds with gentle easing. The incoming background uses an explicit opacity keyframe animation so the fade starts reliably even when the browser batches updates. Layered backgrounds preserve an in-progress blend during rapid clicks, and older requests cannot replace the latest choice. `theme-motion.css` animates the palette colors, including the logo, title, gradients, and translucent panels. System reduced-motion preferences make theme changes immediate. If a preview fails to load, the current theme remains available. Without JavaScript the morning palette is the fallback. All three images stay fixed during scrolling, with translucent section backgrounds above them.
 
 To change the schedule, edit `themeForDate()` in `themes.js`. To replace an image, update its entry in both `themes.js` and `themes.css`. Keep their relative paths for GitHub Pages. Run `node tests/themes.test.cjs` to check timezone boundaries and preview behavior; Node is only needed for development checks, not hosting.
+
+## Visitor analytics
+
+Every page at the repository root carries the Google tag for Google Analytics 4 (measurement ID `G-64J13FY14D`), right after the charset line in `<head>`: all 12 pages, the logo galleries included. Open [analytics.google.com](https://analytics.google.com): **Reports → Realtime** shows visitors within a minute, and the other reports fill in within a day or two.
+
+| A visitor… | Recorded as |
+| --- | --- |
+| opens any page | a page view with the page's address and title |
+| opens the quest board or a library on the Side Quests page | a page view for each, titled **Side Quests · Quest Board**, **Side Quests · Manga** and so on, with `#quests`, `#manga`… in the address |
+| opens a manga chapter | one page view per chapter, titled with the manga and the chapter; turning pages adds none |
+| follows a link to another site (Medium, GitHub, PakCyberbot…) | a `click` event with the link's address |
+| follows a link to a part of the home page (`#about`…) | nothing extra |
+
+- **Pages:** **Reports → Engagement → Pages and screens**. Switch the table to **Page title and screen class** to see the shrine's places and the manga chapters apart.
+- **Links out:** **Reports → Engagement → Events → click**.
+- Previews on your own computer (`localhost`, `127.0.0.1` or an opened file) are not counted, so checking a change locally never adds visits.
+- Visitors whose ad or tracker blocker stops Google's tag are not counted.
+- Arriving straight at a library address such as `side-quests.html#manga` counts as **Side Quests**: Google drops the part after `#` when a page loads.
+- The property's enhanced measurement (**Admin → Data streams →** the web stream) is all on, so Google also records scrolls to the end of a page and its other automatic events. Keep **Page changes based on browser history events** on: the manga chapters are counted through it.
+- To use another ID, replace `G-64J13FY14D` in every page's tag and in `tests/analytics.test.cjs`. A new page needs the same tag; `node --test "tests/*.test.cjs"` fails until it has it.
+
+How each of these is counted is in [Analytics implementation](#analytics-implementation).
 
 ## Run on localhost
 
@@ -326,8 +348,9 @@ repository-root/
 ├── side-quests.css, side-quests.js, quest-data.js
 ├── manga.css, manga.js, quest-post.css, quest-post.js
 ├── chapter-transition.js
+├── credit-transition.css, credit-transition.js   # Home page footer: the PakCyberbot send-off
 ├── profile.js, script.js, themes.js
-├── mainimage.png
+├── mainimage.png, pakcyberbot.png
 ├── card-main-image.jpeg, card-back-main-clip.mp4, card-top-left-small.jpeg
 ├── CNAME                     # Custom domain: ainkun.com
 ├── .nojekyll
@@ -397,7 +420,7 @@ After deployment, refresh the published page. Keep this README updated when a ch
 With Node.js installed, run from the project root:
 
 ```sh
-node --test "tests/*.test.cjs"   # all 60 Node tests
+node --test "tests/*.test.cjs"   # all 68 Node tests
 python tests/test_medium.py      # 5 RSS-parser tests
 node --check script.js           # syntax of the three scripts the tests do not load
 node --check profile.js
@@ -406,7 +429,7 @@ node --check side-quests.js
 
 The theme suite contains 10 behavior tests. Eleven additional card tests check proportional desktop/mobile sizing, opening, interrupting the animation with Escape, outside clicks, focus restoration, motion preferences, resizing, timed diagonal hints, clicks during hints, suspension/resumption when hidden or paused, and silent video playback without a background image. These use DOM models and do not replace browser checks for rendering, native focus trapping, or animation smoothness.
 
-Fourteen blog tests cover feed validation, caching/retry, portrait decoding and theme races, page navigation and modifier keys, greeting/farewell state, mute controls, blocked autoplay, interrupted audio, curated labels and their Medium-tag fallback, title/label search with tag filtering, and a check that every `data/blog-labels.json` entry matches a real article with 1–4 labels. Five Python tests cover RSS parsing, empty/error responses, duplicate/unsafe links, and keeping older archived articles during a refresh. Eleven chapter-transition tests follow. Fourteen Side Quests tests complete the 60 Node tests: the shrine's hours match the home street, `?time=` and a chosen scene last for the visit, the board, manga, review and trip data rules (simple ids, safe links, manga page shapes, fortunes from ratings, captioned screenshots, kanji dates), page turning across chapters with right-to-left keys, taps and swipes, the Markdown subset with unsafe links and HTML kept as text, and that every file a bundled entry needs exists. Layouts were also checked in a real browser engine (headless Microsoft Edge driven by Playwright) at desktop and phone sizes and at browser zoom levels from 50% to 500%; real audio playback still needs a check on a device with sound.
+Fourteen blog tests cover feed validation, caching/retry, portrait decoding and theme races, page navigation and modifier keys, greeting/farewell state, mute controls, blocked autoplay, interrupted audio, curated labels and their Medium-tag fallback, title/label search with tag filtering, and a check that every `data/blog-labels.json` entry matches a real article with 1–4 labels. Five Python tests cover RSS parsing, empty/error responses, duplicate/unsafe links, and keeping older archived articles during a refresh. Eleven chapter-transition tests follow. Fourteen Side Quests tests check that the shrine's hours match the home street, `?time=` and a chosen scene last for the visit, the board, manga, review and trip data rules (simple ids, safe links, manga page shapes, fortunes from ratings, captioned screenshots, kanji dates), page turning across chapters with right-to-left keys, taps and swipes, the Markdown subset with unsafe links and HTML kept as text, and that every file a bundled entry needs exists. Five creator-credit tests check the send-off's timing, repeat clicks, native link behavior, reduced motion, cancellation, cleanup and its analytics report. Three analytics tests complete the 68 Node tests: every page has the Google tag once in its head, the tag is the same everywhere, and local previews are not counted. Layouts were also checked in a real browser engine (headless Microsoft Edge driven by Playwright) at desktop and phone sizes and at browser zoom levels from 50% to 500%; real audio playback still needs a check on a device with sound.
 
 ## Troubleshooting
 
@@ -425,6 +448,7 @@ Fourteen blog tests cover feed validation, caching/retry, portrait decoding and 
 | Pages returns 404 | Check the selected branch/root folder, ensure `index.html` is at that root, and inspect the deployment status. |
 | Images or styles are missing | Upload the referenced files and preserve exact filename capitalization and relative paths. |
 | The live site shows older content | Wait for the deployment to finish, then hard-refresh: Ctrl+Shift+R on Windows/Linux or Cmd+Shift+R on macOS. |
+| Visits don't show in Google Analytics | Visits from `localhost`, `127.0.0.1` or an opened file are not counted on purpose, and ad or tracker blockers stop the tag. Open the live site, then **Reports → Realtime**; the other reports take a day or two. |
 | Theme changes or hover effects are instant | Check your operating system's reduced-motion setting. |
 | The shrine's ema don't swing | The clips are left out with reduced motion or a data-saving setting; check both. |
 | Japanese text becomes question marks | Save the file as UTF-8; preserve the original characters when editing. |
@@ -447,10 +471,16 @@ Design and behavior details for maintainers.
 - The Japanese motto line always stays on one line. At any window size or browser zoom it keeps its normal size and shrinks only as much as its box requires (the motto block near the end of `responsive.css`). That sizing assumes three two-character words. The English line does not shrink, so keep it to 26 characters or fewer; longer lines wrap at some zoom levels.
 - The back of the collectible card shows **AinKun** with **Evolves from Hussain K.** underneath, like an evolved trading card (`name` and `evolvesFrom` in `profile.js`), a **GLITCH TYPE** ribbon on the artwork (`type`), and the ability **Security Researcher** (`ability.title`) with the line "Researching the Android platform with a focus on reversing and vuln research." (`ability.description`). Every extra line of description takes room from the artwork, because the card keeps a fixed shape; this one is two lines on desktop and phones.
 - The card name and its Evolves line each stay on one line too. They keep their normal sizes (name 34px, or 30px on phones; Evolves line 9px) and shrink only when the card is very narrow, such as at 500% zoom on a laptop or on a folding phone (the last block of `responsive.css`). The sizing is set for the current texts, so recheck at high zoom if you make either one much longer.
-- The sidebar on every page ends with the **ainkun.** home wordmark. The pages have no footer strip: the bottom strip with **Created by PakCyberbot**, the year and またね / SEE YOU AGAIN, with its send-off animation, was removed from every page on 2026-11-01. The previous learning status and decorative-motion button have been removed; OS reduced-motion support remains.
+- The sidebar on every page ends with the **ainkun.** home wordmark. The home page ends with a footer strip: **Created by PakCyberbot** at the left (see [Creator-credit transition](#creator-credit-transition)), © with the current year and ainkun in the middle, and **またね / SEE YOU AGAIN ↑** back to the top at the right; at 640px wide or less the © line moves underneath. The strip was removed from every page on 2026-11-01 and brought back on the home page only on 2026-11-02; the blog and the Side Quests pages have none. The previous learning status and decorative-motion button have been removed; OS reduced-motion support remains.
 - The favicon uses the current transparent `assets/logo-clean/ainkun-clean.png` logo.
 - Explore my work uses white text for morning/evening and transitions to black over 3.2 seconds for night. Its Japanese label inherits the same color.
 - The card's upper-right diamond is drawn in CSS and geometrically centered inside its circle.
+
+### Creator-credit transition
+
+On the home page, the complete **Created by PakCyberbot** text at the bottom-left of the footer is one padded link in the site's Space Mono font at regular weight, 11px on desktop and 9px on mobile. Ordinary activation plays a 2.4-second Japanese character-rain transition, fading toward the bottom, then navigates the current tab to `https://pakcyberbot.com`. The supplied `pakcyberbot.png` appears in the center with a gently pulsing logo and rotating loading ring, above 接続中 / Connecting to PakCyberbot; the home page preloads it, and the Pages build includes it. Ctrl/Cmd/Shift/Alt-click and middle-click keep native behavior; reduced motion follows the link immediately. Escape cancels the transition. Page lifecycle cleanup prevents a stale overlay after Back navigation. The send-off also reports the click to Google Analytics (see [Analytics implementation](#analytics-implementation)).
+
+Implementation: `credit-transition.js` and `credit-transition.css`, loaded only by `index.html`. The strip's styles are the `footer` rules in `styles.css` and `.creator-credit` in `responsive.css`, with each time of day's `--footer-overlay` in `themes.css` (faded by `theme-motion.css`); the profile card's own `<footer>` overrides them in `analyst-card.css`. `node tests/credit-transition.test.cjs` checks navigation timing, repeat clicks, native link behavior, reduced motion, cancellation, cleanup and the analytics report (five tests).
 
 ### Native-zoom layout and researcher content
 
@@ -477,11 +507,21 @@ Latest validation (2026-11-01): 60 Node and 5 Python tests pass. In headless Edg
 
 Earlier (2026-10-31), the shrine passed the 81-layout title check and the 13-size first-screen board check. The openings and their reverse were confirmed from the transitions' own animations. Returning showed no reload and no replay, and the reader, screenshot viewer, theme panel and Esc layers worked with no errors. With A Date with Prime Numbers added, its 3:4 cover stands first on the shelf beside the 2:3 sample at desktop and phone sizes and keeps its shape through the opening, and the reader turns it left to right in both modes and ends with 完.
 
+### Analytics implementation
+
+- The tag is Google's snippet with one added line: on `localhost`, `127.0.0.1`, `[::1]` or an opened file it sets `window['ga-disable-G-64J13FY14D'] = true`, which stops the tag sending anything. `tests/analytics.test.cjs` checks that every root page has the tag exactly once inside `<head>`, that it is identical everywhere, and that this line stops local previews but not the site.
+- Google counts a new address as a page view, but ignores a change after the `#` alone. So `countView()` in `side-quests.js` sends a `page_view` after each move to the board, a library or back to the scene, with that place's address and title (`Side Quests · Manga | …`). The place a visit starts at is counted with the page load.
+- The manga reader keeps the page in its address (`?id=…&ch=…&p=…`), and Google counts each change it sees through its wrapper around `history.replaceState`. `manga.js` turns pages with `History.prototype.replaceState`, which the wrapper doesn't see, and changes chapter through `history.replaceState`, so a chapter counts once.
+- Google records only the link clicks it sees go through. The PakCyberbot send-off holds its click, so `credit-transition.js` sends the same `click` event itself (`link_url`, `link_domain`, `outbound: true`). Google sends events in batches about 5 seconds apart and sends what is waiting as the page closes, so the click arrives as the send-off leaves.
+- These calls go through `window.gtag?.()`, so the pages work the same without the tag.
+
+Latest validation (2026-11-02): 68 Node and 5 Python tests pass. In headless Edge with Google's real tag script, and its hits answered on this computer so none reached Google: each of the 12 pages sends one page view with its title; a local preview sends none; the shrine's four moves send one view each; a manga chapter counts once, five page turns add none and the next chapter counts; a link to `#about` adds nothing; a Medium link and the PakCyberbot credit each send one click (the credit's as the send-off leaves, caught by a local stand-in for Google's servers); Back still restores pages from the page cache. The footer strip was checked on the home page at desktop and phone sizes in all three times of day (one row on desktop, the © line underneath on phones, no sideways scrolling); the card's own footer is unchanged, and the blog and shrine pages have no strip.
+
 ### Opening chapter panel transition
 
 On the homepage, `chapter-transition.js` turns the opening/content boundary into a 620ms eased transition. A downward mouse-wheel gesture or upward finger swipe from Chapter 1 lands exactly at the archive bar (below the fixed mobile header). Upward scrolling that reaches this boundary returns to the beginning; scrolling farther down the content is normal. A short 180ms cooldown absorbs trailing wheel momentum. The scroll cue and Arrow/Page/Space keyboard scrolling support the same boundary behavior, with keyboard focus moved to the destination.
 
-Ctrl/Cmd-wheel zoom, horizontal gestures, sidebar scrolling, form controls and card dialogs are excluded. Reduced motion jumps immediately. If enlarged text makes the opening chapter taller than the available screen, its internal document range remains scrollable before transitioning out. Resizing settles an active transition; page lifecycle events clear stale frames. Scrollbar navigation remains native. Eleven DOM-model behavior checks pass with `node tests/chapter-transition.test.cjs`, and the wheel transition was checked in headless Edge on 2026-10-23.
+Ctrl/Cmd-wheel zoom, horizontal gestures, sidebar scrolling, form controls, card dialogs and the creator send-off are excluded. Reduced motion jumps immediately. If enlarged text makes the opening chapter taller than the available screen, its internal document range remains scrollable before transitioning out. Resizing settles an active transition; page lifecycle events clear stale frames. Scrollbar navigation remains native. Eleven DOM-model behavior checks pass with `node tests/chapter-transition.test.cjs`, and the wheel transition was checked in headless Edge on 2026-10-23.
 
 On every page the **ainkun.** wordmark in the sidebar links home.
 
