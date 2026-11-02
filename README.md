@@ -241,6 +241,8 @@ Every page at the repository root carries the Google tag for Google Analytics 4 
 
 - **Pages:** **Reports → Engagement → Pages and screens**. Switch the table to **Page title and screen class** to see the shrine's places and the manga chapters apart.
 - **Links out:** **Reports → Engagement → Events → click**.
+- **Each click with the visitor's device and place:** **Explore → Free form** with the dimensions **Event name**, **Link URL**, **Screen resolution**, **Browser**, **Operating system** and **City**, the metric **Event count**, and the filter Event name = `click`. **Explore → User explorer** shows one visitor's path (pages, clicks, device, city) under an anonymous ID. Google keeps the screen resolution, browser, system, device and place, but never the IP address or the full user-agent string.
+- Explore keeps 2 months of data by default; raise it to 14 months under **Admin → Data retention**.
 - Previews on your own computer (`localhost`, `127.0.0.1` or an opened file) are not counted, so checking a change locally never adds visits.
 - Visitors whose ad or tracker blocker stops Google's tag are not counted.
 - Arriving straight at a library address such as `side-quests.html#manga` counts as **Side Quests**: Google drops the part after `#` when a page loads.
